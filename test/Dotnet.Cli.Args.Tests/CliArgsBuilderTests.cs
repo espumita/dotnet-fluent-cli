@@ -55,7 +55,6 @@ public class CliArgsBuilderTests {
     public void mark_flag_as_present() {
         var aFlagOption = AFlagOption()
             .BuildWithTestValues();
-
         var environmentArgs = new [] { aFlagOption.ShortName };
 
         var args = CliArgsBuilderFrom(environmentArgs)
@@ -70,7 +69,6 @@ public class CliArgsBuilderTests {
     public void get_flag_by_short_name() {
         var aFlagOption = AFlagOption()
             .BuildWithTestValues();
-
         var environmentArgs = new[] { aFlagOption.ShortName };
 
         var args = CliArgsBuilderFrom(environmentArgs)
