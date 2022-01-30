@@ -9,6 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0C1C5712
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dotnet.Cli.Args.Tests", "tests\Dotnet.Cli.Args.Tests\Dotnet.Cli.Args.Tests.csproj", "{A2675A77-52D6-4F78-A090-DD4B095B4C0B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{0562732D-88F8-4287-9308-C3FB9A40ECAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppSample", "samples\ConsoleAppSample\ConsoleAppSample.csproj", "{BBCE25AE-F0DF-4A32-90CA-BC8A0F06F2D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +27,17 @@ Global
 		{A2675A77-52D6-4F78-A090-DD4B095B4C0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2675A77-52D6-4F78-A090-DD4B095B4C0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2675A77-52D6-4F78-A090-DD4B095B4C0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBCE25AE-F0DF-4A32-90CA-BC8A0F06F2D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBCE25AE-F0DF-4A32-90CA-BC8A0F06F2D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBCE25AE-F0DF-4A32-90CA-BC8A0F06F2D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBCE25AE-F0DF-4A32-90CA-BC8A0F06F2D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A2675A77-52D6-4F78-A090-DD4B095B4C0B} = {0C1C5712-D30F-472E-AA47-5C26B0C458B7}
+		{BBCE25AE-F0DF-4A32-90CA-BC8A0F06F2D5} = {0562732D-88F8-4287-9308-C3FB9A40ECAB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {593AA450-4757-40B8-AA2F-654A2DA7B27E}

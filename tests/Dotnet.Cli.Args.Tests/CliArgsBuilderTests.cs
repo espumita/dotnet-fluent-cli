@@ -72,9 +72,6 @@ public class CliArgsBuilderTests {
     [TestCase("-force", "force")]
     [TestCase("--force", "force")]
     public void mark_flag_as_present_in_different_formats(string environmentArg, string flagShortName) {
-        var aFlagOption = AFlagOption()
-            .BuildWithTestValues();
-
         var environmentArgs = new[] { environmentArg };
 
         var args = CliArgsBuilderFrom(environmentArgs)
