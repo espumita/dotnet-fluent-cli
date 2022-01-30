@@ -10,7 +10,7 @@ var argsOptions = CliArgsBuilder.From(environmentArgs)
     .AddFlag(config => config.ShortName = "force")
     .Build();
 
-var forceFlagOption = argsOptions.Flags.First(flag => flag.ShortName.Equals("force"));
+var forceFlagOption = argsOptions.Flag("force");
 
 if (forceFlagOption.IsPresent) {
     Console.WriteLine("Force mode is enabled");
