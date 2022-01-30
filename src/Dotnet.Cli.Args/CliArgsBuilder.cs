@@ -31,11 +31,15 @@ public class CliArgsBuilder {
         return flagOptionConfigurations
             .Select(configuration => new FlagOption {
                 ShortName = configuration.ShortName,
-                IsPresent = Contains(configuration.ShortName)
+                IsPresent = IsPresent(configuration.ShortName)
             }).ToList();
     }
 
-    private bool Contains(string flagShortName) {
-        return args.Contains(flagShortName);
+    private bool IsPresent(string flagShortName) {
+        return args.Any(arg => 
+            arg.Equals(flagShortName) 
+            || arg.Equals($"-{flagShortName}")
+            || arg.Equals($"--{flagShortName}")
+        );
     }
 }

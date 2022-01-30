@@ -66,6 +66,25 @@ public class CliArgsBuilderTests {
         args.Flags.Single().IsPresent.Should().BeTrue();
     }
 
+    [TestCase("f", "f")]
+    [TestCase("-f", "f")]
+    [TestCase("force", "force")]
+    [TestCase("-force", "force")]
+    [TestCase("--force", "force")]
+    public void mark_flag_as_present_in_different_formats(string environmentArg, string flagShortName) {
+        var aFlagOption = AFlagOption()
+            .BuildWithTestValues();
+
+        var environmentArgs = new[] { environmentArg };
+
+        var args = CliArgsBuilderFrom(environmentArgs)
+            .AddFlag(config => config.ShortName = flagShortName)
+            .Build();
+
+        args.Flags.Count.Should().Be(1);
+        args.Flags.Single().IsPresent.Should().BeTrue();
+    }
+
     private static CliArgsBuilder CliArgsBuilderFrom(string[] args) {
         return Args.CliArgsBuilder.From(args);
     }
