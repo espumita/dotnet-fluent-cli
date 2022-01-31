@@ -14,7 +14,6 @@ public class CliArgsBuilderTests {
         stringBuilder = new StringBuilder();
     }
 
-
     [Test]
     public void do_not_read_any_flag() {
         var environmentArgs = new string[] { };
