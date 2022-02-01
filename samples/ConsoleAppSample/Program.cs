@@ -1,8 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using Dotnet.Cli.Args;
-
-Console.WriteLine("Hello, World!");
+﻿using Dotnet.Cli.Args;
 
 var environmentArgs = Environment.GetCommandLineArgs();
 
@@ -10,9 +6,7 @@ var argsOptions = CliArgsBuilder.From(environmentArgs)
     .AddFlag(config => config.ShortName = "force")
     .Build();
 
-var forceFlagOption = argsOptions.Flag("force");
-
-if (forceFlagOption.IsPresent) {
+if (argsOptions.Flag("force").IsPresent) {
     Console.WriteLine("Force mode is enabled");
 } else {
     Console.WriteLine("Running in normal mode");

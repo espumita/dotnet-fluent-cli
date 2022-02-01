@@ -3,13 +3,13 @@
 var environmentArgs = Environment.GetCommandLineArgs();
 
 var argsOptions = CliArgsBuilder.From(environmentArgs)
-    .AddFlag(config => config.ShortName = "help")
+    .AddFlag(config => config.ShortName = "option")
     .Build();
 
-var forceFlagOption = argsOptions.Flag("help");
-
-if (forceFlagOption.IsPresent) {
-    Console.WriteLine("Help option enabled");
+if (argsOptions.Flag("option").IsPresent) {
+    Console.Write("Option flag is present");
 } else {
-    Console.WriteLine("Running in normal mode");
+    Console.Write("Option flag is not present");
 }
+
+Environment.Exit(0);
