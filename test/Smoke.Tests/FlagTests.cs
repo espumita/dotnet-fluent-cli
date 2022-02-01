@@ -18,16 +18,16 @@ namespace Smoke.Tests {
 
             var consoleOutput = await consoleApp.RunWithArgs(args);
 
-            consoleOutput.Should().Be("Option flag is not present");
+            consoleOutput.Should().Be("Verbose flag is not present");
         }
 
         [Test]
         public async Task flag_enabled() {
-            var args = "--option";
+            var args = "--verbose";
 
             var consoleOutput = await consoleApp.RunWithArgs(args);
 
-            consoleOutput.Should().Be("Option flag is present");
+            consoleOutput.Should().Be("Verbose flag is present");
         }
 
     }

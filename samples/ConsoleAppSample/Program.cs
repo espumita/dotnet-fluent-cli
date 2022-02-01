@@ -7,7 +7,7 @@ var argsOptions = CliArgsBuilder.From(environmentArgs)
     .Build();
 
 if (argsOptions.Flag("force").IsPresent) {
-    Console.WriteLine("Force mode is enabled");
+    Console.WriteLine("Running in force mode");
 } else {
     Console.WriteLine("Running in normal mode");
 }

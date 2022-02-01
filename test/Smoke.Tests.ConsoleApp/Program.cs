@@ -3,13 +3,13 @@
 var environmentArgs = Environment.GetCommandLineArgs();
 
 var argsOptions = CliArgsBuilder.From(environmentArgs)
-    .AddFlag(config => config.ShortName = "option")
+    .AddFlag(config => config.ShortName = "verbose")
     .Build();
 
-if (argsOptions.Flag("option").IsPresent) {
-    Console.Write("Option flag is present");
+if (argsOptions.Flag("verbose").IsPresent) {
+    Console.Write("Verbose flag is present");
 } else {
-    Console.Write("Option flag is not present");
+    Console.Write("Verbose flag is not present");
 }
 
 Environment.Exit(0);
