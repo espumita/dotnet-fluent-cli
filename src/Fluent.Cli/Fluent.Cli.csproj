@@ -1,8 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+	<Description>Fluent interface to parse and configure arguments for command line applications in .NET</Description>
+	<TargetFramework>net6.0</TargetFramework>
+	<PackageId>Fluent.Cli</PackageId>
+	<PackageTags>cli;arguments;args;parser;configuration</PackageTags>
+	<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Version>0.0.1-alpha</Version>
+    <PackageProjectUrl>https://github.com/espumita/dotnet-fluent-cli</PackageProjectUrl>
+	<RepositoryType>git</RepositoryType>
+	<RepositoryUrl>https://github.com/espumita/dotnet-fluent-cli.git</RepositoryUrl>
+	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
