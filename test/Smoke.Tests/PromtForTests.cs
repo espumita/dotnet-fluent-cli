@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 
 namespace Smoke.Tests;
 
-public class ConsoleAppForTests {
+public class PromtForTests {
     private readonly string executableFileName;
 
-    public ConsoleAppForTests(string executableFileName) {
+    public PromtForTests(string executableFileName) {
         this.executableFileName = executableFileName;
     }
 
-    public async Task<string> RunWithArgs(string args) {
+    public async Task<string> RunWithArguments(string args) {
         var process = new ProcessStartInfo {
             CreateNoWindow = false,
             UseShellExecute = false,

@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Dotnet.Cli.Args\Dotnet.Cli.Args.csproj" />
+    <ProjectReference Include="..\..\src\Fluent.Cli\Fluent.Cli.csproj" />
   </ItemGroup>
 
 </Project>

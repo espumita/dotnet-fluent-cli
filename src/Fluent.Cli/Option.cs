@@ -1,6 +1,6 @@
-﻿namespace Dotnet.Cli.Args;
+﻿namespace Fluent.Cli;
 
-public class FlagOption {
+public class Option {
     public string ShortName { get; set; }
     public bool IsPresent { get; set; }
 }
