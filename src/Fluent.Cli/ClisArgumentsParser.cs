@@ -10,15 +10,6 @@ public class ClisArgumentsParser {
         return new ClisArguments(options);
     }
 
-    private static void MarkOptionsAsPresent(string arg, List<Option> options) {
-        foreach (var argCharacter in arg) {
-            var option = options.FirstOrDefault(option => char.Parse(option.ShortName).Equals(argCharacter));
-            if (option != null) {
-                option = new Option(option.ShortName, isPresent: true);
-            }
-        }
-    }
-
     private static List<Option> InitializeOptionResultFrom(IDictionary<string, OptionConfiguration> optionConfigurations) {
         return optionConfigurations.Keys
             .Select(configuration => new Option(configuration, false))
@@ -29,6 +20,15 @@ public class ClisArgumentsParser {
         var possibleOptionStartingChar = possibleOption[0];
         return possibleOptionStartingChar.Equals('-');
         // || possibleOptionStartingChar.Equals("/");
+    }
+
+    private static void MarkOptionsAsPresent(string arg, List<Option> options) {
+        foreach (var argCharacter in arg) {
+            var option = options.FirstOrDefault(option => char.Parse(option.ShortName).Equals(argCharacter));
+            if (option != null) {
+                option = new Option(option.ShortName, isPresent: true);
+            }
+        }
     }
 
     private static bool IsPresent(string[] environmentArgs, string shortName) {
