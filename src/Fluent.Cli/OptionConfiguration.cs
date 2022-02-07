@@ -1,7 +1,10 @@
 ﻿namespace Fluent.Cli;
 
 public class OptionConfiguration {
-    public string ShortName { get; set; }
+    public string ShortName { get; }
 
-    public string[] Names { get; set; }
+    public OptionConfiguration(string shortName) {
+        ShortName = shortName;
+    }
+
 }

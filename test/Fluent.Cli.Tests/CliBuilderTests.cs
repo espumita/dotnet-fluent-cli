@@ -1,15 +1,18 @@
 ﻿using System.Linq;
+using Bogus;
 using FluentAssertions;
 using NUnit.Framework;
 
 namespace Fluent.Cli.Tests; 
 
 public class CliBuilderTests {
+    private Faker faker;
 
+    private const string AvailableOptionsCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     [SetUp]
     public void SetUp() {
-
+        faker = new Faker();
     }
 
     [Test]
@@ -24,9 +27,8 @@ public class CliBuilderTests {
 
     [Test]
     public void do_not_read_options_when_they_are_not_configured() {
-        var anOption = AnOption()
-            .BuildWithTestValues();
-        var environmentArgs = new [] { anOption.ShortName };
+        var anOptionShortName = AnOptionShortNameWith(length: 1);
+        var environmentArgs = new [] { anOptionShortName };
 
         var cli = CliBuilderFrom(environmentArgs)
             .Build();
@@ -35,13 +37,12 @@ public class CliBuilderTests {
     }
 
     [Test]
-    public void mark_option_as_not_present() {
-        var anOption = AnOption()
-            .BuildWithTestValues();
+    public void mark_option_with_short_name_as_not_present() {
+        var anOptionShortName = AnOptionShortNameWith(length: 1);
         var environmentArgs = new string[] { };
 
         var cli = CliBuilderFrom(environmentArgs)
-            .Option(config => config.ShortName = anOption.ShortName)
+            .Option(shortName: anOptionShortName)
             .Build();
 
         cli.Options.Count.Should().Be(1);
@@ -49,54 +50,39 @@ public class CliBuilderTests {
     }
 
     [Test]
-    public void mark_option_as_present() {
-        var anOption = AnOption()
-            .BuildWithTestValues();
-        var environmentArgs = new [] { anOption.ShortName };
+    public void mark_option_with_short_name_as_present() {
+        var anOptionShortName = AnOptionShortNameWith(length: 1);
+        var environmentArgs = new [] { anOptionShortName };
 
         var cli = CliBuilderFrom(environmentArgs)
-            .Option(config => config.ShortName = anOption.ShortName)
+            .Option(shortName: anOptionShortName)
             .Build();
 
         cli.Options.Count.Should().Be(1);
         cli.Options.Single().IsPresent.Should().BeTrue();
     }
 
-    [Test]
-    public void get_option_by_short_name() {
-        var anOption = AnOption()
-            .BuildWithTestValues();
-        var environmentArgs = new[] { anOption.ShortName };
+    //[TestCase("f", "f")]
+    //[TestCase("-f", "f")]
+    //[TestCase("force", "force")]
+    //[TestCase("-force", "force")]
+    //[TestCase("--force", "force")]
+    //public void mark_option_as_present_in_different_formats(string option, string shortName) {
+    //    var environmentArgs = new[] { option };
 
-        var cli = CliBuilderFrom(environmentArgs)
-            .Option(config => config.ShortName = anOption.ShortName)
-            .Build();
+    //    var cli = CliBuilderFrom(environmentArgs)
+    //        .Option(shortName)
+    //        .Build();
 
-        cli.Options.Count.Should().Be(1);
-        cli.Option(anOption.ShortName).IsPresent.Should().BeTrue();
-    }
-
-    [TestCase("f", "f")]
-    [TestCase("-f", "f")]
-    [TestCase("force", "force")]
-    [TestCase("-force", "force")]
-    [TestCase("--force", "force")]
-    public void mark_option_as_present_in_different_formats(string option, string shortName) {
-        var environmentArgs = new[] { option };
-
-        var cli = CliBuilderFrom(environmentArgs)
-            .Option(config => config.ShortName = shortName)
-            .Build();
-
-        cli.Options.Count.Should().Be(1);
-        cli.Options.Single().IsPresent.Should().BeTrue();
-    }
+    //    cli.Options.Count.Should().Be(1);
+    //    cli.Options.Single().IsPresent.Should().BeTrue();
+    //}
 
     private static CliBuilder CliBuilderFrom(string[] args) {
-        return CliBuilder.From(args);
+        return CliBuilder.With(args);
     }
 
-    private OptionBuilder AnOption() {
-        return new OptionBuilder();
+    private string AnOptionShortNameWith(int length) {
+        return faker.Random.String2(1, length, AvailableOptionsCharacters);
     }
 }

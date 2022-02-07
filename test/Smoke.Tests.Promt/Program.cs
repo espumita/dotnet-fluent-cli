@@ -2,8 +2,8 @@
 
 var environmentArgs = Environment.GetCommandLineArgs();
 
-var argsOptions = CliBuilder.From(environmentArgs)
-    .Option(config => config.ShortName = "verbose")
+var argsOptions = CliBuilder.With(environmentArgs)
+    .Option("verbose")
     .Build();
 
 if (argsOptions.Option("verbose").IsPresent) {
