@@ -115,35 +115,52 @@ public class CliBuilderTests {
         cli.Options.Single().IsPresent.Should().BeTrue();
     }
 
-    [TestCase("-", "r", "r")]
-    [TestCase("--", "r", "r")]
-    [TestCase("/", "r", "r")]
-    [TestCase("-", "r", "rrr")]
-    [TestCase("--", "r", "rrr")]
-    [TestCase("/", "r", "rrr")]
-    public void mark_simple_character_options_repeated__as_present(string validOptionPrefix, string optionShortName, string args) {
+    [TestCase("-", "r")]
+    [TestCase("--", "r")]
+    [TestCase("/", "r")]
+    [TestCase("-", "rrr")]
+    [TestCase("--","rrr")]
+    [TestCase("/","rrr")]
+    public void mark_simple_character_options_repeated__as_present(string validOptionPrefix, string args) {
         var environmentArgs = new[] { $"{validOptionPrefix}{args}" };
 
         var cli = CliBuilderFrom(environmentArgs)
-            .Option(shortName: optionShortName)
+            .Option(shortName: "r")
             .Build();
 
         cli.Options.Count.Should().Be(1);
         cli.Options.Single().IsPresent.Should().BeTrue();
     }
 
-    [TestCase("-", "r", "arr")]
-    [TestCase("--", "r", "rar")]
-    [TestCase("/", "r", "rra")]
-    public void do_not_read_simple_character_options_repeated_when_they_are_not_configured(string validOptionPrefix, string optionShortName, string args) {
+    [TestCase("-", "arr")]
+    [TestCase("--", "rar")]
+    [TestCase("/", "rra")]
+    public void do_not_read_simple_character_options_repeated_when_they_are_not_configured(string validOptionPrefix, string args) {
         var environmentArgs = new[] { $"{validOptionPrefix}{args}" };
 
         Action action = () => CliBuilderFrom(environmentArgs)
-            .Option(shortName: optionShortName)
+            .Option(shortName: "r")
             .Build();
 
         action.Should().Throw<ArgumentException>()
             .And.Message.Should().Be($"PROGRAM: invalid option -- 'a'\r\nTry 'PROGRAM --help' for more information.");
+    }
+
+
+    [TestCase("-", "arr")]
+    [TestCase("--", "rar")]
+    [TestCase("/", "rra")]
+    public void mark_multiple_simple_character_options_repeated__as_present(string validOptionPrefix, string args) {
+        var environmentArgs = new[] { $"{validOptionPrefix}{args}" };
+
+        var cli = CliBuilderFrom(environmentArgs)
+            .Option(shortName: "r")
+            .Option(shortName: "a")
+            .Build();
+
+        cli.Options.Count.Should().Be(2);
+        cli.Option("r").IsPresent.Should().BeTrue();
+        cli.Option("a").IsPresent.Should().BeTrue();
     }
 
     private static CliBuilder CliBuilderFrom(string[] args) {
