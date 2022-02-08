@@ -8,7 +8,9 @@ public class ClisArguments {
     }
 
     public Option Option(string shortName) {
-        return Options.First(option => option.ShortName.Equals(shortName));
+        var option = Options.FirstOrDefault(option => option.ShortName.Equals(shortName));
+        if (option == null) throw new OptionIsNotConfiguredException($"Option -- '{shortName}' has not been configured yet, add it to the builder first.");
+        return option;
     }
 
 

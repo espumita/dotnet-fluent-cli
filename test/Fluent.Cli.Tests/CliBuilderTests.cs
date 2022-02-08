@@ -8,7 +8,6 @@ namespace Fluent.Cli.Tests;
 
 public class CliBuilderTests {
     private Faker faker;
-    private const string AvailableOptionsCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     [SetUp]
     public void SetUp() {
@@ -59,6 +58,19 @@ public class CliBuilderTests {
 
         action.Should().Throw<ArgumentException>()
             .And.Message.Should().Be($"{optionShortName} is not a valid option, only alpha-numeric values can be configured");
+    }
+
+    [Test]
+    public void throw_option_is_not_configured_exception_when_try_to_get_option_not_configured() {
+        var anOptionShortName = AnOptionShortNameWith(length: AnOptionLength());
+        var environmentArgs = new string[] { };
+        var cli = CliBuilderFrom(environmentArgs)
+            .Build();
+
+        Action action = () => cli.Option(anOptionShortName);
+
+        action.Should().Throw<OptionIsNotConfiguredException>()
+            .And.Message.Should().Be($"Option -- '{anOptionShortName}' has not been configured yet, add it to the builder first.");
     }
 
     [Test]
