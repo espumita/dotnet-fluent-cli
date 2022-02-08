@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Bogus;
 using FluentAssertions;
 using NUnit.Framework;
@@ -7,12 +8,20 @@ namespace Fluent.Cli.Tests;
 
 public class CliBuilderTests {
     private Faker faker;
-
     private const string AvailableOptionsCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     [SetUp]
     public void SetUp() {
         faker = new Faker();
+    }
+
+    [Test]
+    public void throw_argument_exception_when_a_null_is_received() {
+        Action action = () => CliBuilderFrom(null)
+            .Build();
+
+        action.Should().Throw<ArgumentException>()
+            .And.Message.Should().Be("args cannot be null");
     }
 
     [Test]
@@ -25,20 +34,36 @@ public class CliBuilderTests {
         cli.Options.Should().BeEmpty();
     }
 
-    [Test]
-    public void do_not_read_options_when_they_are_not_configured() {
-        var anOptionShortName = AnOptionShortNameWith(length: 1);
-        var environmentArgs = new [] { anOptionShortName };
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase(" ")]
+    [TestCase("-")]
+    [TestCase("!")]
+    [TestCase("--")]
+    [TestCase("/")]
+    [TestCase("-")]
+    [TestCase("🐛")]
+    [TestCase("a ")]
+    [TestCase(" a")]
+    [TestCase("a_a")]
+    [TestCase("1_")]
+    [TestCase("_1")]
+    [TestCase("1_1")]
+    [TestCase("1 = 1")]
+    public void throw_argument_exception_when_option_is_not_correctly_configured(string optionShortName) {
+        var environmentArgs = new string[] { };
 
-        var cli = CliBuilderFrom(environmentArgs)
+        Action action = () => CliBuilderFrom(environmentArgs)
+            .Option(shortName: optionShortName)
             .Build();
 
-        cli.Options.Should().BeEmpty();
+        action.Should().Throw<ArgumentException>()
+            .And.Message.Should().Be($"{optionShortName} is not a valid option, only alpha-numeric values can be configured");
     }
 
     [Test]
     public void mark_option_with_short_name_as_not_present() {
-        var anOptionShortName = AnOptionShortNameWith(length: 1);
+        var anOptionShortName = AnOptionShortNameWith(length: AnOptionLength());
         var environmentArgs = new string[] { };
 
         var cli = CliBuilderFrom(environmentArgs)
@@ -49,10 +74,26 @@ public class CliBuilderTests {
         cli.Options.Single().IsPresent.Should().BeFalse();
     }
 
-    [Test]
-    public void mark_option_with_short_name_as_present() {
-        var anOptionShortName = AnOptionShortNameWith(length: 1);
-        var environmentArgs = new [] { anOptionShortName };
+    [TestCase("-")]
+    [TestCase("--")]
+    [TestCase("/")]
+    public void do_not_read_options_when_they_are_not_configured(string validOptionPrefix) {
+        var anOptionShortName = AnOptionShortNameWith(length: AnOptionLength());
+        var environmentArgs = new [] { $"{validOptionPrefix}{anOptionShortName}" };
+
+        Action action = () => CliBuilderFrom(environmentArgs)
+            .Build();
+
+        action.Should().Throw<ArgumentException>()
+            .And.Message.Should().Be($"PROGRAM: invalid option -- '{anOptionShortName}'\r\nTry 'PROGRAM --help' for more information.");
+    }
+
+    [TestCase("-")]
+    [TestCase("--")]
+    [TestCase("/")]
+    public void mark_option_with_short_name_as_present(string validOptionPrefix) {
+        var anOptionShortName = AnOptionShortNameWith(length: AnOptionLength());
+        var environmentArgs = new [] { $"{validOptionPrefix}{anOptionShortName}" };
 
         var cli = CliBuilderFrom(environmentArgs)
             .Option(shortName: anOptionShortName)
@@ -62,27 +103,15 @@ public class CliBuilderTests {
         cli.Options.Single().IsPresent.Should().BeTrue();
     }
 
-    //[TestCase("f", "f")]
-    //[TestCase("-f", "f")]
-    //[TestCase("force", "force")]
-    //[TestCase("-force", "force")]
-    //[TestCase("--force", "force")]
-    //public void mark_option_as_present_in_different_formats(string option, string shortName) {
-    //    var environmentArgs = new[] { option };
-
-    //    var cli = CliBuilderFrom(environmentArgs)
-    //        .Option(shortName)
-    //        .Build();
-
-    //    cli.Options.Count.Should().Be(1);
-    //    cli.Options.Single().IsPresent.Should().BeTrue();
-    //}
-
     private static CliBuilder CliBuilderFrom(string[] args) {
         return CliBuilder.With(args);
     }
 
+    private short AnOptionLength() {
+        return faker.Random.Short(0, 100);
+    }
+
     private string AnOptionShortNameWith(int length) {
-        return faker.Random.String2(1, length, AvailableOptionsCharacters);
+        return faker.Random.AlphaNumeric(length);
     }
 }

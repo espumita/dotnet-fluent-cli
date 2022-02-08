@@ -10,29 +10,15 @@ public class CliBuilder {
     }
 
     public static CliBuilder With(string[] args) {
+        if (args == null) throw new ArgumentException("args cannot be null");
         return new CliBuilder(args);
     }
 
-    //public CliBuilder Option(Action<OptionConfiguration> optionConfiguration) {
-    //    var configuration = new OptionConfiguration();
-    //    optionConfiguration(configuration);
-    //    optionConfigurations.Add(configuration);
-    //    return this;
-    //}
-
     public CliBuilder Option(string shortName) {
-        var optionConfiguration = new OptionConfiguration(shortName);
+        var optionConfiguration = OptionConfiguration.For(shortName);
         optionConfigurations[shortName] = optionConfiguration;
         return this;
     }
-
-    //public CliBuilder Option(params string[] names) {
-    //    var configuration = new OptionConfiguration {
-    //        Names = names
-    //    };
-    //    optionConfigurations.Add(configuration);
-    //    return this;
-    //}
 
     public ClisArguments Build() {
         return ClisArgumentsParser.ParseFrom(environmentArgs, optionConfigurations);
