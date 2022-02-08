@@ -35,21 +35,21 @@ public class ClisArgumentsParser {
 
         for (int index = 0; index < optionArgWithoutPrefix.Length; index++) {
             string possibleSimpleOptionChar = optionArgWithoutPrefix[index].ToString();
-            if (!optionsMap.ContainsKey(possibleSimpleOptionChar)) break;
+            if (!optionsMap.ContainsKey(possibleSimpleOptionChar)) throw InvalidOptionArgumentException(possibleSimpleOptionChar);
             optionsMap[possibleSimpleOptionChar] = new Option(possibleSimpleOptionChar, isPresent: true);
             if (index == optionArgWithoutPrefix.Length - 1) return;
         }
 
-        throw new ArgumentException($"PROGRAM: invalid option -- '{optionArgWithoutPrefix}'\r\nTry 'PROGRAM --help' for more information.");
+        throw InvalidOptionArgumentException(optionArgWithoutPrefix);
         
-    }
-
-    private static List<string> SimpleOptionsPresentIn(string optionArg, IDictionary<string, Option> optionsMap) {
-        throw new NotImplementedException();
     }
 
     private static string OptionWithoutPrefix(string optionArg) {
         var match = Regex.Match(optionArg, "^(-|/|--)([a-zA-Z0-9]+)$");
         return match.Groups[2].Value;
+    }
+
+    private static ArgumentException InvalidOptionArgumentException(string optionShortName) {
+        return new ArgumentException($"PROGRAM: invalid option -- '{optionShortName}'\r\nTry 'PROGRAM --help' for more information.");
     }
 }

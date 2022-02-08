@@ -97,7 +97,7 @@ public class CliBuilderTests {
             .Build();
 
         action.Should().Throw<ArgumentException>()
-            .And.Message.Should().Be($"PROGRAM: invalid option -- '{anOptionShortName}'\r\nTry 'PROGRAM --help' for more information.");
+            .And.Message.Should().Be($"PROGRAM: invalid option -- '{anOptionShortName[0]}'\r\nTry 'PROGRAM --help' for more information.");
     }
 
     [TestCase("-")]
@@ -121,7 +121,7 @@ public class CliBuilderTests {
     [TestCase("-", "r", "rrr")]
     [TestCase("--", "r", "rrr")]
     [TestCase("/", "r", "rrr")]
-    public void mark_sinple_character_options_repeated__as_present(string validOptionPrefix, string optionShortName, string args) {
+    public void mark_simple_character_options_repeated__as_present(string validOptionPrefix, string optionShortName, string args) {
         var environmentArgs = new[] { $"{validOptionPrefix}{args}" };
 
         var cli = CliBuilderFrom(environmentArgs)
@@ -130,6 +130,20 @@ public class CliBuilderTests {
 
         cli.Options.Count.Should().Be(1);
         cli.Options.Single().IsPresent.Should().BeTrue();
+    }
+
+    [TestCase("-", "r", "arr")]
+    [TestCase("--", "r", "rar")]
+    [TestCase("/", "r", "rra")]
+    public void do_not_read_simple_character_options_repeated_when_they_are_not_configured(string validOptionPrefix, string optionShortName, string args) {
+        var environmentArgs = new[] { $"{validOptionPrefix}{args}" };
+
+        Action action = () => CliBuilderFrom(environmentArgs)
+            .Option(shortName: optionShortName)
+            .Build();
+
+        action.Should().Throw<ArgumentException>()
+            .And.Message.Should().Be($"PROGRAM: invalid option -- 'a'\r\nTry 'PROGRAM --help' for more information.");
     }
 
     private static CliBuilder CliBuilderFrom(string[] args) {
