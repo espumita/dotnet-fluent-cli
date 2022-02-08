@@ -150,7 +150,7 @@ public class CliBuilderTests {
     [TestCase("-", "arr")]
     [TestCase("--", "rar")]
     [TestCase("/", "rra")]
-    public void mark_multiple_simple_character_options_repeated__as_present(string validOptionPrefix, string args) {
+    public void mark_multiple_simple_character_options_repeated_as_present(string validOptionPrefix, string args) {
         var environmentArgs = new[] { $"{validOptionPrefix}{args}" };
 
         var cli = CliBuilderFrom(environmentArgs)
