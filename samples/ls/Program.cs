@@ -3,13 +3,10 @@
 var environmentArgs = Environment.GetCommandLineArgs();
 
 var cli = CliBuilder.With(environmentArgs)
-    //.Option(config => config.Names = new[] { "a", "all"})
-    //.Option("A", "almost-all")
-    //.Option(config => config.ShortName = "author")
-    //.Option(config => {
-    //    config.ShortName = "b";
-    //    config.Names = new[] { "escape" };
-    //})
+    .Option("a")
+    .Option("A")
+    .Option("author")
+    .Option("b")
     .Build();
 
 if (cli.Option("a").IsPresent) Console.WriteLine("a option enabled");

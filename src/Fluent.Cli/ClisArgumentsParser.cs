@@ -28,8 +28,24 @@ public class ClisArgumentsParser {
 
     private static void TryToMarkOptionsAsPresent(string optionArg, IDictionary<string, Option> optionsMap) {
         var optionArgWithoutPrefix = OptionWithoutPrefix(optionArg);
-        if (!optionsMap.ContainsKey(optionArgWithoutPrefix)) throw new ArgumentException($"PROGRAM: invalid option -- '{optionArgWithoutPrefix}'\r\nTry 'PROGRAM --help' for more information.");
-        optionsMap[optionArgWithoutPrefix] = new Option(optionArgWithoutPrefix, isPresent: true);
+        if (optionsMap.ContainsKey(optionArgWithoutPrefix)) {
+            optionsMap[optionArgWithoutPrefix] = new Option(optionArgWithoutPrefix, isPresent: true);
+            return;
+        }
+
+        for (int index = 0; index < optionArgWithoutPrefix.Length; index++) {
+            string possibleSimpleOptionChar = optionArgWithoutPrefix[index].ToString();
+            if (!optionsMap.ContainsKey(possibleSimpleOptionChar)) break;
+            optionsMap[possibleSimpleOptionChar] = new Option(possibleSimpleOptionChar, isPresent: true);
+            if (index == optionArgWithoutPrefix.Length - 1) return;
+        }
+
+        throw new ArgumentException($"PROGRAM: invalid option -- '{optionArgWithoutPrefix}'\r\nTry 'PROGRAM --help' for more information.");
+        
+    }
+
+    private static List<string> SimpleOptionsPresentIn(string optionArg, IDictionary<string, Option> optionsMap) {
+        throw new NotImplementedException();
     }
 
     private static string OptionWithoutPrefix(string optionArg) {

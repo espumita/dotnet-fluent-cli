@@ -115,6 +115,23 @@ public class CliBuilderTests {
         cli.Options.Single().IsPresent.Should().BeTrue();
     }
 
+    [TestCase("-", "r", "r")]
+    [TestCase("--", "r", "r")]
+    [TestCase("/", "r", "r")]
+    [TestCase("-", "r", "rrr")]
+    [TestCase("--", "r", "rrr")]
+    [TestCase("/", "r", "rrr")]
+    public void mark_sinple_character_options_repeated__as_present(string validOptionPrefix, string optionShortName, string args) {
+        var environmentArgs = new[] { $"{validOptionPrefix}{args}" };
+
+        var cli = CliBuilderFrom(environmentArgs)
+            .Option(shortName: optionShortName)
+            .Build();
+
+        cli.Options.Count.Should().Be(1);
+        cli.Options.Single().IsPresent.Should().BeTrue();
+    }
+
     private static CliBuilder CliBuilderFrom(string[] args) {
         return CliBuilder.With(args);
     }
@@ -126,4 +143,5 @@ public class CliBuilderTests {
     private string AnOptionShortNameWith(int length) {
         return faker.Random.AlphaNumeric(length);
     }
+
 }
