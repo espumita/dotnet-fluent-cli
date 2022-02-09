@@ -1,27 +1,27 @@
 ﻿namespace Fluent.Cli; 
 
-public class CliBuilder {
+public class CliArgumentsBuilder {
     private readonly string[] environmentArgs;
     private IDictionary<string, OptionConfiguration> optionConfigurations;
 
-    private CliBuilder(string[] environmentArgs) {
-        this.environmentArgs = (string[]) environmentArgs.Clone();
+    private CliArgumentsBuilder(string[] environmentArgs) {
+        this.environmentArgs = environmentArgs;
         optionConfigurations = new Dictionary<string, OptionConfiguration>();
     }
 
-    public static CliBuilder With(string[] args) {
+    public static CliArgumentsBuilder With(string[] args) {
         if (args == null) throw new ArgumentException("args cannot be null");
-        return new CliBuilder(args);
+        return new CliArgumentsBuilder(args);
     }
 
-    public CliBuilder Option(string shortName) {
+    public CliArgumentsBuilder Option(string shortName) {
         var optionConfiguration = OptionConfiguration.For(shortName);
         optionConfigurations[shortName] = optionConfiguration;
         return this;
     }
 
-    public ClisArguments Build() {
-        return ClisArgumentsParser.ParseFrom(environmentArgs, optionConfigurations);
+    public CliArguments Build() {
+        return CliArgumentsParser.ParseFrom(environmentArgs, optionConfigurations);
     }
 
 

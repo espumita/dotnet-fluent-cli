@@ -2,7 +2,7 @@
 
 var environmentArgs = Environment.GetCommandLineArgs();
 
-var cli = CliBuilder.With(environmentArgs)
+var cli = CliArgumentsBuilder.With(environmentArgs)
     .Option("a")
     .Option("A")
     .Option("author")

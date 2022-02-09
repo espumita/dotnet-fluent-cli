@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace Fluent.Cli.Tests; 
 
-public class CliBuilderTests {
+public class CliArgumentsBuilderTests {
     private Faker faker;
 
     [SetUp]
@@ -163,8 +163,8 @@ public class CliBuilderTests {
         cli.Option("a").IsPresent.Should().BeTrue();
     }
 
-    private static CliBuilder CliBuilderFrom(string[] args) {
-        return CliBuilder.With(args);
+    private static CliArgumentsBuilder CliBuilderFrom(string[] args) {
+        return CliArgumentsBuilder.With(args);
     }
 
     private short AnOptionLength() {

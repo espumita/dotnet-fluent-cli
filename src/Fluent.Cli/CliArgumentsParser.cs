@@ -2,14 +2,14 @@
 
 namespace Fluent.Cli;
 
-public class ClisArgumentsParser {
+public class CliArgumentsParser {
 
-    public static ClisArguments ParseFrom(string[] environmentArgs, IDictionary<string, OptionConfiguration> optionConfigurations) {
+    public static CliArguments ParseFrom(string[] environmentArgs, IDictionary<string, OptionConfiguration> optionConfigurations) {
         var optionsMap = InitializeOptionResultFrom(optionConfigurations);
         foreach (var arg in environmentArgs) {
             if (IsAnOption(arg)) TryToMarkOptionsAsPresent(arg, optionsMap);
         }
-        return new ClisArguments(
+        return new CliArguments(
             options: optionsMap.Values.ToList()
         );
     }

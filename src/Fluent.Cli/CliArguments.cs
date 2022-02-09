@@ -1,9 +1,9 @@
 ﻿namespace Fluent.Cli;
 
-public class ClisArguments {
+public class CliArguments {
     public List<Option> Options { get; }
 
-    public ClisArguments(List<Option> options) {
+    public CliArguments(List<Option> options) {
         Options = options;
     }
 

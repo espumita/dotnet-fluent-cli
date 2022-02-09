@@ -2,7 +2,7 @@
 
 var environmentArgs = Environment.GetCommandLineArgs();
 
-var argsOptions = CliBuilder.With(environmentArgs)
+var argsOptions = CliArgumentsBuilder.With(environmentArgs)
     .Option("verbose")
     .Build();
 
