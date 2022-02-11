@@ -20,9 +20,15 @@ public class CliArgumentsBuilder {
         return this;
     }
 
-    public CliArgumentsBuilder Option(string shortName, string name) {
-        var optionConfiguration = OptionConfiguration.For(shortName, name);
+    public CliArgumentsBuilder Option(string shortName, string longName) {
+        var optionConfiguration = OptionConfiguration.For(shortName, longName);
         optionConfigurations[shortName] = optionConfiguration;
+        return this;
+    }
+
+    public CliArgumentsBuilder LongOption(string longName) {
+        var optionConfiguration = OptionConfiguration.For(longName);
+        optionConfigurations[longName] = optionConfiguration;
         return this;
     }
 

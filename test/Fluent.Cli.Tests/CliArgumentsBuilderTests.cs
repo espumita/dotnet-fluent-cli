@@ -92,7 +92,7 @@ public class CliArgumentsBuilderTests {
         var environmentArgs = new string[] { };
 
         Action action = () => CliBuilderFrom(environmentArgs)
-            .Option(shortName: "r", name: optionName)
+            .Option(shortName: "r", longName: optionName)
             .Build();
 
         action.Should().Throw<ArgumentException>()
@@ -132,7 +132,7 @@ public class CliArgumentsBuilderTests {
         var environmentArgs = new string[] { };
 
         var cli = CliBuilderFrom(environmentArgs)
-            .Option(shortName: anOptionShortName, name: anOptionName)
+            .Option(shortName: anOptionShortName, longName: anOptionName)
             .Build();
 
         cli.Options.Count.Should().Be(1);
@@ -247,7 +247,7 @@ public class CliArgumentsBuilderTests {
         var environmentArgs = new[] { $"{validOptionPrefix}{anOptionName}" };
 
         var cli = CliBuilderFrom(environmentArgs)
-            .Option(shortName: anOptionShortName, name: anOptionName)
+            .Option(shortName: anOptionShortName, longName: anOptionName)
             .Build();
 
         cli.Options.Count.Should().Be(1);

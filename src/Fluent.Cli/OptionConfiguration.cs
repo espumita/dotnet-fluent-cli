@@ -4,23 +4,23 @@ using System.Text.RegularExpressions;
 namespace Fluent.Cli;
 
 public class OptionConfiguration {
-    public string ShortName { get; }
-    public string Name { get; }
+    public string PrimaryName { get; }
+    public string SecondaryName { get; }
 
-    private OptionConfiguration(string shortName, [Optional] string name) {
-        ShortName = shortName;
-        Name = name;
+    private OptionConfiguration(string primaryName, [Optional] string secondaryName) {
+        PrimaryName = primaryName;
+        SecondaryName = secondaryName;
     }
 
-    public static OptionConfiguration For(string shortName) {
-        Validate(shortName);
-        return new OptionConfiguration(shortName);
+    public static OptionConfiguration For(string primaryName) {
+        Validate(primaryName);
+        return new OptionConfiguration(primaryName);
     }
 
-    public static OptionConfiguration For(string shortName, string name) {
-        Validate(shortName);
-        Validate(name);
-        return new OptionConfiguration(shortName, name);
+    public static OptionConfiguration For(string primaryName, string secondaryName) {
+        Validate(primaryName);
+        Validate(secondaryName);
+        return new OptionConfiguration(primaryName, secondaryName);
     }
 
     private static void Validate(string shortName) {

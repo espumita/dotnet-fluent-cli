@@ -20,7 +20,7 @@ public class CliArgumentsParser {
         return optionConfigurations
             .ToDictionary(
                 keyValuePair => keyValuePair.Key,
-                keyValuePair => new Option(keyValuePair.Value.ShortName, keyValuePair.Value.Name, isPresent: false));
+                keyValuePair => new Option(keyValuePair.Value.PrimaryName, keyValuePair.Value.SecondaryName, isPresent: false));
     }
 
     private static Dictionary<string, Option> OptionsConfiguredWithName(IDictionary<string, Option> optionsMap) {
