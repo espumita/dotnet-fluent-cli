@@ -63,7 +63,7 @@ public class CliArgumentsBuilderTests {
             .Build();
 
         action.Should().Throw<ArgumentException>()
-            .And.Message.Should().Be($"{optionShortName} is not a valid option, only alpha-numeric values can be configured");
+            .And.Message.Should().Be($"{optionShortName} is not a valid option, only alpha-numeric values and words separated by hyphen minus can be configured");
     }
 
     [TestCase(null)]
@@ -96,7 +96,7 @@ public class CliArgumentsBuilderTests {
             .Build();
 
         action.Should().Throw<ArgumentException>()
-            .And.Message.Should().Be($"{optionName} is not a valid option, only alpha-numeric values can be configured");
+            .And.Message.Should().Be($"{optionName} is not a valid option, only alpha-numeric values and words separated by hyphen minus can be configured");
     }
 
     [Test]

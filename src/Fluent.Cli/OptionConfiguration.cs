@@ -25,6 +25,6 @@ public class OptionConfiguration {
 
     private static void Validate(string shortName) {
         if (string.IsNullOrEmpty(shortName) || !Regex.IsMatch(shortName, "^[a-zA-Z0-9]+$|^[^/-][a-zA-Z0-9/-]+[^/-]$"))
-            throw new ArgumentException($"{shortName} is not a valid option, only alpha-numeric values can be configured");
+            throw new ArgumentException($"{shortName} is not a valid option, only alpha-numeric values and words separated by hyphen minus can be configured");
     }
 }
