@@ -20,6 +20,12 @@ public class CliArgumentsBuilder {
         return this;
     }
 
+    public CliArgumentsBuilder Option(string shortName, string name) {
+        var optionConfiguration = OptionConfiguration.For(shortName, name);
+        optionConfigurations[shortName] = optionConfiguration;
+        return this;
+    }
+
     public CliArguments Build() {
         return CliArgumentsParser.ParseFrom(environmentArgs, optionConfigurations);
     }

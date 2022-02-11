@@ -8,9 +8,11 @@ public class CliArguments {
     }
 
     public Option Option(string shortName) {
-        var option = Options.FirstOrDefault(option => option.ShortName.Equals(shortName));
-        if (option == null) throw new OptionIsNotConfiguredException($"Option -- '{shortName}' has not been configured yet, add it to the builder first.");
-        return option;
+        var optionByShortName = Options.FirstOrDefault(option => option.ShortName.Equals(shortName));
+        if (optionByShortName != null) return optionByShortName;
+        var optionByName = Options.FirstOrDefault(optionByName => optionByName.Name.Equals(shortName));
+        if (optionByName != null) return optionByName;
+        throw new OptionIsNotConfiguredException($"Option -- '{shortName}' has not been configured yet, add it to the builder first.");
     }
 
 

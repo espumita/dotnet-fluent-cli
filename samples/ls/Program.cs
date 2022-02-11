@@ -3,8 +3,8 @@
 var environmentArgs = Environment.GetCommandLineArgs();
 
 var cli = CliArgumentsBuilder.With(environmentArgs)
-    .Option("a")
-    .Option("A")
+    .Option("a", "all")
+    .Option("A", "almost-all")
     .Option("author")
     .Option("b")
     .Build();
