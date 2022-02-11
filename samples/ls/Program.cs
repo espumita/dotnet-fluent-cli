@@ -6,98 +6,126 @@ var cli = CliArgumentsBuilder.With(environmentArgs)
     .Option("a", "all")
     .Option("A", "almost-all")
     .Option("author")
-    .Option("b")
+    .Option("b", "escape")
+    .Option("block-size") //TODO
+    .Option("B", "ignore-backups")
+    .Option("c")
+    .Option("C")
+    .Option("color") //TODO
+    .Option("d", "directory")
+    .Option("D", "dired")
+    .Option("f")
+    .Option("F", "classify")
+    .Option("file-type")
+    .Option("format") //TODO
+    .Option("full-time")
+    .Option("g")
+    .Option("group-directories-first")
+    .Option("G", "no-group")
+    .Option("h", "human-readable")
+    .Option("si")
+    .Option("H", "dereference-command-line")
+    .Option("dereference-command-line-symlink-to-dir")
+    .Option("hide") //TODO
+    .Option("hyperlink") //TODO
+    .Option("indicator-style") //TODO
+    .Option("i", "inode")
+    .Option("I", "ignore") //TODO
+    .Option("k", "kibibytes")
+    .Option("l")
+    .Option("L", "dereference")
+    .Option("m")
+    .Option("n", "numeric-uid-gid")
+    .Option("N", "literal")
+    .Option("o")
+    .Option("p", "indicator-style") //TODO
+    .Option("q", "hide-control-chars")
+    .Option("show-control-chars")
+    .Option("Q", "quote-name")
+    .Option("quoting-style") //TODO
+    .Option("r", "reverse")
+    .Option("R", "recursive")
+    .Option("s")
+    .Option("sort") //TODO
+    .Option("time")
+    .Option("time-style") //TODO
+    .Option("t")
+    .Option("T", "tabsize") //TODO
+    .Option("u")
+    .Option("U")
+    .Option("v")
+    .Option("w", "width") //TODO
+    .Option("x")
+    .Option("X")
+    .Option("Z", "context")
+    .Option("1")
+    .Option("help")
+    .Option("version")
     .Build();
 
-if (cli.Option("a").IsPresent) Console.WriteLine("a option enabled");
-if (cli.Option("A").IsPresent) Console.WriteLine("A option enabled");
-if (cli.Option("author").IsPresent) Console.WriteLine("author option enabled");
-if (cli.Option("b").IsPresent) Console.WriteLine("b option enabled");
-
-//      --block-size= SIZE      with -l, scale sizes by SIZE when printing them;
-//e.g., '--block-size=M'; see SIZE format below
-//  -B, --ignore-backups       do not list implied entries ending with ~
-//  -c                         with -lt: sort by, and show, ctime (time of last
-//                               modification of file status information);
-//with - l: show ctime and sort by name;
-//otherwise: sort by ctime, newest first
-//  -C                         list entries by columns
-//      --color[=WHEN]         colorize the output; WHEN can be 'always' (default
-//                               if omitted), 'auto', or 'never'; more info below
-//  -d, --directory            list directories themselves, not their contents
-//  -D, --dired                generate output designed for Emacs' dired mode
-//  -f                         do not sort, enable -aU, disable -ls --color
-//  -F, --classify             append indicator (one of */=>@|) to entries
-//      --file-type            likewise, except do not append '*'
-//      --format=WORD          across -x, commas -m, horizontal -x, long -l,
-//                               single-column -1, verbose -l, vertical -C
-//      --full-time            like -l --time-style=full-iso
-//  -g                         like -l, but do not list owner
-//      --group-directories-first
-//                             group directories before files;
-//can be augmented with a --sort option, but any
-//                               use of --sort=none (-U) disables grouping
-//  -G, --no-group             in a long listing, don't print group names
-//  -h, --human-readable       with -l and -s, print sizes like 1K 234M 2G etc.
-//      --si                   likewise, but use powers of 1000 not 1024
-//  -H, --dereference-command-line
-//                             follow symbolic links listed on the command line
-//      --dereference-command-line-symlink-to-dir
-//                             follow each command line symbolic link
-//                               that points to a directory
-//      --hide=PATTERN         do not list implied entries matching shell PATTERN
-//                               (overridden by -a or -A)
-//      --hyperlink[= WHEN]     hyperlink file names; WHEN can be 'always'
-//                               (default if omitted), 'auto', or 'never'
-//      --indicator - style = WORD  append indicator with style WORD to entry names:
-//                               none(default), slash(-p),
-//                               file - type(--file - type), classify(-F)
-//     - i, --inode                print the index number of each file
-//  -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN
-//  -k, --kibibytes            default to 1024-byte blocks for disk usage;
-//used only with -s and per directory totals
-//  -l                         use a long listing format
-//  -L, --dereference          when showing file information for a symbolic
-//                               link, show information for the file the link
-//                               references rather than for the link itself
-//  -m                         fill width with a comma separated list of entries
-//  -n, --numeric-uid-gid      like -l, but list numeric user and group IDs
-//  -N, --literal              print entry names without quoting
-//  -o                         like -l, but do not list group information
-//  -p, --indicator-style=slash
-//                             append / indicator to directories
-//  -q, --hide-control-chars   print ? instead of nongraphic characters
-//      --show-control-chars   show nongraphic characters as-is (the default,
-//unless program is 'ls' and output is a terminal)
-//  -Q, --quote - name           enclose entry names in double quotes
-//      --quoting-style=WORD   use quoting style WORD for entry names:
-//                               literal, locale, shell, shell - always,
-//                               shell - escape, shell - escape - always, c, escape
-//                                     (overrides QUOTING_STYLE environment variable)
-//        - r, --reverse              reverse order while sorting
-//  -R, --recursive            list subdirectories recursively
-//  -s, --size                 print the allocated size of each file, in blocks
-//  -S                         sort by file size, largest first
-//      --sort=WORD            sort by WORD instead of name: none(-U), size(-S),
-//                               time(-t), version(-v), extension(-X)
-//    --time = WORD            with - l, show time as WORD instead of default
-//                               modification time: atime or access or use (-u);
-//ctime or status (-c); also use specified time
-//                               as sort key if --sort=time (newest first)
-//      --time - style = TIME_STYLE  time / date format with -l; see TIME_STYLE below
-//  -t                         sort by modification time, newest first
-//  -T, --tabsize=COLS         assume tab stops at each COLS instead of 8
-//  -u                         with -lt: sort by, and show, access time;
-//with - l: show access time and sort by name;
-//otherwise: sort by access time, newest first
-//  -U                         do not sort; list entries in directory order
-//  -v                         natural sort of (version) numbers within text
-//  -w, --width=COLS           set output width to COLS.  0 means no limit
-//  -x                         list entries by lines instead of by columns
-//  -X                         sort alphabetically by entry extension
-//  -Z, --context              print any security context of each file
-//  -1                         list one file per line.  Avoid '\n' with -q or -b
-//      --help     display this help and exit
-//      --version  output version information and exit
+ConfigureOption("a", "all");
+ConfigureOption("A", "almost-all");
+ConfigureOption("author");
+ConfigureOption("b", "escape");
+ConfigureOption("block-size");
+ConfigureOption("B", "ignore-backups");
+ConfigureOption("c");
+ConfigureOption("C");
+ConfigureOption("color");
+ConfigureOption("d", "directory");
+ConfigureOption("D", "dired");
+ConfigureOption("f");
+ConfigureOption("F", "classify");
+ConfigureOption("file-type");
+ConfigureOption("format");
+ConfigureOption("full-time");
+ConfigureOption("g");
+ConfigureOption("group-directories-first");
+ConfigureOption("G", "no-group");
+ConfigureOption("h", "human-readable");
+ConfigureOption("si");
+ConfigureOption("H", "dereference-command-line");
+ConfigureOption("dereference-command-line-symlink-to-dir");
+ConfigureOption("hide");
+ConfigureOption("hyperlink");
+ConfigureOption("indicator-style");
+ConfigureOption("i", "inode");
+ConfigureOption("I", "ignore");
+ConfigureOption("k", "kibibytes");
+ConfigureOption("l");
+ConfigureOption("L", "dereference");
+ConfigureOption("m");
+ConfigureOption("n", "numeric-uid-gid");
+ConfigureOption("N", "literal");
+ConfigureOption("o");
+ConfigureOption("p", "indicator-style");
+ConfigureOption("q", "hide-control-chars");
+ConfigureOption("show-control-chars");
+ConfigureOption("Q", "quote-name");
+ConfigureOption("quoting-style");
+ConfigureOption("r", "reverse");
+ConfigureOption("R", "recursive");
+ConfigureOption("s");
+ConfigureOption("sort");
+ConfigureOption("time");
+ConfigureOption("time-style");
+ConfigureOption("t");
+ConfigureOption("T", "tabsize");
+ConfigureOption("u");
+ConfigureOption("U");
+ConfigureOption("v");
+ConfigureOption("w", "width");
+ConfigureOption("x");
+ConfigureOption("X");
+ConfigureOption("Z", "context");
+ConfigureOption("1");
+ConfigureOption("help");
+ConfigureOption("version");
 
 Environment.Exit(0);
+
+void ConfigureOption(params string[] optionShortNames) {
+    foreach (var optionShortName in optionShortNames)
+        if (cli.Option(optionShortName).IsPresent)
+            Console.WriteLine($"{optionShortName} option enabled");
+}
