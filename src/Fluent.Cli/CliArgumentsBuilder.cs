@@ -14,20 +14,22 @@ public class CliArgumentsBuilder {
         return new CliArgumentsBuilder(args);
     }
 
-    public CliArgumentsBuilder Option(string shortName) {
+    public CliArgumentsBuilder Option(char shortName) {
         var optionConfiguration = OptionConfiguration.For(shortName);
-        optionConfigurations[shortName] = optionConfiguration;
+        optionConfigurations[shortName.ToString()] = optionConfiguration;
         return this;
     }
 
-    public CliArgumentsBuilder Option(string shortName, string longName) {
+    public CliArgumentsBuilder Option(char shortName, string longName) {
+        if (string.IsNullOrEmpty(longName)) throw new ArgumentException("Option long name cannot be null, use other method instead");
         var optionConfiguration = OptionConfiguration.For(shortName, longName);
-        optionConfigurations[shortName] = optionConfiguration;
+        optionConfigurations[shortName.ToString()] = optionConfiguration;
         return this;
     }
 
     public CliArgumentsBuilder LongOption(string longName) {
-        var optionConfiguration = OptionConfiguration.For(longName);
+        if (string.IsNullOrEmpty(longName)) throw new ArgumentException("Option long name cannot be null, use other method instead");
+        var optionConfiguration = OptionConfiguration.ForLong(longName);
         optionConfigurations[longName] = optionConfiguration;
         return this;
     }

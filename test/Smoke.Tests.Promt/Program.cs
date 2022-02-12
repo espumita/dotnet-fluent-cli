@@ -3,7 +3,7 @@
 var environmentArgs = Environment.GetCommandLineArgs();
 
 var argsOptions = CliArgumentsBuilder.With(environmentArgs)
-    .Option("verbose")
+    .LongOption("verbose")
     .Build();
 
 if (argsOptions.Option("verbose").IsPresent) {
