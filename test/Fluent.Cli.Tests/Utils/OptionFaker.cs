@@ -61,4 +61,12 @@ public class OptionFaker {
         return LongOptionsPrefixes[f];
     }
 
+    public string Argument() {
+        var f = faker.Random.Byte(0, 1);
+        return f switch {
+            0 => faker.Random.String(1, 100, '\0', '\u001f'),
+            _ => faker.Random.String(1, 100, '\u0021', '\uffff'),
+        };
+    }
+
 }

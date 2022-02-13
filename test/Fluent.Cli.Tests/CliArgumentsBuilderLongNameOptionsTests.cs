@@ -38,7 +38,7 @@ public class CliArgumentsBuilderLongNameOptionsTests {
             .Build();
 
         action.Should().Throw<ArgumentException>()
-            .And.Message.Should().Be($"Option long name cannot be null, use other method instead");
+            .And.Message.Should().Be($"Option long name cannot be null or empty, use other method instead");
     }
 
     [TestCase("-a-a")]

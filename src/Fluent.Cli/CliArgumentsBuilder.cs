@@ -28,15 +28,19 @@ public class CliArgumentsBuilder {
     }
 
     public CliArgumentsBuilder LongOption(string longName) {
-        if (string.IsNullOrEmpty(longName)) throw new ArgumentException("Option long name cannot be null, use other method instead");
+        if (string.IsNullOrEmpty(longName)) throw new ArgumentException("Option long name cannot be null or empty, use other method instead");
         var optionConfiguration = OptionConfiguration.ForLong(longName);
         optionConfigurations[longName] = optionConfiguration;
         return this;
     }
 
-    public CliArguments Build() {
-        return CliArgumentsParser.ParseFrom(environmentArgs, optionConfigurations);
+    public CliArgumentsBuilder WithArgument(string argumentName) {
+        if (string.IsNullOrEmpty(argumentName)) throw new ArgumentException("argument name cannot be null or empty");
+        return this;
     }
 
 
+    public CliArguments Build() {
+        return CliArgumentsParser.ParseFrom(environmentArgs, optionConfigurations);
+    }
 }
