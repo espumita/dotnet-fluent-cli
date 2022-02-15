@@ -9,6 +9,7 @@ public class CliArgumentsParser {
         var optionsConfiguredWithName = OptionsConfiguredWithName(optionsMap);
 
         foreach (var arg in environmentArgs) {
+            if (IsAnOptionWithArgument(arg)) TryToMarkOptionArgumentAsPresent(arg, optionsMap);
             if (IsALongOption(arg)) TryToMarkLongOptionAsPresent(arg, optionsMap, optionsConfiguredWithName);
             else if (IsAnOption(arg)) TryToMarkOptionsAsPresent(arg, optionsMap);
         }
@@ -21,7 +22,7 @@ public class CliArgumentsParser {
         return optionConfigurations
             .ToDictionary(
                 keyValuePair => keyValuePair.Key,
-                keyValuePair => new Option(keyValuePair.Value.PrimaryName, keyValuePair.Value.SecondaryName, isPresent: false));
+                keyValuePair => new Option(keyValuePair.Value.PrimaryName, keyValuePair.Value.SecondaryName, isPresent: false, keyValuePair.Value?.Argument?.ArgumentName));
     }
 
     private static Dictionary<string, Option> OptionsConfiguredWithName(IDictionary<string, Option> optionsMap) {
@@ -29,6 +30,27 @@ public class CliArgumentsParser {
             .ToDictionary(
                 keyValuePair => keyValuePair.Value.Name,
                 keyValuePair => keyValuePair.Value);
+    }
+
+    private static bool IsAnOptionWithArgument(string possibleOptionWithArgument) {
+        if (string.IsNullOrEmpty(possibleOptionWithArgument) || possibleOptionWithArgument.Length < 4) return false;
+        return Regex.IsMatch(possibleOptionWithArgument, "^(-)([a-zA-Z0-9])(=)(.*)$");
+    }
+
+    private static void TryToMarkOptionArgumentAsPresent(string optionArg, IDictionary<string, Option> optionsMap) {
+        var optionWithArgumentWithoutPrefix = OptionWitArgument(optionArg);
+        if (!optionsMap.ContainsKey(optionWithArgumentWithoutPrefix.option)) return;
+        var option = optionsMap[optionWithArgumentWithoutPrefix.option];
+        optionsMap[optionWithArgumentWithoutPrefix.option] = OptionPresentWithArgument(option, optionWithArgumentWithoutPrefix.argumentValue);
+    }
+
+    private static Option OptionPresentWithArgument(Option option, string argumentValue) {
+        return new Option(option.ShortName, option.Name, isPresent: true, option._Argument.Name, argumentValue);
+    }
+
+    private static (string option, string argumentValue) OptionWitArgument(string optionArg) {
+        var match = Regex.Match(optionArg, "^(-)([a-zA-Z0-9])(=)(.*)$");
+        return (match.Groups[2].Value, match.Groups[4].Value);
     }
 
     private static bool IsALongOption(string possibleLongOption) {

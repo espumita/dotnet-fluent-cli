@@ -1,11 +1,12 @@
-﻿using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Fluent.Cli;
 
 public class OptionConfiguration {
     public char? PrimaryName { get; }
-    public string? SecondaryName { get; }
+    public string SecondaryName { get; }
+
+    public ArgumentConfiguration Argument { get; private set; }
 
     private OptionConfiguration(char? primaryName, string secondaryName) {
         PrimaryName = primaryName;
@@ -26,6 +27,10 @@ public class OptionConfiguration {
     public static OptionConfiguration ForLong(string secondaryName) {
         Validate(secondaryName);
         return new OptionConfiguration(primaryName: null, secondaryName: secondaryName);
+    }
+
+    public void AddArgument(string argumentName) {
+        Argument = new ArgumentConfiguration(argumentName);
     }
 
     private static void Validate(char primaryName) {

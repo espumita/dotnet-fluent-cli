@@ -2,7 +2,8 @@
 
 public class CliArgumentsBuilder {
     private readonly string[] environmentArgs;
-    private IDictionary<string, OptionConfiguration> optionConfigurations;
+    private readonly IDictionary<string, OptionConfiguration> optionConfigurations;
+    private string buildingOptionConfiguration;
 
     private CliArgumentsBuilder(string[] environmentArgs) {
         this.environmentArgs = environmentArgs;
@@ -17,6 +18,7 @@ public class CliArgumentsBuilder {
     public CliArgumentsBuilder Option(char shortName) {
         var optionConfiguration = OptionConfiguration.For(shortName);
         optionConfigurations[shortName.ToString()] = optionConfiguration;
+        buildingOptionConfiguration = shortName.ToString();
         return this;
     }
 
@@ -36,6 +38,9 @@ public class CliArgumentsBuilder {
 
     public CliArgumentsBuilder WithArgument(string argumentName) {
         if (string.IsNullOrEmpty(argumentName)) throw new ArgumentException("argument name cannot be null or empty");
+        if (string.IsNullOrEmpty(buildingOptionConfiguration)) throw new ArgumentException($"Argument '{argumentName}' could not be configured, you need to configure an Option first.");
+        var option = optionConfigurations[buildingOptionConfiguration];
+        option.AddArgument(argumentName);
         return this;
     }
 
