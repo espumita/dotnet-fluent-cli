@@ -4,9 +4,10 @@ using Fluent.Cli.Tests.Utils;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Fluent.Cli.Tests; 
+namespace Fluent.Cli.Tests;
 
-public class CliArgumentsBuilderShortOptionArgumentsTests {
+public class CliArgumentsBuilderLongOptionArgumentsTests
+{
 
     private Faker faker;
     private OptionFaker anOption;
@@ -19,11 +20,11 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
 
     [Test]
     public void throw_argument_exception_when_a_null_is_received() {
-        var anOptionShortName = anOption.ShortName();
-        var environmentArguments = new string[]{};
+        var anOptionLongName = anOption.LongName();
+        var environmentArguments = new string[] { };
         Action action = () => {
             CliBuilderFrom(environmentArguments)
-                .Option(anOptionShortName)
+                .LongOption(anOptionLongName)
                     .WithArgument(null)
                 .Build();
         };
@@ -34,19 +35,19 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
 
     [Test]
     public void throw_exception_when_argument_is_not_configured_yet() {
-        var anOptionShortName = anOption.ShortName();
+        var anOptionLongName = anOption.LongName();
         var environmentArguments = new string[] { };
         var cliArguments = CliBuilderFrom(environmentArguments)
-            .Option(anOptionShortName)
+            .LongOption(anOptionLongName)
             .Build();
-        var option = cliArguments.Option(anOptionShortName);
+        var option = cliArguments.Option(anOptionLongName);
 
         Action action = () => {
             option.Argument();
         };
 
         action.Should().Throw<ArgumentIsNotConfiguredException>()
-            .And.Message.Should().Be($"Argument for option '{anOptionShortName}' has not been configured yet, add it to the builder first.");
+            .And.Message.Should().Be($"Argument for option '{anOptionLongName}' has not been configured yet, add it to the builder first.");
     }
 
     [Test]
@@ -65,17 +66,17 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
     }
 
     [Test]
-    public void get_a_short_option_argument_value_when_argument_is_after_equals_sign() {
-        var anOptionShortName = anOption.ShortName();
-        var anOptionShortNamePrefix = anOption.ShortNamePrefix();
+    public void get_a_long_option_argument_value_when_argument_is_after_equals_sign() {
+        var anOptionLongName = anOption.LongName();
+        var anOptionLongNamePrefix = anOption.LongNamePrefix();
         var argumentName = anOption.ArgumentName();
         var argumentValue = anOption.ArgumentValue();
-        var environmentArguments = new [] { $"{anOptionShortNamePrefix}{anOptionShortName}={argumentValue}"};
+        var environmentArguments = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}={argumentValue}" };
         var cliArguments = CliBuilderFrom(environmentArguments)
-            .Option(anOptionShortName)
+            .LongOption(anOptionLongName)
                 .WithArgument(argumentName)
             .Build();
-        var option = cliArguments.Option(anOptionShortName);
+        var option = cliArguments.Option(anOptionLongName);
 
         var argument = option.Argument();
 
@@ -84,16 +85,16 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
     }
 
     [Test]
-    public void do_not_get_a_short_option_argument_value_when_argument_is_not_after_equals_sign() {
-        var anOptionShortName = anOption.ShortName();
-        var anOptionShortNamePrefix = anOption.ShortNamePrefix();
+    public void do_not_get_a_long_option_argument_value_when_argument_is_not_after_equals_sign() {
+        var anOptionLongName = anOption.LongName();
+        var anOptionLongNamePrefix = anOption.LongNamePrefix();
         var argumentName = anOption.ArgumentName();
-        var environmentArguments = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}=" };
+        var environmentArguments = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}=" };
         var cliArguments = CliBuilderFrom(environmentArguments)
-            .Option(anOptionShortName)
+            .LongOption(anOptionLongName)
             .WithArgument(argumentName)
             .Build();
-        var option = cliArguments.Option(anOptionShortName);
+        var option = cliArguments.Option(anOptionLongName);
 
         var argument = option.Argument();
 
@@ -103,17 +104,17 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
     }
 
     [Test]
-    public void do_not_get_a_short_option_argument_value_when_equals_sign_is_not_present() {
-        var anOptionShortName = anOption.ShortName();
-        var anOptionShortNamePrefix = anOption.ShortNamePrefix();
+    public void do_not_get_a_long_option_argument_value_when_equals_sign_is_not_present() {
+        var anOptionLongName = anOption.LongName();
+        var anOptionLongNamePrefix = anOption.LongNamePrefix();
         var argumentName = anOption.ArgumentName();
         var argumentValue = anOption.ArgumentValue();
-        var environmentArguments = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}{argumentValue}" };
+        var environmentArguments = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}{argumentValue}" };
         var cliArguments = CliBuilderFrom(environmentArguments)
-            .Option(anOptionShortName)
+            .LongOption(anOptionLongName)
             .WithArgument(argumentName)
             .Build();
-        var option = cliArguments.Option(anOptionShortName);
+        var option = cliArguments.Option(anOptionLongName);
 
         var argument = option.Argument();
 
@@ -124,17 +125,17 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
 
     [Test]
     public void a() { //TODO throw exeption before long is implemented
-        var anOptionShortName = anOption.ShortName();
-        var anotherOptionShortName = anOption.ShortName();
-        var anOptionShortNamePrefix = anOption.ShortNamePrefix();
+        var anOptionLongName = anOption.LongName();
+        var anotherOptionLongName = anOption.LongName();
+        var anOptionLongNamePrefix = anOption.LongNamePrefix();
         var argumentName = anOption.ArgumentName();
         var argumentValue = anOption.ArgumentValue();
-        var environmentArguments = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}{anotherOptionShortName}={argumentValue}" };
+        var environmentArguments = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}{anotherOptionLongName}={argumentValue}" };
         var cliArguments = CliBuilderFrom(environmentArguments)
-            .Option(anOptionShortName)
+            .LongOption(anOptionLongName)
             .WithArgument(argumentName)
             .Build();
-        var option = cliArguments.Option(anOptionShortName);
+        var option = cliArguments.Option(anOptionLongName);
 
         var argument = option.Argument();
 
@@ -143,7 +144,8 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         argument.Value.Should().BeNull();
     }
 
-    private static CliArgumentsBuilder CliBuilderFrom(string[] args) {
+    private static CliArgumentsBuilder CliBuilderFrom(string[] args)
+    {
         return CliArgumentsBuilder.With(args);
     }
 

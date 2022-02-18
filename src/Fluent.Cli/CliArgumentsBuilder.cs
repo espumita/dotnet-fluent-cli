@@ -37,7 +37,7 @@ public class CliArgumentsBuilder {
     }
 
     public CliArgumentsBuilder WithArgument(string argumentName) {
-        if (string.IsNullOrEmpty(argumentName)) throw new ArgumentException("argument name cannot be null or empty");
+        if (string.IsNullOrEmpty(argumentName)) throw new ArgumentException("Argument name cannot be null or empty");
         if (string.IsNullOrEmpty(buildingOptionConfiguration)) throw new ArgumentException($"Argument '{argumentName}' could not be configured, you need to configure an Option first.");
         var option = optionConfigurations[buildingOptionConfiguration];
         option.AddArgument(argumentName);
