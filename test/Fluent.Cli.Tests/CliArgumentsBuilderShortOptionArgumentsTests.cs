@@ -65,7 +65,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
             .And.Message.Should().Be($"Argument '{argumentName}' could not be configured, you need to configure an Option first.");
     }
 
-    [Test]//crlf remove
+    [Test]
     public void get_a_short_option_argument_value_when_argument_is_after_equals_sign() {
         var anOptionShortName = anOption.ShortName();
         var anOptionShortNamePrefix = anOption.ShortNamePrefix();
