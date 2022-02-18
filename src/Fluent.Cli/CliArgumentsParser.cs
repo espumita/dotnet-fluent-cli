@@ -33,8 +33,8 @@ public class CliArgumentsParser {
     }
 
     private static bool IsAnOptionWithArgument(string possibleOptionWithArgument) {
-        if (string.IsNullOrEmpty(possibleOptionWithArgument) || possibleOptionWithArgument.Length < 4) return false;
-        return Regex.IsMatch(possibleOptionWithArgument, "^(-)([a-zA-Z0-9])(=)(.*)$");
+        if (string.IsNullOrEmpty(possibleOptionWithArgument) || possibleOptionWithArgument.Length < 3) return false;
+        return Regex.IsMatch(possibleOptionWithArgument, "^(-)([a-zA-Z0-9])(=)(.*)");
     }
 
     private static void TryToMarkOptionArgumentAsPresent(string optionArg, IDictionary<string, Option> optionsMap) {
@@ -49,7 +49,7 @@ public class CliArgumentsParser {
     }
 
     private static (string option, string argumentValue) OptionWitArgument(string optionArg) {
-        var match = Regex.Match(optionArg, "^(-)([a-zA-Z0-9])(=)(.*)$");
+        var match = Regex.Match(optionArg, "^(-)([a-zA-Z0-9])(=)(.*)");
         return (match.Groups[2].Value, match.Groups[4].Value);
     }
 
