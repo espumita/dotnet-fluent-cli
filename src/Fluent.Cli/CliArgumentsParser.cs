@@ -53,7 +53,7 @@ public class CliArgumentsParser {
 
     private static void TryToMarkLongOptionArgumentAsPresent(string optionArg, IDictionary<string, Option> optionsMap, Dictionary<string, Option> optionsConfiguredWithName) {
         var optionWithArgumentWithoutPrefix = LongOptionWitArgument(optionArg);
-        if (!optionsConfiguredWithName.ContainsKey(optionWithArgumentWithoutPrefix.option)) return;
+        if (!optionsConfiguredWithName.ContainsKey(optionWithArgumentWithoutPrefix.option)) throw InvalidOptionArgumentException(optionWithArgumentWithoutPrefix.option);
         var option = optionsConfiguredWithName[optionWithArgumentWithoutPrefix.option];
         var key = option.ShortName != null ? option.ShortName.ToString() : option.Name;
         optionsMap[key] = OptionPresentWithArgument(option, optionWithArgumentWithoutPrefix.argumentValue);
@@ -101,8 +101,8 @@ public class CliArgumentsParser {
         return new Option(option.ShortName, option.Name, isPresent: true);
     }
 
-    private static ArgumentException InvalidOptionArgumentException(string optionShortName) {
-        return new ArgumentException($"PROGRAM: invalid option -- '{optionShortName}'\r\nTry 'PROGRAM --help' for more information.");
+    private static ArgumentException InvalidOptionArgumentException(string optionName) {
+        return new ArgumentException($"PROGRAM: invalid option -- '{optionName}'\r\nTry 'PROGRAM --help' for more information.");
     }
 
     private static bool IsAShortOption(string possibleOption) {
