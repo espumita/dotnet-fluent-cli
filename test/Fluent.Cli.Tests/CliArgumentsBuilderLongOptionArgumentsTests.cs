@@ -21,9 +21,9 @@ public class CliArgumentsBuilderLongOptionArgumentsTests
     [Test]
     public void throw_argument_exception_when_a_null_is_received() {
         var anOptionLongName = anOption.LongName();
-        var environmentArguments = new string[] { };
+        var environmentArgs = new string[] { };
         Action action = () => {
-            CliBuilderFrom(environmentArguments)
+            CliBuilderFrom(environmentArgs)
                 .LongOption(anOptionLongName)
                     .WithArgument(null)
                 .Build();
@@ -36,8 +36,8 @@ public class CliArgumentsBuilderLongOptionArgumentsTests
     [Test]
     public void throw_exception_when_argument_is_not_configured_yet() {
         var anOptionLongName = anOption.LongName();
-        var environmentArguments = new string[] { };
-        var cliArguments = CliBuilderFrom(environmentArguments)
+        var environmentArgs = new string[] { };
+        var cliArguments = CliBuilderFrom(environmentArgs)
             .LongOption(anOptionLongName)
             .Build();
         var option = cliArguments.Option(anOptionLongName);
@@ -53,10 +53,10 @@ public class CliArgumentsBuilderLongOptionArgumentsTests
     [Test]
     public void throw_exception_when_option_is_not_configured_yet_and_try_to_configure_an_argument() {
         var argumentName = anOption.ArgumentName();
-        var environmentArguments = new string[] { };
+        var environmentArgs = new string[] { };
 
         Action action = () => {
-            CliBuilderFrom(environmentArguments)
+            CliBuilderFrom(environmentArgs)
                 .WithArgument(argumentName)
                 .Build();
         };
@@ -71,8 +71,8 @@ public class CliArgumentsBuilderLongOptionArgumentsTests
         var anOptionLongNamePrefix = anOption.LongNamePrefix();
         var argumentName = anOption.ArgumentName();
         var argumentValue = anOption.ArgumentValue();
-        var environmentArguments = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}={argumentValue}" };
-        var cliArguments = CliBuilderFrom(environmentArguments)
+        var environmentArgs = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}={argumentValue}" };
+        var cliArguments = CliBuilderFrom(environmentArgs)
             .LongOption(anOptionLongName)
                 .WithArgument(argumentName)
             .Build();
@@ -89,8 +89,8 @@ public class CliArgumentsBuilderLongOptionArgumentsTests
         var anOptionLongName = anOption.LongName();
         var anOptionLongNamePrefix = anOption.LongNamePrefix();
         var argumentName = anOption.ArgumentName();
-        var environmentArguments = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}=" };
-        var cliArguments = CliBuilderFrom(environmentArguments)
+        var environmentArgs = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}=" };
+        var cliArguments = CliBuilderFrom(environmentArgs)
             .LongOption(anOptionLongName)
             .WithArgument(argumentName)
             .Build();
@@ -109,8 +109,8 @@ public class CliArgumentsBuilderLongOptionArgumentsTests
         var anOptionLongNamePrefix = anOption.LongNamePrefix();
         var argumentName = anOption.ArgumentName();
         var argumentValue = anOption.ArgumentValue();
-        var environmentArguments = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}{argumentValue}" };
-        var cliArguments = CliBuilderFrom(environmentArguments)
+        var environmentArgs = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}{argumentValue}" };
+        var cliArguments = CliBuilderFrom(environmentArgs)
             .LongOption(anOptionLongName)
             .WithArgument(argumentName)
             .Build();
@@ -130,9 +130,9 @@ public class CliArgumentsBuilderLongOptionArgumentsTests
         var anOptionLongNamePrefix = anOption.LongNamePrefix();
         var argumentName = anOption.ArgumentName();
         var argumentValue = anOption.ArgumentValue();
-        var environmentArguments = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}{anotherOptionLongName}={argumentValue}" };
+        var environmentArgs = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}{anotherOptionLongName}={argumentValue}" };
 
-        Action action = () => CliBuilderFrom(environmentArguments)
+        Action action = () => CliBuilderFrom(environmentArgs)
             .LongOption(anOptionLongName)
             .WithArgument(argumentName)
             .Build();

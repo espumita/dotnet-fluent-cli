@@ -20,9 +20,9 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
     [Test]
     public void throw_argument_exception_when_a_null_is_received() {
         var anOptionShortName = anOption.ShortName();
-        var environmentArguments = new string[]{};
+        var environmentArgs = new string[]{};
         Action action = () => {
-            CliBuilderFrom(environmentArguments)
+            CliBuilderFrom(environmentArgs)
                 .Option(anOptionShortName)
                     .WithArgument(null)
                 .Build();
@@ -35,8 +35,8 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
     [Test]
     public void throw_exception_when_argument_is_not_configured_yet() {
         var anOptionShortName = anOption.ShortName();
-        var environmentArguments = new string[] { };
-        var cliArguments = CliBuilderFrom(environmentArguments)
+        var environmentArgs = new string[] { };
+        var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
             .Build();
         var option = cliArguments.Option(anOptionShortName);
@@ -52,10 +52,10 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
     [Test]
     public void throw_exception_when_option_is_not_configured_yet_and_try_to_configure_an_argument() {
         var argumentName = anOption.ArgumentName();
-        var environmentArguments = new string[] { };
+        var environmentArgs = new string[] { };
 
         Action action = () => {
-            CliBuilderFrom(environmentArguments)
+            CliBuilderFrom(environmentArgs)
                 .WithArgument(argumentName)
                 .Build();
         };
@@ -70,8 +70,8 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         var anOptionShortNamePrefix = anOption.ShortNamePrefix();
         var argumentName = anOption.ArgumentName();
         var argumentValue = anOption.ArgumentValue();
-        var environmentArguments = new [] { $"{anOptionShortNamePrefix}{anOptionShortName}={argumentValue}"};
-        var cliArguments = CliBuilderFrom(environmentArguments)
+        var environmentArgs = new [] { $"{anOptionShortNamePrefix}{anOptionShortName}={argumentValue}"};
+        var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
                 .WithArgument(argumentName)
             .Build();
@@ -90,8 +90,8 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         var anOptionShortNamePrefix = anOption.ShortNamePrefix();
         var argumentName = anOption.ArgumentName();
         var argumentValue = anOption.ArgumentValue();
-        var environmentArguments = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}={argumentValue}" };
-        var cliArguments = CliBuilderFrom(environmentArguments)
+        var environmentArgs = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}={argumentValue}" };
+        var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName, anOptionLongName)
             .WithArgument(argumentName)
             .Build();
@@ -110,8 +110,8 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         var anOptionLongNamePrefix = anOption.LongNamePrefix();
         var argumentName = anOption.ArgumentName();
         var argumentValue = anOption.ArgumentValue();
-        var environmentArguments = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}={argumentValue}" };
-        var cliArguments = CliBuilderFrom(environmentArguments)
+        var environmentArgs = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}={argumentValue}" };
+        var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName, anOptionLongName)
             .WithArgument(argumentName)
             .Build();
@@ -128,8 +128,8 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         var anOptionShortName = anOption.ShortName();
         var anOptionShortNamePrefix = anOption.ShortNamePrefix();
         var argumentName = anOption.ArgumentName();
-        var environmentArguments = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}=" };
-        var cliArguments = CliBuilderFrom(environmentArguments)
+        var environmentArgs = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}=" };
+        var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
             .WithArgument(argumentName)
             .Build();
@@ -148,8 +148,8 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         var anOptionShortNamePrefix = anOption.ShortNamePrefix();
         var argumentName = anOption.ArgumentName();
         var argumentValue = anOption.ArgumentValue();
-        var environmentArguments = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}{argumentValue}" };
-        var cliArguments = CliBuilderFrom(environmentArguments)
+        var environmentArgs = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}{argumentValue}" };
+        var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
             .WithArgument(argumentName)
             .Build();
@@ -169,9 +169,9 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         var anOptionShortNamePrefix = anOption.ShortNamePrefix();
         var argumentName = anOption.ArgumentName();
         var argumentValue = anOption.ArgumentValue();
-        var environmentArguments = new[] { $"{anOptionShortNamePrefix}{anotherOptionShortName}={argumentValue}" };
+        var environmentArgs = new[] { $"{anOptionShortNamePrefix}{anotherOptionShortName}={argumentValue}" };
 
-        Action action = () => CliBuilderFrom(environmentArguments)
+        Action action = () => CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
             .WithArgument(argumentName)
             .Build();
