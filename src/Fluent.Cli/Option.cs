@@ -28,6 +28,6 @@ public class Option {
 
     public Argument Argument() {
         if (_Argument != null) return _Argument;
-        throw new ArgumentIsNotConfiguredException($"Argument for option '{ShortName}' has not been configured yet, add it to the builder first.");
+        throw new ArgumentIsNotConfiguredException($"Argument for option '{(!string.IsNullOrEmpty(Name) ? Name : ShortName.ToString())}' has not been configured yet, add it to the builder first.");
     }
 }

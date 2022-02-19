@@ -26,6 +26,7 @@ public class CliArgumentsBuilder {
         if (string.IsNullOrEmpty(longName)) throw new ArgumentException("Option long name cannot be null, use other method instead");
         var optionConfiguration = OptionConfiguration.For(shortName, longName);
         optionConfigurations[shortName.ToString()] = optionConfiguration;
+        buildingOptionConfiguration = shortName.ToString();
         return this;
     }
 
@@ -33,6 +34,7 @@ public class CliArgumentsBuilder {
         if (string.IsNullOrEmpty(longName)) throw new ArgumentException("Option long name cannot be null or empty, use other method instead");
         var optionConfiguration = OptionConfiguration.ForLong(longName);
         optionConfigurations[longName] = optionConfiguration;
+        buildingOptionConfiguration = longName;
         return this;
     }
 

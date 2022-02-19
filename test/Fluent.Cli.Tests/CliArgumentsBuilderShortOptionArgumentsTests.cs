@@ -84,6 +84,46 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
     }
 
     [Test]
+    public void get_a_short_and_long_option_argument_value_when_argument_is_after_equals_sign_for_short_case() {
+        var anOptionShortName = anOption.ShortName();
+        var anOptionLongName = anOption.LongName();
+        var anOptionShortNamePrefix = anOption.ShortNamePrefix();
+        var argumentName = anOption.ArgumentName();
+        var argumentValue = anOption.ArgumentValue();
+        var environmentArguments = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}={argumentValue}" };
+        var cliArguments = CliBuilderFrom(environmentArguments)
+            .Option(anOptionShortName, anOptionLongName)
+            .WithArgument(argumentName)
+            .Build();
+        var option = cliArguments.Option(anOptionShortName);
+
+        var argument = option.Argument();
+
+        argument.Name.Should().Be(argumentName);
+        argument.Value.Should().Be(argumentValue);
+    }
+
+    [Test]
+    public void get_a_short_and_long_option_argument_value_when_argument_is_after_equals_sign_for_long_case() {
+        var anOptionShortName = anOption.ShortName();
+        var anOptionLongName = anOption.LongName();
+        var anOptionLongNamePrefix = anOption.LongNamePrefix();
+        var argumentName = anOption.ArgumentName();
+        var argumentValue = anOption.ArgumentValue();
+        var environmentArguments = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}={argumentValue}" };
+        var cliArguments = CliBuilderFrom(environmentArguments)
+            .Option(anOptionShortName, anOptionLongName)
+            .WithArgument(argumentName)
+            .Build();
+        var option = cliArguments.Option(anOptionLongName);
+
+        var argument = option.Argument();
+
+        argument.Name.Should().Be(argumentName);
+        argument.Value.Should().Be(argumentValue);
+    }
+
+    [Test]
     public void do_not_get_a_short_option_argument_value_when_argument_is_not_after_equals_sign() {
         var anOptionShortName = anOption.ShortName();
         var anOptionShortNamePrefix = anOption.ShortNamePrefix();

@@ -19,5 +19,4 @@ public class CliArguments {
         throw new OptionIsNotConfiguredException($"Option -- '{longName}' has not been configured yet, add it to the builder first.");
     }
 
-
 }
