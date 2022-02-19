@@ -46,7 +46,7 @@ public class CliArgumentsParser {
 
     private static void TryToMarkShortOptionArgumentAsPresent(string optionArg, IDictionary<string, Option> optionsMap) {
         var optionWithArgumentWithoutPrefix = OptionWitArgument(optionArg);
-        if (!optionsMap.ContainsKey(optionWithArgumentWithoutPrefix.option)) return;
+        if (!optionsMap.ContainsKey(optionWithArgumentWithoutPrefix.option)) throw InvalidOptionArgumentException(optionWithArgumentWithoutPrefix.option);
         var option = optionsMap[optionWithArgumentWithoutPrefix.option];
         optionsMap[optionWithArgumentWithoutPrefix.option] = OptionPresentWithArgument(option, optionWithArgumentWithoutPrefix.argumentValue);
     }
