@@ -64,9 +64,9 @@ var cliArguments = CliArgumentsBuilder.With(args)
         .WithArgument("SIZE")
     .Build();
 
-var shortOption = cliArguments.Option("block-size");
-if (shortOption.IsPresent) {
-    var argument = shortOption.Argument();
+var option = cliArguments.Option("block-size");
+if (option.IsPresent) {
+    var argument = option.Argument();
     Console.WriteLine($"Option 'block-size' enabled with SIZE value:{argument.Value}");
 }
 ```
