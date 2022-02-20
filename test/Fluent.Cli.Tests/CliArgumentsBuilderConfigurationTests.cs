@@ -101,6 +101,23 @@ public class CliArgumentsBuilderConfigurationTests {
             .And.Message.Should().Be($"PROGRAM: invalid option -- '{args}'\r\nTry 'PROGRAM --help' for more information.");
     }
 
+
+    [Test]
+    public void throw_exception_when_trying_to_configure_multiple_arguments_for_the_same_option() {
+        var anOptionShortName = anOption.ShortName();
+        var anOptionArgumentName = anOption.ArgumentName();
+        var environmentArgs = new string[] { };
+
+        Action action = () =>
+            CliBuilderFrom(environmentArgs)
+                .Option(anOptionShortName)
+                    .WithArgument(anOptionArgumentName)
+                    .WithArgument(anOptionArgumentName)
+                .Build();
+
+        action.Should().Throw<OptionWithMultipleArgumentsAreNotSupportedException>()
+            .And.Message.Should().Be($"Option -- '{anOptionShortName}' can only be configured with a single argument. If you need multiple arguments, consider use a command instead.");
+    }
     private static CliArgumentsBuilder CliBuilderFrom(string[] args) {
         return CliArgumentsBuilder.With(args);
     }
