@@ -13,9 +13,9 @@ Fluent interface to parse and configure arguments for command line applications 
 ---
 
 ## Ussage and concept
-`CliArgumentsBuilder` class let you dynamically, configure options. Once build, it will parse the `strin[] args` to a `CliArguments` object.
+`CliArgumentsBuilder` class let you dynamically, configure options. Once build, it will parse the `strin[] args` and return a `CliArguments` object.
 
-You can get program's arguments in .NET from the [Main entrypoint](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/program-structure/main-command-line#:~:text=The%20Main%20method%20is%20the,point%20in%20a%20C%23%20program.) or just call `Environment.GetCommandLineArgs()`.
+You can get program's arguments in .NET from the [Main entrypoint](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/program-structure/main-command-line#:~:text=The%20Main%20method%20is%20the,point%20in%20a%20C%23%20program.) `strin[] args` parameter, or just call `Environment.GetCommandLineArgs()`.
 
 ### Short options:
 ```c#
