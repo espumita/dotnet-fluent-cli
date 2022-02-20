@@ -180,6 +180,22 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
             .And.Message.Should().Be($"PROGRAM: invalid option -- '{anotherOptionShortName}'\r\nTry 'PROGRAM --help' for more information.");
     }
 
+    [Test]
+    public void trow_exception_when_short_option_with_argument_is_duplicated() {
+        var anOptionShortName = anOption.ShortName();
+        var anOptionShortNamePrefix = anOption.ShortNamePrefix();
+        var argumentName = anOption.ArgumentName();
+        var argumentValue = anOption.ArgumentValue();
+        var environmentArgs = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}{anOptionShortName}={argumentValue}" };
+
+        Action action = () => CliBuilderFrom(environmentArgs)
+            .Option(anOptionShortName)
+            .WithArgument(argumentName)
+            .Build();
+
+        action.Should().Throw<ArgumentException>()
+            .And.Message.Should().Be($"PROGRAM: invalid option -- '{anOptionShortName}{anOptionShortName}'\r\nTry 'PROGRAM --help' for more information.");
+    }
 
     private static CliArgumentsBuilder CliBuilderFrom(string[] args) {
         return CliArgumentsBuilder.With(args);

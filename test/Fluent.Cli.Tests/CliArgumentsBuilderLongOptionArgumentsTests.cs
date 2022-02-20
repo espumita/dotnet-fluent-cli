@@ -6,8 +6,7 @@ using NUnit.Framework;
 
 namespace Fluent.Cli.Tests;
 
-public class CliArgumentsBuilderLongOptionArgumentsTests
-{
+public class CliArgumentsBuilderLongOptionArgumentsTests {
 
     private Faker faker;
     private OptionFaker anOption;

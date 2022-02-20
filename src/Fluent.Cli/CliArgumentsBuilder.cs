@@ -4,7 +4,6 @@ public class CliArgumentsBuilder {
     private readonly string[] environmentArgs;
     private readonly IDictionary<string, OptionConfiguration> optionConfigurations;
     private string buildingOptionConfiguration;
-
     private CliArgumentsBuilder(string[] environmentArgs) {
         this.environmentArgs = environmentArgs;
         optionConfigurations = new Dictionary<string, OptionConfiguration>();
@@ -45,7 +44,6 @@ public class CliArgumentsBuilder {
         option.AddArgument(argumentName);
         return this;
     }
-
 
     public CliArguments Build() {
         return CliArgumentsParser.ParseFrom(environmentArgs, optionConfigurations);
