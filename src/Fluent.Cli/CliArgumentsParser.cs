@@ -14,6 +14,7 @@ public class CliArgumentsParser {
             else if (IsALongOption(arg)) TryToMarkLongOptionAsPresent(arg, optionsMap, optionsConfiguredWithName);
             else if (IsAShortOption(arg)) TryToMarkShortOptionsAsPresent(arg, optionsMap);
             else if (AreMultipleShortOptions(arg)) TryToMarkMultipleShortOptionsAsPresent(arg, optionsMap);
+            else if (IsAnUndefinedOption(arg)) ThrowUndefinedOptionException(arg);
         }
         return new CliArguments(
             options: optionsMap.Values.ToList()
@@ -115,6 +116,11 @@ public class CliArgumentsParser {
         return Regex.IsMatch(possibleOption, "^(-)([a-zA-Z0-9])$");
     }
 
+    private static bool IsAnUndefinedOption(string possibleOption) {
+        if (string.IsNullOrEmpty(possibleOption) || possibleOption.Length == 1) return false;
+        return Regex.IsMatch(possibleOption, "^(--|-)(.*)$");
+    }
+
     private static bool AreMultipleShortOptions(string possibleOption) {
         if (string.IsNullOrEmpty(possibleOption) || possibleOption.Length == 1) return false;
         return Regex.IsMatch(possibleOption, "^(-)([a-zA-Z0-9]+)$");
@@ -124,6 +130,11 @@ public class CliArgumentsParser {
         var optionArgWithoutPrefix = OptionWithoutPrefix(optionArg);
         if (ShortNameIsPresent(optionArgWithoutPrefix, optionsMap)) return;
         throw InvalidOptionArgumentException(optionArgWithoutPrefix);
+    }
+
+    private static void ThrowUndefinedOptionException(string optionArg) {
+       var undefinedOption = Regex.Match(optionArg, "^(--|-)(.*)$");
+       throw InvalidOptionArgumentException(undefinedOption.Groups[2].Value);
     }
 
     private static void TryToMarkMultipleShortOptionsAsPresent(string optionArg, IDictionary<string, Option> optionsMap) {

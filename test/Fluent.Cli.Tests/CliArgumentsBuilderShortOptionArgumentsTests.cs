@@ -146,20 +146,17 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
     public void do_not_get_a_short_option_argument_value_when_equals_sign_is_not_present() {
         var anOptionShortName = anOption.ShortName();
         var anOptionShortNamePrefix = anOption.ShortNamePrefix();
-        var argumentName = anOption.ArgumentName();
         var argumentValue = anOption.ArgumentValue();
+        var argumentName = anOption.ArgumentName();
         var environmentArgs = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}{argumentValue}" };
-        var cliArguments = CliBuilderFrom(environmentArgs)
+        
+        Action action = () => CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
             .WithArgument(argumentName)
             .Build();
-        var option = cliArguments.Option(anOptionShortName);
 
-        var argument = option.Argument();
-
-        option.IsPresent.Should().BeFalse();
-        argument.Name.Should().Be(argumentName);
-        argument.Value.Should().BeNull();
+        action.Should().Throw<ArgumentException>()
+            .And.Message.Should().Be($"PROGRAM: invalid option -- '{anOptionShortName}{argumentValue}'\r\nTry 'PROGRAM --help' for more information.");
     }
 
     [Test]

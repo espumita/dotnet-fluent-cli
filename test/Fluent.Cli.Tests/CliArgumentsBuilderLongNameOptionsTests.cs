@@ -102,6 +102,20 @@ public class CliArgumentsBuilderLongNameOptionsTests {
         cli.Option(optionLongName).IsPresent.Should().BeTrue();
     }
 
+    [TestCase("!")]
+    [TestCase("Q-")]
+    [TestCase("Q-Q")]
+    [TestCase("Q-Q")]
+    public void trow_exception_when_short_option_is_not_configured(string optionName) {
+        var anOptionLongNamePrefix = anOption.LongNamePrefix();
+        var environmentArgs = new[] { $"{anOptionLongNamePrefix}{optionName}" };
+
+        Action action = () => CliBuilderFrom(environmentArgs)
+            .Build();
+
+        action.Should().Throw<ArgumentException>()
+            .And.Message.Should().Be($"PROGRAM: invalid option -- '{optionName}'\r\nTry 'PROGRAM --help' for more information.");
+    }
     private static CliArgumentsBuilder CliBuilderFrom(string[] args) {
         return CliArgumentsBuilder.With(args);
     }

@@ -106,20 +106,17 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
     public void do_not_get_a_long_option_argument_value_when_equals_sign_is_not_present() {
         var anOptionLongName = anOption.LongName();
         var anOptionLongNamePrefix = anOption.LongNamePrefix();
-        var argumentName = anOption.ArgumentName();
         var argumentValue = anOption.ArgumentValue();
+        var argumentName = anOption.ArgumentName();
         var environmentArgs = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}{argumentValue}" };
-        var cliArguments = CliBuilderFrom(environmentArgs)
+        
+        Action action = () => CliBuilderFrom(environmentArgs)
             .LongOption(anOptionLongName)
             .WithArgument(argumentName)
             .Build();
-        var option = cliArguments.Option(anOptionLongName);
 
-        var argument = option.Argument();
-
-        option.IsPresent.Should().BeFalse();
-        argument.Name.Should().Be(argumentName);
-        argument.Value.Should().BeNull();
+        action.Should().Throw<ArgumentException>()
+            .And.Message.Should().Be($"PROGRAM: invalid option -- '{anOptionLongName}{argumentValue}'\r\nTry 'PROGRAM --help' for more information.");
     }
 
     [Test]
