@@ -86,6 +86,23 @@ public class CliArgumentsBuilderLongNameOptionsTests {
         cli.Option(anOptionLongName).IsPresent.Should().BeTrue();
     }
 
+    [Test]
+    public void mark_multiple_option_with_long_name_as_present() {
+        var anOptionLongName = anOption.LongName();
+        var anotherOptionLongName = anOption.LongName();
+        var anOptionLongNamePrefix = anOption.LongNamePrefix();
+        var environmentArgs = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}", $"{anOptionLongNamePrefix}{anotherOptionLongName}" };
+
+        var cliArguments = CliBuilderFrom(environmentArgs)
+            .LongOption(anOptionLongName)
+            .LongOption(anotherOptionLongName)
+            .Build();
+
+        cliArguments.Options.Count.Should().Be(2);
+        cliArguments.Option(anOptionLongName).IsPresent.Should().BeTrue();
+        cliArguments.Option(anotherOptionLongName).IsPresent.Should().BeTrue();
+    }
+
     [TestCase("a-a")]
     [TestCase("a-a-a")]
     [TestCase("a--a--a")]

@@ -59,6 +59,23 @@ public class CliArgumentsBuilderShortNameOptionsTests {
     }
 
     [Test]
+    public void mark_multiple_option_with_short_name_as_present() {
+        var anOptionShortName = anOption.ShortName();
+        var anotherOptionShortName = anOption.ShortName();
+        var anOptionShortNamePrefix = anOption.ShortNamePrefix();
+        var environmentArgs = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}", $"{anOptionShortNamePrefix}{anotherOptionShortName}" };
+
+        var cliArguments = CliBuilderFrom(environmentArgs)
+            .Option(shortName: anOptionShortName)
+            .Option(shortName: anotherOptionShortName)
+            .Build();
+
+        cliArguments.Options.Count.Should().Be(2);
+        cliArguments.Option(anOptionShortName).IsPresent.Should().BeTrue();
+        cliArguments.Option(anotherOptionShortName).IsPresent.Should().BeTrue();
+    }
+
+    [Test]
     public void mark_simple_character_options_repeated_as_present() {
         var anOptionShortName = anOption.ShortName();
         var shortNamePrefix = anOption.ShortNamePrefix();

@@ -56,7 +56,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
 
         Action action = () => {
             CliBuilderFrom(environmentArgs)
-                .WithArgument(argumentName)
+                    .WithArgument(argumentName)
                 .Build();
         };
 
@@ -84,6 +84,34 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
     }
 
     [Test]
+    public void get_multiple_short_option_argument_value_when_argument_is_after_equals_sign() {
+        var anOptionShortName = anOption.ShortName();
+        var anotherOptionShortName = anOption.ShortName();
+        var anOptionShortNamePrefix = anOption.ShortNamePrefix();
+        var argumentName = anOption.ArgumentName();
+        var anotherArgumentName = anOption.ArgumentName();
+        var argumentValue = anOption.ArgumentValue();
+        var anotherArgumentValue = anOption.ArgumentValue();
+        var environmentArgs = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}={argumentValue}", $"{anOptionShortNamePrefix}{anotherOptionShortName}={anotherArgumentValue}" };
+        
+        var cliArguments = CliBuilderFrom(environmentArgs)
+            .Option(anOptionShortName)
+                .WithArgument(argumentName)
+            .Option(anotherOptionShortName)
+                .WithArgument(anotherArgumentName)
+            .Build();
+        
+        var option = cliArguments.Option(anOptionShortName);
+        var argument = option.Argument();
+        argument.Name.Should().Be(argumentName);
+        argument.Value.Should().Be(argumentValue);
+        var anotherOption = cliArguments.Option(anotherOptionShortName);
+        var anotherArgument = anotherOption.Argument();
+        anotherArgument.Name.Should().Be(anotherArgumentName);
+        anotherArgument.Value.Should().Be(anotherArgumentValue);
+    }
+
+    [Test]
     public void get_a_short_and_long_option_argument_value_when_argument_is_after_equals_sign_for_short_case() {
         var anOptionShortName = anOption.ShortName();
         var anOptionLongName = anOption.LongName();
@@ -93,7 +121,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         var environmentArgs = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}={argumentValue}" };
         var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName, anOptionLongName)
-            .WithArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
         var option = cliArguments.Option(anOptionShortName);
 
@@ -113,7 +141,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         var environmentArgs = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}={argumentValue}" };
         var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName, anOptionLongName)
-            .WithArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
         var option = cliArguments.Option(anOptionLongName);
 
@@ -131,7 +159,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         var environmentArgs = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}=" };
         var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-            .WithArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
         var option = cliArguments.Option(anOptionShortName);
 
@@ -152,7 +180,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         
         Action action = () => CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-            .WithArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
 
         action.Should().Throw<ArgumentException>()
@@ -170,7 +198,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
 
         Action action = () => CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-            .WithArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
 
         action.Should().Throw<ArgumentException>()
@@ -187,7 +215,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
 
         Action action = () => CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-            .WithArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
 
         action.Should().Throw<ArgumentException>()
@@ -205,12 +233,13 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
 
         Action action = () => CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-            .WithArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
 
         action.Should().Throw<ArgumentException>()
             .And.Message.Should().Be($"PROGRAM: invalid option -- '{anOptionShortName}{anotherOptionShortName}'\r\nTry 'PROGRAM --help' for more information.");
     }
+
 
     private static CliArgumentsBuilder CliBuilderFrom(string[] args) {
         return CliArgumentsBuilder.With(args);
