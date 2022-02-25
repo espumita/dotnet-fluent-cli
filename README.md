@@ -5,30 +5,27 @@ Fluent interface to parse and configure arguments for command line applications 
 ## Types of standars suported
 
 * [POSIX](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html), UNIX  or  short-option like options, for example `ls -la ~/.docker` 
-* [GNU](https://www.gnu.org/software/libc/manual/html_node/Argument-Syntax.html) like long options, for example `ls --all --show-control-chars ~/.docker` 
-* Traditional style like options, for example `ls la ~/.docker`
-* Java like properties `-com.java.property` are not supported.
-* Windows style like options, for example `ls /all ~/.docker` are not supported.
+* [GNU](https://www.gnu.org/software/libc/manual/html_node/Argument-Syntax.html) like long options, for example `ls --all --show-control-chars ~/.docker` are not supported yet.
+* Traditional style like options, for example `ls la ~/.docker` are not supported yet.
+* Java like properties `-com.java.property` are not supported yet.
+* Windows style like options, for example `ls /all ~/.docker` are not supported yet.
 
 ---
 
-## Ussage and concept
-`CliArgumentsBuilder` class let you dynamically, configure options. Once build, it will parse the `strin[] args` and return a `CliArguments` object.
+## Ussage
+`CliArgumentsBuilder` class let you dynamically, configure options. Once build, it will parse the `strin[] args` and returns a `CliArguments` object.
 
 You can get program's arguments in .NET from the [Main entrypoint](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/program-structure/main-command-line#:~:text=The%20Main%20method%20is%20the,point%20in%20a%20C%23%20program.) `strin[] args` parameter, or just call `Environment.GetCommandLineArgs()`.
 
 ### Short options:
 ```c#
-public static void Main(string[] args) {
+var cliArguments = CliArgumentsBuilder.With(args)
+    .Option('a')
+    .Build();
 
-    var cliArguments = CliArgumentsBuilder.With(args)
-        .Option('a')
-        .Build();
-
-    var option = cliArguments.Option('a');
-    if (option.IsPresent) {
-        Console.WriteLine("Option 'a' enabled!");
-    }
+var option = cliArguments.Option('a');
+if (option.IsPresent) {
+    Console.WriteLine("Option 'a' enabled!");
 }
 ```
 ### Long options:
@@ -75,11 +72,11 @@ if (option.IsPresent) {
 
 **Considerations**
 
-* Prefixes can only be [Hyphen-minus](https://en.wikipedia.org/wiki/Hyphen-minus), U+002D character. One for sort options `-r` and two for long options `--color`.
+* Prefixes can only be [Hyphen-minus](https://en.wikipedia.org/wiki/Hyphen-minus), U+002D character. One for sort options like `-c`, and two for long options like `--color`.
 
-* Only [unicode Basic Latin](https://en.wikipedia.org/wiki/Basic_Latin_(Unicode_block)) alphanumeric upper and lower case characters are acepted for short and long options. Also, long options can contain Hyphen-minus, U+002D character between words, for example: `--my-test-option`.
+* Only [unicode Basic Latin](https://en.wikipedia.org/wiki/Basic_Latin_(Unicode_block)) alphanumeric upper and lower case characters are acepted for short and long options. `-m`, `-2`, `-M`, `--mytest`, `--mytest01` or `--MyTest01` are valid options. Long options can also contain Hyphen-minus, U+002D character between words, for example: `--my-test-option`.
 
-* ?
+* All controlled exceptions ocurred during the argument parsing step are considered as [ArgumentException](https://docs.microsoft.com/es-mx/dotnet/api/system.argumentexception?view=net-6.0). While all controlled exceptions ocurred during the builder configuration step are considered as `CliArgumentsBuilderConfigurationException`.
 
 ---
 
