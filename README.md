@@ -74,6 +74,8 @@ if (option.IsPresent) {
 
 * Prefixes can only be [Hyphen-minus](https://en.wikipedia.org/wiki/Hyphen-minus), U+002D character. One for sort options like `-c`, and two for long options like `--color`.
 
+* \u2010-\u2015\u2212\uFE58\uFE63\uFF0D Are Invalid dashs for options.
+
 * Only [unicode Basic Latin](https://en.wikipedia.org/wiki/Basic_Latin_(Unicode_block)) alphanumeric upper and lower case characters are acepted for short and long options. `-m`, `-2`, `-M`, `--mytest`, `--mytest01` or `--MyTest01` are valid options. Long options can also contain Hyphen-minus, U+002D character between words, for example: `--my-test-option`.
 
 * All controlled exceptions ocurred during the argument parsing step are considered as [ArgumentException](https://docs.microsoft.com/es-mx/dotnet/api/system.argumentexception?view=net-6.0). While all controlled exceptions ocurred during the builder configuration step are considered as `CliArgumentsBuilderConfigurationException`.
