@@ -1,16 +1,17 @@
 ﻿using System.Text.RegularExpressions;
+using Fluent.Cli.Options;
 
-namespace Fluent.Cli;
+namespace Fluent.Cli.Parsers;
 
-public class UndefinedOptionsArgumentParser {
+public class UndefinedOptionsArgumentOptionsParser : IOptionsParser {
+    public IList<ArgumentOption> TryToParse(string argument) {
+        var undefinedOption = Regex.Match(argument, "^(--|-)(.*)$");
+        throw InvalidOptionArgumentException(undefinedOption.Groups[2].Value);
+    }
+
     public bool IsAnUndefinedOption(string possibleOption) {
         if (string.IsNullOrEmpty(possibleOption) || possibleOption.Length == 1) return false;
         return Regex.IsMatch(possibleOption, "^(--|-)(.*)$");
-    }
-
-    public void ThrowUndefinedOptionException(string optionArg) {
-        var undefinedOption = Regex.Match(optionArg, "^(--|-)(.*)$");
-        throw InvalidOptionArgumentException(undefinedOption.Groups[2].Value);
     }
 
     private static ArgumentException InvalidOptionArgumentException(string optionName) {

@@ -1,4 +1,6 @@
-﻿namespace Fluent.Cli; 
+﻿using Fluent.Cli.Parsers;
+
+namespace Fluent.Cli; 
 
 public class CliArgumentsBuilder {
     private readonly string[] environmentArgs;
@@ -48,14 +50,32 @@ public class CliArgumentsBuilder {
     }
 
     public CliArguments Build() {
+        var optionsMap = InitializeOptionResultFrom(optionConfigurations);
+        var optionsConfiguredWithName = OptionsConfiguredWithName(optionsMap);
+
         var cliArgumentsParser = new CliArgumentsParser(
-            new LongOptionsWithArgumentParser(),
-            new ShortOptionsWithArgumentParser(),
-            new LongOptionsArgumentParser(),
-            new ShortOptionsArgumentParser(),
-            new MultipleShortOptionsArgumentParser(),
-            new UndefinedOptionsArgumentParser()
+            optionsMap,
+            new LongOptionsWithArgumentOptionsParser(optionsMap, optionsConfiguredWithName),
+            new ShortOptionsWithArgumentOptionsParser(optionsMap),
+            new LongOptionsArgumentOptionsParser(optionsMap, optionsConfiguredWithName),
+            new ShortOptionsArgumentOptionsParser(optionsMap),
+            new MultipleShortOptionsArgumentOptionsParser(optionsMap),
+            new UndefinedOptionsArgumentOptionsParser()
         );
-        return cliArgumentsParser.ParseFrom(environmentArgs, optionConfigurations);
+        return cliArgumentsParser.ParseFrom(environmentArgs);
+    }
+
+    private static IDictionary<string, Option> InitializeOptionResultFrom(IDictionary<string, OptionConfiguration> optionConfigurations) {
+        return optionConfigurations
+            .ToDictionary(
+                keyValuePair => keyValuePair.Key,
+                keyValuePair => new Option(keyValuePair.Value.PrimaryName, keyValuePair.Value.SecondaryName, isPresent: false, keyValuePair.Value?.Argument?.ArgumentName));
+    }
+
+    private static Dictionary<string, Option> OptionsConfiguredWithName(IDictionary<string, Option> optionsMap) {
+        return optionsMap.Where(keyValuePair => !string.IsNullOrEmpty(keyValuePair.Value.Name))
+            .ToDictionary(
+                keyValuePair => keyValuePair.Value.Name,
+                keyValuePair => keyValuePair.Value);
     }
 }

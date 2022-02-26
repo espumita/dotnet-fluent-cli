@@ -1,52 +1,56 @@
-﻿namespace Fluent.Cli;
+﻿using Fluent.Cli.Parsers;
+
+namespace Fluent.Cli;
 
 public class CliArgumentsParser {
-    
-    private readonly LongOptionsWithArgumentParser longOptionsWithArgumentParser;
-    private readonly ShortOptionsWithArgumentParser shortOptionsWithArgumentParser;
-    private readonly LongOptionsArgumentParser longOptionsArgumentParser;
-    private readonly ShortOptionsArgumentParser shortOptionsArgumentParser;
-    private readonly MultipleShortOptionsArgumentParser multipleShortOptionsArgumentParser;
-    private readonly UndefinedOptionsArgumentParser undefinedOptionsArgumentParser;
+    private readonly IDictionary<string, Option> _optionsMap;
+    private readonly LongOptionsWithArgumentOptionsParser _longOptionsWithArgumentOptionsParser;
+    private readonly ShortOptionsWithArgumentOptionsParser _shortOptionsWithArgumentOptionsParser;
+    private readonly LongOptionsArgumentOptionsParser _longOptionsArgumentOptionsParser;
+    private readonly ShortOptionsArgumentOptionsParser _shortOptionsArgumentOptionsParser;
+    private readonly MultipleShortOptionsArgumentOptionsParser _multipleShortOptionsArgumentOptionsParser;
+    private readonly UndefinedOptionsArgumentOptionsParser _undefinedOptionsArgumentOptionsParser;
 
-    public CliArgumentsParser(LongOptionsWithArgumentParser longOptionsWithArgumentParser, ShortOptionsWithArgumentParser shortOptionsWithArgumentParser, LongOptionsArgumentParser longOptionsArgumentParser, ShortOptionsArgumentParser shortOptionsArgumentParser, MultipleShortOptionsArgumentParser multipleShortOptionsArgumentParser, UndefinedOptionsArgumentParser undefinedOptionsArgumentParser) {
-        this.longOptionsWithArgumentParser = longOptionsWithArgumentParser;
-        this.shortOptionsWithArgumentParser = shortOptionsWithArgumentParser;
-        this.longOptionsArgumentParser = longOptionsArgumentParser;
-        this.shortOptionsArgumentParser = shortOptionsArgumentParser;
-        this.multipleShortOptionsArgumentParser = multipleShortOptionsArgumentParser;
-        this.undefinedOptionsArgumentParser = undefinedOptionsArgumentParser;
+    public CliArgumentsParser(
+            IDictionary<string, Option> optionsMap,
+            LongOptionsWithArgumentOptionsParser longOptionsWithArgumentOptionsParser,
+            ShortOptionsWithArgumentOptionsParser shortOptionsWithArgumentOptionsParser,
+            LongOptionsArgumentOptionsParser longOptionsArgumentOptionsParser,
+            ShortOptionsArgumentOptionsParser shortOptionsArgumentOptionsParser,
+            MultipleShortOptionsArgumentOptionsParser multipleShortOptionsArgumentOptionsParser,
+            UndefinedOptionsArgumentOptionsParser undefinedOptionsArgumentOptionsParser) {
+        _optionsMap = optionsMap;
+        this._longOptionsWithArgumentOptionsParser = longOptionsWithArgumentOptionsParser;
+        this._shortOptionsWithArgumentOptionsParser = shortOptionsWithArgumentOptionsParser;
+        this._longOptionsArgumentOptionsParser = longOptionsArgumentOptionsParser;
+        this._shortOptionsArgumentOptionsParser = shortOptionsArgumentOptionsParser;
+        this._multipleShortOptionsArgumentOptionsParser = multipleShortOptionsArgumentOptionsParser;
+        this._undefinedOptionsArgumentOptionsParser = undefinedOptionsArgumentOptionsParser;
     }
 
-    public CliArguments ParseFrom(string[] environmentArgs, IDictionary<string, OptionConfiguration> optionConfigurations) {
-        var optionsMap = InitializeOptionResultFrom(optionConfigurations);
-        var optionsConfiguredWithName = OptionsConfiguredWithName(optionsMap);
-
+    public CliArguments ParseFrom(string[] environmentArgs) {
         foreach (var arg in environmentArgs) {
-            if (longOptionsWithArgumentParser.IsALongOptionWithArgument(arg)) longOptionsWithArgumentParser.TryToMarkLongOptionArgumentAsPresent(arg, optionsMap, optionsConfiguredWithName);
-            else if (shortOptionsWithArgumentParser.IsAnOptionWithArgument(arg)) shortOptionsWithArgumentParser.TryToMarkShortOptionArgumentAsPresent(arg, optionsMap);
-            else if (longOptionsArgumentParser.IsALongOption(arg)) longOptionsArgumentParser.TryToMarkLongOptionAsPresent(arg, optionsMap, optionsConfiguredWithName);
-            else if (shortOptionsArgumentParser.IsAShortOption(arg)) shortOptionsArgumentParser.TryToMarkShortOptionsAsPresent(arg, optionsMap);
-            else if (multipleShortOptionsArgumentParser.AreMultipleShortOptions(arg)) multipleShortOptionsArgumentParser.TryToMarkMultipleShortOptionsAsPresent(arg, optionsMap);
-            else if (undefinedOptionsArgumentParser.IsAnUndefinedOption(arg)) undefinedOptionsArgumentParser.ThrowUndefinedOptionException(arg);
+            var optionsParser = OptionsParserFor(arg);
+            var options = optionsParser.TryToParse(arg);
+            foreach (var option in options) {
+                _optionsMap[option.key] = option.NewOption;
+            }
         }
         return new CliArguments(
-            options: optionsMap.Values.ToList()
+            options: _optionsMap.Values.ToList()
         );
     }
 
-    private static IDictionary<string, Option> InitializeOptionResultFrom(IDictionary<string, OptionConfiguration> optionConfigurations) {
-        return optionConfigurations
-            .ToDictionary(
-                keyValuePair => keyValuePair.Key,
-                keyValuePair => new Option(keyValuePair.Value.PrimaryName, keyValuePair.Value.SecondaryName, isPresent: false, keyValuePair.Value?.Argument?.ArgumentName));
+    private IOptionsParser OptionsParserFor(string arg) {
+        if (_longOptionsWithArgumentOptionsParser.IsALongOptionWithArgument(arg)) return _longOptionsWithArgumentOptionsParser;
+        if (_shortOptionsWithArgumentOptionsParser.IsAnOptionWithArgument(arg)) return _shortOptionsWithArgumentOptionsParser;
+        if (_longOptionsArgumentOptionsParser.IsALongOption(arg)) return _longOptionsArgumentOptionsParser;
+        if (_shortOptionsArgumentOptionsParser.IsAShortOption(arg)) return _shortOptionsArgumentOptionsParser;
+        if (_multipleShortOptionsArgumentOptionsParser.AreMultipleShortOptions(arg)) return _multipleShortOptionsArgumentOptionsParser;
+        if (_undefinedOptionsArgumentOptionsParser.IsAnUndefinedOption(arg)) return _undefinedOptionsArgumentOptionsParser;
+        return null;
     }
 
-    private static Dictionary<string, Option> OptionsConfiguredWithName(IDictionary<string, Option> optionsMap) {
-        return optionsMap.Where(keyValuePair => !string.IsNullOrEmpty(keyValuePair.Value.Name))
-            .ToDictionary(
-                keyValuePair => keyValuePair.Value.Name,
-                keyValuePair => keyValuePair.Value);
-    }
+
 
 }

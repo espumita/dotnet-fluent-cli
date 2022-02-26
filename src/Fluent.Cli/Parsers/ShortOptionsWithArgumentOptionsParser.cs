@@ -1,8 +1,19 @@
 ﻿using System.Text.RegularExpressions;
+using Fluent.Cli.Options;
 
-namespace Fluent.Cli;
+namespace Fluent.Cli.Parsers;
 
-public class ShortOptionsWithArgumentParser {
+public class ShortOptionsWithArgumentOptionsParser : IOptionsParser {
+    private readonly IDictionary<string, Option> _optionsMap;
+
+    public ShortOptionsWithArgumentOptionsParser(IDictionary<string, Option> optionsMap) {
+        _optionsMap = optionsMap;
+    }
+
+    public IList<ArgumentOption> TryToParse(string argument) {
+        return TryToMarkShortOptionArgumentAsPresent(argument);
+    }
+
     public bool IsAnOptionWithArgument(string possibleOptionWithArgument) {
         if (string.IsNullOrEmpty(possibleOptionWithArgument) || possibleOptionWithArgument.Length < 3) return false;
         var isAMultipleShortOption = Regex.IsMatch(possibleOptionWithArgument, "^(-)([a-zA-Z0-9]+)(=)(.*)");
@@ -13,11 +24,17 @@ public class ShortOptionsWithArgumentParser {
         throw InvalidOptionArgumentException(value);
     }
 
-    public void TryToMarkShortOptionArgumentAsPresent(string optionArg, IDictionary<string, Option> optionsMap) {
-        var optionWithArgumentWithoutPrefix = OptionWithArgument(optionArg);
-        if (!optionsMap.ContainsKey(optionWithArgumentWithoutPrefix.option)) throw InvalidOptionArgumentException(optionWithArgumentWithoutPrefix.option);
-        var option = optionsMap[optionWithArgumentWithoutPrefix.option];
-        optionsMap[optionWithArgumentWithoutPrefix.option] = OptionPresentWithArgument(option, optionWithArgumentWithoutPrefix.argumentValue);
+    public IList<ArgumentOption> TryToMarkShortOptionArgumentAsPresent(string argument) {
+        var optionWithArgumentWithoutPrefix = OptionWithArgument(argument);
+        if (!_optionsMap.ContainsKey(optionWithArgumentWithoutPrefix.option)) throw InvalidOptionArgumentException(optionWithArgumentWithoutPrefix.option);
+        var option = _optionsMap[optionWithArgumentWithoutPrefix.option];
+        var key = optionWithArgumentWithoutPrefix.option;
+        return new List<ArgumentOption> {
+            new ShortOptionWithArgument {
+                key = key,
+                NewOption = OptionPresentWithArgument(option, optionWithArgumentWithoutPrefix.argumentValue)
+            }
+        };
     }
 
     private static (string option, string argumentValue) OptionWithArgument(string optionArg) {
@@ -32,5 +49,4 @@ public class ShortOptionsWithArgumentParser {
     private static Option OptionPresentWithArgument(Option option, string argumentValue) {
         return new Option(option.ShortName, option.Name, isPresent: true, option._Argument.Name, argumentValue);
     }
-
 }
