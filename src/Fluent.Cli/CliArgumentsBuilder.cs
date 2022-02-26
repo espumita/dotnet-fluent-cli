@@ -50,30 +50,64 @@ public class CliArgumentsBuilder {
     }
 
     public CliArguments Build() {
-        var optionsMap = InitializeOptionResultFrom(optionConfigurations);
-        var optionsConfiguredWithName = OptionsConfiguredWithName(optionsMap);
+        var optionsDefinitions = InitializeOptionResultFrom(optionConfigurations);
+        var optionsConfiguredWithName = OptionsConfiguredWithName(optionsDefinitions);
 
         var cliArgumentsParser = new CliArgumentsParser(
-            optionsMap,
-            new LongOptionsWithArgumentOptionsParser(optionsMap, optionsConfiguredWithName),
-            new ShortOptionsWithArgumentOptionsParser(optionsMap),
-            new LongOptionsArgumentOptionsParser(optionsMap, optionsConfiguredWithName),
-            new ShortOptionsArgumentOptionsParser(optionsMap),
-            new MultipleShortOptionsArgumentOptionsParser(optionsMap),
+            new LongOptionsWithArgumentOptionsParser(optionsDefinitions, optionsConfiguredWithName),
+            new ShortOptionsWithArgumentOptionsParser(optionsDefinitions),
+            new LongOptionsArgumentOptionsParser(optionsDefinitions, optionsConfiguredWithName),
+            new ShortOptionsArgumentOptionsParser(optionsDefinitions),
+            new MultipleShortOptionsArgumentOptionsParser(optionsDefinitions),
             new UndefinedOptionsArgumentOptionsParser()
         );
-        return cliArgumentsParser.ParseFrom(environmentArgs);
+        var parserResult = cliArgumentsParser.ParseFrom(environmentArgs);
+        return BuildCliArgumentsFrom(optionsDefinitions, parserResult);
     }
 
-    private static IDictionary<string, Option> InitializeOptionResultFrom(IDictionary<string, OptionConfiguration> optionConfigurations) {
-        return optionConfigurations
+    private CliArguments BuildCliArgumentsFrom(OptionsDefinitions optionsDefinitions, CliArgumentsParserResult parserResult) {
+        var presentOptions = parserResult.presentOptions.Select(argumentOption => {
+            var option = argumentOption.NewOption;
+            return option;
+        }).ToList();
+
+        var options = optionsDefinitions.Options.Keys.Select(key => {
+            var presentOption = presentOptions.FirstOrDefault(option => key.Equals(option.ShortName?.ToString()) || key.Equals(option.Name));
+            if (presentOption != null) {
+                return presentOption;
+            }
+            return OptionNotPresent(optionsDefinitions.Options[key]);
+        }).ToList();
+
+        return new CliArguments(options);
+    }
+
+    private Option OptionNotPresent(Option option) {
+        return option;
+       // return new Option(
+       //     option.ShortName,
+       //     option.Name,
+       //     isPresent: false);//Argument
+       // )
+    }
+
+    private static OptionsDefinitions InitializeOptionResultFrom(IDictionary<string, OptionConfiguration> optionConfigurations) {
+        var options = optionConfigurations
             .ToDictionary(
                 keyValuePair => keyValuePair.Key,
-                keyValuePair => new Option(keyValuePair.Value.PrimaryName, keyValuePair.Value.SecondaryName, isPresent: false, keyValuePair.Value?.Argument?.ArgumentName));
+                keyValuePair => new Option(
+                    keyValuePair.Value.PrimaryName,
+                    keyValuePair.Value.SecondaryName,
+                    isPresent: false,
+                    keyValuePair.Value?.Argument?.ArgumentName)
+            );
+        return new OptionsDefinitions {
+            Options = options
+        };
     }
 
-    private static Dictionary<string, Option> OptionsConfiguredWithName(IDictionary<string, Option> optionsMap) {
-        return optionsMap.Where(keyValuePair => !string.IsNullOrEmpty(keyValuePair.Value.Name))
+    private static Dictionary<string, Option> OptionsConfiguredWithName(OptionsDefinitions optionsDefinitions) {
+        return optionsDefinitions.Options.Where(keyValuePair => !string.IsNullOrEmpty(keyValuePair.Value.Name))
             .ToDictionary(
                 keyValuePair => keyValuePair.Value.Name,
                 keyValuePair => keyValuePair.Value);

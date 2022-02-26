@@ -4,10 +4,10 @@ using Fluent.Cli.Options;
 namespace Fluent.Cli.Parsers;
 
 public class ShortOptionsWithArgumentOptionsParser : IOptionsParser {
-    private readonly IDictionary<string, Option> _optionsMap;
+    private readonly OptionsDefinitions _optionsDefinitions;
 
-    public ShortOptionsWithArgumentOptionsParser(IDictionary<string, Option> optionsMap) {
-        _optionsMap = optionsMap;
+    public ShortOptionsWithArgumentOptionsParser(OptionsDefinitions optionsDefinitions) {
+        _optionsDefinitions = optionsDefinitions;
     }
 
     public IList<ArgumentOption> TryToParse(string argument) {
@@ -26,8 +26,8 @@ public class ShortOptionsWithArgumentOptionsParser : IOptionsParser {
 
     public IList<ArgumentOption> TryToMarkShortOptionArgumentAsPresent(string argument) {
         var optionWithArgumentWithoutPrefix = OptionWithArgument(argument);
-        if (!_optionsMap.ContainsKey(optionWithArgumentWithoutPrefix.option)) throw InvalidOptionArgumentException(optionWithArgumentWithoutPrefix.option);
-        var option = _optionsMap[optionWithArgumentWithoutPrefix.option];
+        if (!_optionsDefinitions.Options.ContainsKey(optionWithArgumentWithoutPrefix.option)) throw InvalidOptionArgumentException(optionWithArgumentWithoutPrefix.option);
+        var option = _optionsDefinitions.Options[optionWithArgumentWithoutPrefix.option];
         var key = optionWithArgumentWithoutPrefix.option;
         return new List<ArgumentOption> {
             new ShortOptionWithArgument {

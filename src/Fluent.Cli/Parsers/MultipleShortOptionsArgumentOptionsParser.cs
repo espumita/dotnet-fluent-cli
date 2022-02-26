@@ -4,10 +4,10 @@ using Fluent.Cli.Options;
 namespace Fluent.Cli.Parsers;
 
 public class MultipleShortOptionsArgumentOptionsParser : IOptionsParser {
-    private readonly IDictionary<string, Option> _optionsMap;
+    private readonly OptionsDefinitions _optionsDefinitions;
 
-    public MultipleShortOptionsArgumentOptionsParser(IDictionary<string, Option> optionsMap) {
-        _optionsMap = optionsMap;
+    public MultipleShortOptionsArgumentOptionsParser(OptionsDefinitions _optionsDefinitions) {
+        this._optionsDefinitions = _optionsDefinitions;
     }
 
     public IList<ArgumentOption> TryToParse(string argument) {
@@ -24,14 +24,17 @@ public class MultipleShortOptionsArgumentOptionsParser : IOptionsParser {
         var options = new List<ArgumentOption>();
         for (int index = 0; index < multipleOptionsArgWithoutPrefix.Length; index++) {
             string possibleSimpleOptionChar = multipleOptionsArgWithoutPrefix[index].ToString();
-            if (!_optionsMap.ContainsKey(possibleSimpleOptionChar)) throw InvalidOptionArgumentException(possibleSimpleOptionChar);
-            var option = _optionsMap[possibleSimpleOptionChar];
+            if (!_optionsDefinitions.Options.ContainsKey(possibleSimpleOptionChar)) throw InvalidOptionArgumentException(possibleSimpleOptionChar);
+            var option = _optionsDefinitions.Options[possibleSimpleOptionChar];
             var key = possibleSimpleOptionChar;
-            var shortOption = new ShortOption {
-                key = key,
-                NewOption = OptionPresent(option)
-            };
-            options.Add(shortOption);
+            if (!options.Any(x => x.key.Equals(key))) {
+                var shortOption = new ShortOption {
+                    key = key,
+                    NewOption = OptionPresent(option)
+                };
+                options.Add(shortOption);
+            }
+
             if (index == multipleOptionsArgWithoutPrefix.Length - 1) break;
         }
 

@@ -4,11 +4,11 @@ using Fluent.Cli.Options;
 namespace Fluent.Cli.Parsers;
 
 public class LongOptionsWithArgumentOptionsParser : IOptionsParser {
-    private readonly IDictionary<string, Option> optionsMap;
+    private readonly OptionsDefinitions _optionsDefinitions;
     private readonly Dictionary<string, Option> optionsConfiguredWithName;
 
-    public LongOptionsWithArgumentOptionsParser(IDictionary<string, Option> optionsMap, Dictionary<string, Option> optionsConfiguredWithName) {
-        this.optionsMap = optionsMap;
+    public LongOptionsWithArgumentOptionsParser(OptionsDefinitions optionsDefinitions, Dictionary<string, Option> optionsConfiguredWithName) {
+        _optionsDefinitions = optionsDefinitions;
         this.optionsConfiguredWithName = optionsConfiguredWithName;
     }
 

@@ -5,11 +5,11 @@ namespace Fluent.Cli.Parsers;
 
 public class LongOptionsArgumentOptionsParser : IOptionsParser {
     
-    private readonly IDictionary<string, Option> _optionsMap;
+    private readonly OptionsDefinitions _optionsDefinitions;
     private readonly Dictionary<string, Option> _optionsConfiguredWithName;
 
-    public LongOptionsArgumentOptionsParser(IDictionary<string, Option> optionsMap, Dictionary<string, Option> optionsConfiguredWithName) {
-        _optionsMap = optionsMap;
+    public LongOptionsArgumentOptionsParser(OptionsDefinitions _optionsDefinitions, Dictionary<string, Option> optionsConfiguredWithName) {
+        this._optionsDefinitions = _optionsDefinitions;
         _optionsConfiguredWithName = optionsConfiguredWithName;
     }
 
