@@ -241,6 +241,21 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
     }
 
 
+    [Test]
+    public void trow_exception_when_short_option_is_configured_but_argument_is_not_configured() {
+        var anOptionShortName = anOption.ShortName();
+        var anOptionShortNamePrefix = anOption.ShortNamePrefix();
+        var argumentValue = anOption.ArgumentValue();
+        var environmentArgs = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}={argumentValue}" };
+
+        Action action = () => CliBuilderFrom(environmentArgs)
+            .Option(anOptionShortName)
+            .Build();
+
+        action.Should().Throw<ArgumentException>()
+            .And.Message.Should().Be($"PROGRAM: option -- '{anOptionShortName}' cannot be used with arguments.\r\nTry 'PROGRAM --help' for more information.");
+    }
+
     private static CliArgumentsBuilder CliBuilderFrom(string[] args) {
         return CliArgumentsBuilder.With(args);
     }

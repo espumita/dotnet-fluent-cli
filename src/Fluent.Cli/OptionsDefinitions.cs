@@ -10,7 +10,9 @@ public class OptionsDefinitions {
     }
 
     public bool IsArgumentOptionDefined(string optionName) {
-        var optionsDefinition = Definitions.Values.First(definition => optionName.Equals(definition.SecondaryName));
+        var optionsDefinition = optionName.Length == 1
+                ? Definitions[optionName]
+                : Definitions.Values.First(definition => optionName.Equals(definition.SecondaryName));
         return optionsDefinition.HasArgument;
     }
 }

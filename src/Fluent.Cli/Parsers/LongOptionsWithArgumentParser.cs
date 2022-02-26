@@ -39,6 +39,7 @@ public class LongOptionsWithArgumentParser : IOptionsParser {
     private static ArgumentException InvalidOptionArgumentException(string optionName) {
         return new ArgumentException($"PROGRAM: invalid option -- '{optionName}'\r\nTry 'PROGRAM --help' for more information.");
     }
+
     private static ArgumentException ArgumentNotConfiguredArgumentException(string optionName) {
         return new ArgumentException($"PROGRAM: option -- '{optionName}' cannot be used with arguments.\r\nTry 'PROGRAM --help' for more information.");
     }
