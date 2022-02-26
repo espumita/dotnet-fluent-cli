@@ -1,5 +1,6 @@
 ﻿using System;
 using Bogus;
+using Fluent.Cli.Exceptions;
 using Fluent.Cli.Tests.Utils;
 using FluentAssertions;
 using NUnit.Framework;

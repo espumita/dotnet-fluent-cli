@@ -1,4 +1,6 @@
-﻿namespace Fluent.Cli;
+﻿using Fluent.Cli.Exceptions;
+
+namespace Fluent.Cli;
 
 public class CliArguments {
     public List<Option> Options { get; }

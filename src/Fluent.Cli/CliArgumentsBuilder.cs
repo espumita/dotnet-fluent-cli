@@ -1,4 +1,5 @@
-﻿using Fluent.Cli.Options;
+﻿using Fluent.Cli.Exceptions;
+using Fluent.Cli.Options;
 using Fluent.Cli.Parsers;
 
 namespace Fluent.Cli; 
@@ -62,9 +63,8 @@ public class CliArgumentsBuilder {
             new UndefinedOptionsParser()
         );
         var parserResult = cliArgumentsParser.ParseFrom(environmentArgs);
-        var options = AllOptionsNotPresentByDefaultFrom(optionConfigurations);
-        MarkOptionsAsPresentBasedOn(parserResult, options);
-        return new CliArguments(options.Values.ToList());
+
+        return CliArgumentsFrom(parserResult);
     }
 
     private static OptionsDefinitions OptionDefinitionsFrom(IDictionary<string, OptionConfiguration> optionConfigurations) {
@@ -79,6 +79,12 @@ public class CliArgumentsBuilder {
         return new OptionsDefinitions {
             Definitions = definitions
         };
+    }
+
+    private CliArguments CliArgumentsFrom(CliArgumentsParserResult parserResult) {
+        var options = AllOptionsNotPresentByDefaultFrom(optionConfigurations);
+        MarkOptionsAsPresentBasedOn(parserResult, options);
+        return new CliArguments(options.Values.ToList());
     }
 
     private IDictionary<string, Option> AllOptionsNotPresentByDefaultFrom(IDictionary<string, OptionConfiguration> optionConfigurations) {
