@@ -4,6 +4,7 @@ public class CliArgumentsBuilder {
     private readonly string[] environmentArgs;
     private readonly IDictionary<string, OptionConfiguration> optionConfigurations;
     private string buildingOptionConfiguration;
+
     private CliArgumentsBuilder(string[] environmentArgs) {
         this.environmentArgs = environmentArgs;
         optionConfigurations = new Dictionary<string, OptionConfiguration>();
@@ -47,6 +48,14 @@ public class CliArgumentsBuilder {
     }
 
     public CliArguments Build() {
-        return CliArgumentsParser.ParseFrom(environmentArgs, optionConfigurations);
+        var cliArgumentsParser = new CliArgumentsParser(
+            new LongOptionsWithArgumentParser(),
+            new ShortOptionsWithArgumentParser(),
+            new LongOptionsArgumentParser(),
+            new ShortOptionsArgumentParser(),
+            new MultipleShortOptionsArgumentParser(),
+            new UndefinedOptionsArgumentParser()
+        );
+        return cliArgumentsParser.ParseFrom(environmentArgs, optionConfigurations);
     }
 }
