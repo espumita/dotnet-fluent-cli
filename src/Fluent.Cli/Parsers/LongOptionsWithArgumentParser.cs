@@ -22,6 +22,7 @@ public class LongOptionsWithArgumentParser : IOptionsParser {
     public IList<ArgumentOption> TryToMarkLongOptionArgumentAsPresent(string argument) {
         var optionWithArgumentWithoutPrefix = LongOptionWithArgument(argument);
         if (!_optionsDefinitions.IsOptionDefined(optionWithArgumentWithoutPrefix.option)) throw InvalidOptionArgumentException(optionWithArgumentWithoutPrefix.option);
+        if (!_optionsDefinitions.IsArgumentOptionDefined(optionWithArgumentWithoutPrefix.option)) throw ArgumentNotConfiguredArgumentException(optionWithArgumentWithoutPrefix.option);
         return new List<ArgumentOption> {
             new LongOptionWithArgument {
                 OptionNamePresent = optionWithArgumentWithoutPrefix.option,
@@ -37,6 +38,9 @@ public class LongOptionsWithArgumentParser : IOptionsParser {
 
     private static ArgumentException InvalidOptionArgumentException(string optionName) {
         return new ArgumentException($"PROGRAM: invalid option -- '{optionName}'\r\nTry 'PROGRAM --help' for more information.");
+    }
+    private static ArgumentException ArgumentNotConfiguredArgumentException(string optionName) {
+        return new ArgumentException($"PROGRAM: option -- '{optionName}' cannot be used with arguments.\r\nTry 'PROGRAM --help' for more information.");
     }
 
 }

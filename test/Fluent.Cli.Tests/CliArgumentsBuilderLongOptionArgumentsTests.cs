@@ -166,6 +166,21 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
             .And.Message.Should().Be($"PROGRAM: invalid option -- '{anOptionLongName}{anotherOptionLongName}'\r\nTry 'PROGRAM --help' for more information.");
     }
 
+    [Test]
+    public void trow_exception_when_long_option_is_configured_but_argument_is_not_configured() {
+        var anOptionLongName = anOption.LongName();
+        var anOptionLongNamePrefix = anOption.LongNamePrefix();
+        var argumentValue = anOption.ArgumentValue();
+        var environmentArgs = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}={argumentValue}" };
+
+        Action action = () => CliBuilderFrom(environmentArgs)
+            .LongOption(anOptionLongName)
+            .Build();
+
+        action.Should().Throw<ArgumentException>()
+            .And.Message.Should().Be($"PROGRAM: option -- '{anOptionLongName}' cannot be used with arguments.\r\nTry 'PROGRAM --help' for more information.");
+    }
+
     private static CliArgumentsBuilder CliBuilderFrom(string[] args)
     {
         return CliArgumentsBuilder.With(args);

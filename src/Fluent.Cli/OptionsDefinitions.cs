@@ -6,8 +6,11 @@ public class OptionsDefinitions {
     public bool IsOptionDefined(string optionName) {
         return optionName.Length == 1
             ? Definitions.ContainsKey(optionName)
-            : Definitions.Values.Any(x => optionName.Equals(x.SecondaryName));
+            : Definitions.Values.Any(definition => optionName.Equals(definition.SecondaryName));
     }
 
-    //TODO IsArgumentDefined
+    public bool IsArgumentOptionDefined(string optionName) {
+        var optionsDefinition = Definitions.Values.First(definition => optionName.Equals(definition.SecondaryName));
+        return optionsDefinition.HasArgument;
+    }
 }
