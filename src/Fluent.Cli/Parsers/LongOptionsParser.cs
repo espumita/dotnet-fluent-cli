@@ -3,14 +3,12 @@ using Fluent.Cli.Options;
 
 namespace Fluent.Cli.Parsers;
 
-public class LongOptionsArgumentOptionsParser : IOptionsParser {
+public class LongOptionsParser : IOptionsParser {
     
     private readonly OptionsDefinitions _optionsDefinitions;
-    private readonly Dictionary<string, Option> _optionsConfiguredWithName;
 
-    public LongOptionsArgumentOptionsParser(OptionsDefinitions _optionsDefinitions, Dictionary<string, Option> optionsConfiguredWithName) {
+    public LongOptionsParser(OptionsDefinitions _optionsDefinitions) {
         this._optionsDefinitions = _optionsDefinitions;
-        _optionsConfiguredWithName = optionsConfiguredWithName;
     }
 
     public IList<ArgumentOption> TryToParse(string argument) {
@@ -24,13 +22,10 @@ public class LongOptionsArgumentOptionsParser : IOptionsParser {
 
     public IList<ArgumentOption> TryToMarkLongOptionAsPresent(string argument) {
         var longOptionArgWithoutPrefix = LongOptionWithoutPrefix(argument);
-        if (!_optionsConfiguredWithName.ContainsKey(longOptionArgWithoutPrefix)) throw InvalidOptionArgumentException(longOptionArgWithoutPrefix); ;
-        var option = _optionsConfiguredWithName[longOptionArgWithoutPrefix];
-        var key = option.ShortName != null ? option.ShortName.ToString() : option.Name; //?
+        if (!_optionsDefinitions.IsOptionDefined(longOptionArgWithoutPrefix)) throw InvalidOptionArgumentException(longOptionArgWithoutPrefix); ;
         return new List<ArgumentOption> {
             new LongOption {
-                key = key,
-                NewOption = OptionPresent(option)
+                OptionNamePresent = longOptionArgWithoutPrefix
             }
         };
     }
@@ -44,7 +39,4 @@ public class LongOptionsArgumentOptionsParser : IOptionsParser {
         return new ArgumentException($"PROGRAM: invalid option -- '{optionName}'\r\nTry 'PROGRAM --help' for more information.");
     }
 
-    private static Option OptionPresent(Option option) {
-        return new Option(option.ShortName, option.Name, isPresent: true);
-    }
 }

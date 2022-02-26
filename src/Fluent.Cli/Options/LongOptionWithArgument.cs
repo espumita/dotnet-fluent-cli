@@ -1,6 +1,5 @@
 ﻿namespace Fluent.Cli.Options;
 
-public class LongOptionWithArgument : ArgumentOption {
-
+public class LongOptionWithArgument : ArgumentOptionWithArgument {
 
 }

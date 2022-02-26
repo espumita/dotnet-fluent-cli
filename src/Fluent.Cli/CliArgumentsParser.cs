@@ -3,26 +3,26 @@
 namespace Fluent.Cli;
 
 public class CliArgumentsParser {
-    private readonly LongOptionsWithArgumentOptionsParser _longOptionsWithArgumentOptionsParser;
-    private readonly ShortOptionsWithArgumentOptionsParser _shortOptionsWithArgumentOptionsParser;
-    private readonly LongOptionsArgumentOptionsParser _longOptionsArgumentOptionsParser;
-    private readonly ShortOptionsArgumentOptionsParser _shortOptionsArgumentOptionsParser;
-    private readonly MultipleShortOptionsArgumentOptionsParser _multipleShortOptionsArgumentOptionsParser;
-    private readonly UndefinedOptionsArgumentOptionsParser _undefinedOptionsArgumentOptionsParser;
+    private readonly LongOptionsWithArgumentParser _longOptionsWithArgumentParser;
+    private readonly ShortOptionsWithArgumentParser _shortOptionsWithArgumentParser;
+    private readonly LongOptionsParser _longOptionsParser;
+    private readonly ShortOptionsParser _shortOptionsParser;
+    private readonly MultipleShortOptionsParser _multipleShortOptionsParser;
+    private readonly UndefinedOptionsParser _undefinedOptionsParser;
 
     public CliArgumentsParser(
-        LongOptionsWithArgumentOptionsParser longOptionsWithArgumentOptionsParser,
-            ShortOptionsWithArgumentOptionsParser shortOptionsWithArgumentOptionsParser,
-            LongOptionsArgumentOptionsParser longOptionsArgumentOptionsParser,
-            ShortOptionsArgumentOptionsParser shortOptionsArgumentOptionsParser,
-            MultipleShortOptionsArgumentOptionsParser multipleShortOptionsArgumentOptionsParser,
-            UndefinedOptionsArgumentOptionsParser undefinedOptionsArgumentOptionsParser) {
-        this._longOptionsWithArgumentOptionsParser = longOptionsWithArgumentOptionsParser;
-        this._shortOptionsWithArgumentOptionsParser = shortOptionsWithArgumentOptionsParser;
-        this._longOptionsArgumentOptionsParser = longOptionsArgumentOptionsParser;
-        this._shortOptionsArgumentOptionsParser = shortOptionsArgumentOptionsParser;
-        this._multipleShortOptionsArgumentOptionsParser = multipleShortOptionsArgumentOptionsParser;
-        this._undefinedOptionsArgumentOptionsParser = undefinedOptionsArgumentOptionsParser;
+        LongOptionsWithArgumentParser longOptionsWithArgumentParser,
+            ShortOptionsWithArgumentParser shortOptionsWithArgumentParser,
+            LongOptionsParser longOptionsParser,
+            ShortOptionsParser shortOptionsParser,
+            MultipleShortOptionsParser multipleShortOptionsParser,
+            UndefinedOptionsParser undefinedOptionsParser) {
+        this._longOptionsWithArgumentParser = longOptionsWithArgumentParser;
+        this._shortOptionsWithArgumentParser = shortOptionsWithArgumentParser;
+        this._longOptionsParser = longOptionsParser;
+        this._shortOptionsParser = shortOptionsParser;
+        this._multipleShortOptionsParser = multipleShortOptionsParser;
+        this._undefinedOptionsParser = undefinedOptionsParser;
     }
 
     public CliArgumentsParserResult ParseFrom(string[] environmentArgs) {
@@ -37,12 +37,12 @@ public class CliArgumentsParser {
     }
 
     private IOptionsParser OptionsParserFor(string argument) {
-        if (_longOptionsWithArgumentOptionsParser.IsALongOptionWithArgument(argument)) return _longOptionsWithArgumentOptionsParser;
-        if (_shortOptionsWithArgumentOptionsParser.IsAnOptionWithArgument(argument)) return _shortOptionsWithArgumentOptionsParser;
-        if (_longOptionsArgumentOptionsParser.IsALongOption(argument)) return _longOptionsArgumentOptionsParser;
-        if (_shortOptionsArgumentOptionsParser.IsAShortOption(argument)) return _shortOptionsArgumentOptionsParser;
-        if (_multipleShortOptionsArgumentOptionsParser.AreMultipleShortOptions(argument)) return _multipleShortOptionsArgumentOptionsParser;
-        if (_undefinedOptionsArgumentOptionsParser.IsAnUndefinedOption(argument)) return _undefinedOptionsArgumentOptionsParser;
+        if (_longOptionsWithArgumentParser.IsALongOptionWithArgument(argument)) return _longOptionsWithArgumentParser;
+        if (_shortOptionsWithArgumentParser.IsAnOptionWithArgument(argument)) return _shortOptionsWithArgumentParser;
+        if (_longOptionsParser.IsALongOption(argument)) return _longOptionsParser;
+        if (_shortOptionsParser.IsAShortOption(argument)) return _shortOptionsParser;
+        if (_multipleShortOptionsParser.AreMultipleShortOptions(argument)) return _multipleShortOptionsParser;
+        if (_undefinedOptionsParser.IsAnUndefinedOption(argument)) return _undefinedOptionsParser;
         return null;
     }
 

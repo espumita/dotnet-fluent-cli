@@ -3,10 +3,10 @@ using Fluent.Cli.Options;
 
 namespace Fluent.Cli.Parsers;
 
-public class ShortOptionsArgumentOptionsParser : IOptionsParser {
+public class ShortOptionsParser : IOptionsParser {
     private readonly OptionsDefinitions _optionsDefinitions;
 
-    public ShortOptionsArgumentOptionsParser(OptionsDefinitions _optionsDefinitions) {
+    public ShortOptionsParser(OptionsDefinitions _optionsDefinitions) {
         this._optionsDefinitions = _optionsDefinitions;
     }
 
@@ -21,14 +21,10 @@ public class ShortOptionsArgumentOptionsParser : IOptionsParser {
 
     public IList<ArgumentOption> TryToMarkShortOptionsAsPresent(string optionArg) {
         var optionArgWithoutPrefix = OptionWithoutPrefix(optionArg);
-        if (!_optionsDefinitions.Options.ContainsKey(optionArgWithoutPrefix)) throw InvalidOptionArgumentException(optionArgWithoutPrefix);
-        var option = _optionsDefinitions.Options[optionArgWithoutPrefix];
-        var key = optionArgWithoutPrefix;
+        if (!_optionsDefinitions.IsOptionDefined(optionArgWithoutPrefix)) throw InvalidOptionArgumentException(optionArgWithoutPrefix);
         return new List<ArgumentOption> {
             new ShortOption {
-                key = key,
-                NewOption = OptionPresent(option)
-
+                OptionNamePresent = optionArgWithoutPrefix,
             }
         };
     }
@@ -36,10 +32,6 @@ public class ShortOptionsArgumentOptionsParser : IOptionsParser {
     private static string OptionWithoutPrefix(string optionArg) {
         var match = Regex.Match(optionArg, "^(-)([a-zA-Z0-9])$");
         return match.Groups[2].Value;
-    }
-
-    private static Option OptionPresent(Option option) {
-        return new Option(option.ShortName, option.Name, isPresent: true);
     }
 
     private static ArgumentException InvalidOptionArgumentException(string optionName) {

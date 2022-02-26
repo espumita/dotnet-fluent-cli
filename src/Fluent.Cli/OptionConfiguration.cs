@@ -3,25 +3,25 @@
 namespace Fluent.Cli;
 
 public class OptionConfiguration {
-    public char? PrimaryName { get; }
+    public string PrimaryName { get; }
     public string SecondaryName { get; }
 
     public ArgumentConfiguration Argument { get; private set; }
 
-    private OptionConfiguration(char? primaryName, string secondaryName) {
+    private OptionConfiguration(string primaryName, string secondaryName) {
         PrimaryName = primaryName;
         SecondaryName = secondaryName;
     }
 
     public static OptionConfiguration For(char primaryName) {
         Validate(primaryName);
-        return new OptionConfiguration(primaryName: primaryName, secondaryName: null);
+        return new OptionConfiguration(primaryName: primaryName.ToString(), secondaryName: null);
     }
 
     public static OptionConfiguration For(char primaryName, string secondaryName) {
         Validate(primaryName);
         Validate(secondaryName);
-        return new OptionConfiguration(primaryName, secondaryName);
+        return new OptionConfiguration(primaryName.ToString(), secondaryName);
     }
 
     public static OptionConfiguration ForLong(string secondaryName) {
@@ -41,5 +41,9 @@ public class OptionConfiguration {
     private static void Validate(string secondaryName) {
         if (string.IsNullOrEmpty(secondaryName) || !Regex.IsMatch(secondaryName, "^[a-zA-Z0-9]+$|^[^/-][a-zA-Z0-9/-]+[^/-]$"))
             throw new ArgumentException($"'{secondaryName}' is not a valid option, only alpha-numeric values and words separated by hyphen minus '-' can be configured");
+    }
+
+    public bool IsArgumentConfigured() {
+        return !string.IsNullOrEmpty(Argument?.ArgumentName);
     }
 }

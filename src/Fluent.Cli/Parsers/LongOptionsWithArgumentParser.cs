@@ -3,13 +3,11 @@ using Fluent.Cli.Options;
 
 namespace Fluent.Cli.Parsers;
 
-public class LongOptionsWithArgumentOptionsParser : IOptionsParser {
+public class LongOptionsWithArgumentParser : IOptionsParser {
     private readonly OptionsDefinitions _optionsDefinitions;
-    private readonly Dictionary<string, Option> optionsConfiguredWithName;
 
-    public LongOptionsWithArgumentOptionsParser(OptionsDefinitions optionsDefinitions, Dictionary<string, Option> optionsConfiguredWithName) {
+    public LongOptionsWithArgumentParser(OptionsDefinitions optionsDefinitions) {
         _optionsDefinitions = optionsDefinitions;
-        this.optionsConfiguredWithName = optionsConfiguredWithName;
     }
 
     public IList<ArgumentOption> TryToParse(string argument) {
@@ -23,13 +21,11 @@ public class LongOptionsWithArgumentOptionsParser : IOptionsParser {
 
     public IList<ArgumentOption> TryToMarkLongOptionArgumentAsPresent(string argument) {
         var optionWithArgumentWithoutPrefix = LongOptionWithArgument(argument);
-        if (!optionsConfiguredWithName.ContainsKey(optionWithArgumentWithoutPrefix.option)) throw InvalidOptionArgumentException(optionWithArgumentWithoutPrefix.option);
-        var option = optionsConfiguredWithName[optionWithArgumentWithoutPrefix.option];
-        var key = option.ShortName != null ? option.ShortName.ToString() : option.Name; //?
+        if (!_optionsDefinitions.IsOptionDefined(optionWithArgumentWithoutPrefix.option)) throw InvalidOptionArgumentException(optionWithArgumentWithoutPrefix.option);
         return new List<ArgumentOption> {
             new LongOptionWithArgument {
-                key = key,
-                NewOption = OptionPresentWithArgument(option, optionWithArgumentWithoutPrefix.argumentValue)
+                OptionNamePresent = optionWithArgumentWithoutPrefix.option,
+                ArgumentValue = optionWithArgumentWithoutPrefix.argumentValue
             }
         };
     }
@@ -43,7 +39,4 @@ public class LongOptionsWithArgumentOptionsParser : IOptionsParser {
         return new ArgumentException($"PROGRAM: invalid option -- '{optionName}'\r\nTry 'PROGRAM --help' for more information.");
     }
 
-    private static Option OptionPresentWithArgument(Option option, string argumentValue) {
-        return new Option(option.ShortName, option.Name, isPresent: true, option._Argument.Name, argumentValue);
-    }
 }

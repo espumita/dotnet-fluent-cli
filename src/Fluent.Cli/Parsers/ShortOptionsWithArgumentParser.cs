@@ -3,10 +3,10 @@ using Fluent.Cli.Options;
 
 namespace Fluent.Cli.Parsers;
 
-public class ShortOptionsWithArgumentOptionsParser : IOptionsParser {
+public class ShortOptionsWithArgumentParser : IOptionsParser {
     private readonly OptionsDefinitions _optionsDefinitions;
 
-    public ShortOptionsWithArgumentOptionsParser(OptionsDefinitions optionsDefinitions) {
+    public ShortOptionsWithArgumentParser(OptionsDefinitions optionsDefinitions) {
         _optionsDefinitions = optionsDefinitions;
     }
 
@@ -26,13 +26,11 @@ public class ShortOptionsWithArgumentOptionsParser : IOptionsParser {
 
     public IList<ArgumentOption> TryToMarkShortOptionArgumentAsPresent(string argument) {
         var optionWithArgumentWithoutPrefix = OptionWithArgument(argument);
-        if (!_optionsDefinitions.Options.ContainsKey(optionWithArgumentWithoutPrefix.option)) throw InvalidOptionArgumentException(optionWithArgumentWithoutPrefix.option);
-        var option = _optionsDefinitions.Options[optionWithArgumentWithoutPrefix.option];
-        var key = optionWithArgumentWithoutPrefix.option;
+        if (!_optionsDefinitions.IsOptionDefined(optionWithArgumentWithoutPrefix.option)) throw InvalidOptionArgumentException(optionWithArgumentWithoutPrefix.option);
         return new List<ArgumentOption> {
             new ShortOptionWithArgument {
-                key = key,
-                NewOption = OptionPresentWithArgument(option, optionWithArgumentWithoutPrefix.argumentValue)
+                OptionNamePresent = optionWithArgumentWithoutPrefix.option,
+                ArgumentValue = optionWithArgumentWithoutPrefix.argumentValue
             }
         };
     }
@@ -46,7 +44,4 @@ public class ShortOptionsWithArgumentOptionsParser : IOptionsParser {
         return new ArgumentException($"PROGRAM: invalid option -- '{optionName}'\r\nTry 'PROGRAM --help' for more information.");
     }
 
-    private static Option OptionPresentWithArgument(Option option, string argumentValue) {
-        return new Option(option.ShortName, option.Name, isPresent: true, option._Argument.Name, argumentValue);
-    }
 }

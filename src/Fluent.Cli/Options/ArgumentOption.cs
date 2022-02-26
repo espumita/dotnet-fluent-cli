@@ -2,6 +2,5 @@
 
 public class ArgumentOption {
 
-    public string key { get; set; }
-    public Option NewOption { get; set; }
+    public string OptionNamePresent { get; set; }
 }

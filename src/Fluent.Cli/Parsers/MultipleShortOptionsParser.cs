@@ -3,10 +3,10 @@ using Fluent.Cli.Options;
 
 namespace Fluent.Cli.Parsers;
 
-public class MultipleShortOptionsArgumentOptionsParser : IOptionsParser {
+public class MultipleShortOptionsParser : IOptionsParser {
     private readonly OptionsDefinitions _optionsDefinitions;
 
-    public MultipleShortOptionsArgumentOptionsParser(OptionsDefinitions _optionsDefinitions) {
+    public MultipleShortOptionsParser(OptionsDefinitions _optionsDefinitions) {
         this._optionsDefinitions = _optionsDefinitions;
     }
 
@@ -24,13 +24,10 @@ public class MultipleShortOptionsArgumentOptionsParser : IOptionsParser {
         var options = new List<ArgumentOption>();
         for (int index = 0; index < multipleOptionsArgWithoutPrefix.Length; index++) {
             string possibleSimpleOptionChar = multipleOptionsArgWithoutPrefix[index].ToString();
-            if (!_optionsDefinitions.Options.ContainsKey(possibleSimpleOptionChar)) throw InvalidOptionArgumentException(possibleSimpleOptionChar);
-            var option = _optionsDefinitions.Options[possibleSimpleOptionChar];
-            var key = possibleSimpleOptionChar;
-            if (!options.Any(x => x.key.Equals(key))) {
+            if (!_optionsDefinitions.IsOptionDefined(possibleSimpleOptionChar)) throw InvalidOptionArgumentException(possibleSimpleOptionChar);
+            if (!options.Any(x => x.OptionNamePresent.Equals(possibleSimpleOptionChar))) {
                 var shortOption = new ShortOption {
-                    key = key,
-                    NewOption = OptionPresent(option)
+                    OptionNamePresent = possibleSimpleOptionChar
                 };
                 options.Add(shortOption);
             }
