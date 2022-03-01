@@ -154,4 +154,9 @@ public class CliArgumentsBuilder {
             argumentValue: argumentValue
         );
     }
+
+    public CliArgumentsBuilder Command(string builder) {
+        //todo
+        return this;
+    }
 }

@@ -1,4 +1,5 @@
-﻿using Fluent.Cli.Exceptions;
+﻿using System.Data;
+using Fluent.Cli.Exceptions;
 
 namespace Fluent.Cli;
 
@@ -29,5 +30,15 @@ public class CliArguments {
         var argument = Arguments.FirstOrDefault(argument => argument.Name.Equals(argumentName));
         //TODO
         return argument;
+    }
+
+    public bool IsCommandPresent() {
+        //TODO
+        return false;
+    }
+
+    public Command Command() {
+        //TODO
+        return null;
     }
 }
