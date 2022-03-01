@@ -65,8 +65,8 @@ public class CliArgumentsBuilder {
         //Configure
         var programName = ProgramNameFromAssembly();
         var programVersion = ProgramVersionFromAssembly();
-        var optionsDefinitions = OptionDefinitionsFrom(optionConfigurations);
         var commandDefinitions = CommandDefinitionsFrom(commandConfigurations);
+        var optionsDefinitions = OptionDefinitionsFrom(optionConfigurations);
         var enableCommandProcess = true; //enabled by default
         var enableOptionsProcess = true; //enabled by default
         var enableArgumentProcess = true; //enabled by default
@@ -77,6 +77,7 @@ public class CliArgumentsBuilder {
         var argumentsPreprocessResult = argumentsPreprocessor.Preprocess(environmentArgs, commandDefinitions);
 
         if (VersionOptionIsPresent(argumentsPreprocessResult.PossibleOptions)) PrintVersionAndStopProcess(programName, programVersion);
+        if (HelpOptionIsPresent(argumentsPreprocessResult.PossibleOptions)) PrintHelpAndStopProcess(programName, optionsDefinitions, commandDefinitions);
 
         //Process (If configured)
         var commandArgumentsParser = new CommandArgumentsParser(commandDefinitions);
@@ -116,6 +117,20 @@ public class CliArgumentsBuilder {
         Environment.Exit(0);
     }
 
+    private void PrintHelpAndStopProcess(string programName, OptionsDefinitions optionsDefinitions, CommandsDefinitions commandsDefinitions) {
+        Console.Write(Environment.NewLine);
+        Console.WriteLine($"Usage: {programName} [OPTIONS] COMMAND [ARGUMENTS]"); //TODO this should be formatted with default window width
+        Console.WriteLine("Options:");
+        foreach (var optionDefinition in optionsDefinitions.Definitions) {
+            Console.WriteLine($"{optionDefinition.Key}");
+        }
+        Console.WriteLine("Commands:");
+        foreach (var commandDefinition in commandsDefinitions.Definitions) {
+            Console.WriteLine($"{commandDefinition.Key}");
+        }
+        Environment.Exit(0);
+    }
+
     private static OptionsDefinitions OptionDefinitionsFrom(IDictionary<string, OptionConfiguration> optionConfigurations) {
         var definitions = optionConfigurations
             .ToDictionary(
@@ -143,6 +158,10 @@ public class CliArgumentsBuilder {
 
     private static bool VersionOptionIsPresent(IList<string> possibleOptions) {
         return possibleOptions.Contains("-v") || possibleOptions.Contains("--version");
+    }
+    
+    private static bool HelpOptionIsPresent(IList<string> possibleOptions) {
+        return possibleOptions.Contains("--help");
     }
 
     private CliArguments CliArgumentsFrom(string program, string version, CommandsArgumentsParserResult commandsArgumentsParserResult, OptionsArgumentsParserResult optionsParserResult, ArgumentsParserResult argumentsParserResult) {
