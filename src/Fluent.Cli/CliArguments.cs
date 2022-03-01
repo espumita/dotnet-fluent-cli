@@ -3,10 +3,12 @@
 namespace Fluent.Cli;
 
 public class CliArguments {
+    public string Program { get; set; }
     public List<Option> Options { get; }
     public List<Argument> Arguments { get; }
 
-    public CliArguments(List<Option> options, List<Argument> arguments) {
+    public CliArguments(string program, List<Option> options, List<Argument> arguments) {
+        Program = program;
         Options = options;
         Arguments = arguments;
     }

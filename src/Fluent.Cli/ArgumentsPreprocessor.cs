@@ -14,8 +14,9 @@ public class ArgumentsPreprocessor {
     public ArgumentsPreprocessResult Preprocess(string[] environmentArgs) {
         var argumentsPreprocessResult = new ArgumentsPreprocessResult();
         var argumentsQueue = new Queue<string>(environmentArgs);
-        //TODO first argument should be considered program some times.
-
+        var executableFileName = ExecutableFileName(argumentsQueue);
+        argumentsPreprocessResult.AddProgramName(executableFileName);
+        
         while (argumentsQueue.Any()) {
             var currentArgument = argumentsQueue.Dequeue();
             if (_enableOptionsProcess && IsAPossibleOption(currentArgument)) {
@@ -25,6 +26,16 @@ public class ArgumentsPreprocessor {
             }
         }
         return argumentsPreprocessResult;
+    }
+
+    private static string ExecutableFileName(Queue<string> argumentsQueue) {
+        var environmentCommandLineArgs = Environment.GetCommandLineArgs();
+        var executableFileName = environmentCommandLineArgs[0];
+        if (argumentsQueue.Any()) {
+            var peek = argumentsQueue.Peek();
+            if (peek.Equals(executableFileName)) return argumentsQueue.Dequeue();
+        }
+        return executableFileName;
     }
 
     private static bool IsAPossibleOption(string currentArgument) {

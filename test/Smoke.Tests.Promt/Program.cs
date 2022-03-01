@@ -2,14 +2,24 @@
 
 var environmentArgs = Environment.GetCommandLineArgs();
 
-var argsOptions = CliArgumentsBuilder.With(environmentArgs)
+var cliArguments = CliArgumentsBuilder.With(environmentArgs)
     .LongOption("verbose")
+    .LongOption("show-program-name")
+    .LongOption("show-arguments")
     .Build();
 
-if (argsOptions.Option("verbose").IsPresent) {
+if (cliArguments.Option("verbose").IsPresent) {
     Console.Write("Verbose option is present");
-} else {
-    Console.Write("Verbose option is not present");
+}
+
+if (cliArguments.Option("show-program-name").IsPresent) {
+    Console.Write(cliArguments.Program);
+}
+
+if (cliArguments.Option("show-arguments").IsPresent) {
+    cliArguments.Arguments.ForEach(argument => {
+        Console.Write($"{argument.Name}:{argument.Value}:");
+    });
 }
 
 Environment.Exit(0);

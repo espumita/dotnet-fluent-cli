@@ -75,7 +75,7 @@ public class CliArgumentsBuilder {
         var optionsArgumentsParserResult = optionsArgumentsParser.ParseFrom(argumentsPreprocessResult.PossibleOptions);
         var argumentsParserResult = argumentsParser.ParseFrom(argumentsPreprocessResult.PossibleArguments);
 
-        return CliArgumentsFrom(optionsArgumentsParserResult, argumentsParserResult);
+        return CliArgumentsFrom(argumentsPreprocessResult.Program, optionsArgumentsParserResult, argumentsParserResult);
     }
 
     private static OptionsDefinitions OptionDefinitionsFrom(IDictionary<string, OptionConfiguration> optionConfigurations) {
@@ -92,11 +92,12 @@ public class CliArgumentsBuilder {
         };
     }
 
-    private CliArguments CliArgumentsFrom(OptionsArgumentsParserResult optionsParserResult, ArgumentsParserResult argumentsParserResult) {
+    private CliArguments CliArgumentsFrom(string program, OptionsArgumentsParserResult optionsParserResult, ArgumentsParserResult argumentsParserResult) {
         var options = AllOptionsNotPresentByDefaultFrom(optionConfigurations);
         MarkOptionsAsPresentBasedOn(optionsParserResult, options);
         var arguments = ArgumentsFrom(argumentsParserResult);
         return new CliArguments(
+            program: program,
             options: options.Values.ToList(),
             arguments: arguments
         );

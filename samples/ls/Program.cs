@@ -134,6 +134,7 @@ ConfigureOption('Z', "context");
 ConfigureOption('1');
 ConfigureLongOption("help");
 ConfigureLongOption("version");
+ConfigureFilesArguments();
 
 Environment.Exit(0);
 
@@ -158,4 +159,10 @@ void ConfigureOption(char? optionsShortName = null, string optionLongName = null
 
 void ConfigureLongOption(string optionLongName) {
     ConfigureOption(optionLongName: optionLongName);
+}
+
+void ConfigureFilesArguments() {
+    cliArguments.Arguments.ForEach(argument => {
+        Console.WriteLine($"Argument:{argument.Name} - FILE: {argument.Value}");
+    });
 }

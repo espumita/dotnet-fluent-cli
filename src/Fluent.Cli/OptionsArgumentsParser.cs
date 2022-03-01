@@ -17,19 +17,19 @@ public class OptionsArgumentsParser {
             ShortOptionsParser shortOptionsParser,
             MultipleShortOptionsParser multipleShortOptionsParser,
             UndefinedOptionsParser undefinedOptionsParser) {
-        this._longOptionsWithArgumentParser = longOptionsWithArgumentParser;
-        this._shortOptionsWithArgumentParser = shortOptionsWithArgumentParser;
-        this._longOptionsParser = longOptionsParser;
-        this._shortOptionsParser = shortOptionsParser;
-        this._multipleShortOptionsParser = multipleShortOptionsParser;
-        this._undefinedOptionsParser = undefinedOptionsParser;
+        _longOptionsWithArgumentParser = longOptionsWithArgumentParser;
+        _shortOptionsWithArgumentParser = shortOptionsWithArgumentParser;
+        _longOptionsParser = longOptionsParser;
+        _shortOptionsParser = shortOptionsParser;
+        _multipleShortOptionsParser = multipleShortOptionsParser;
+        _undefinedOptionsParser = undefinedOptionsParser;
     }
 
     public OptionsArgumentsParserResult ParseFrom(IList<string> environmentArgs) {
         var parserResult = new OptionsArgumentsParserResult();
         foreach (var argument in environmentArgs) {
             var optionsParser = OptionsParserFor(argument);
-            if (optionsParser == null) continue; //TODO
+           // if (optionsParser == null) continue; //TODO
             var presentOptions = optionsParser.TryToParse(argument);
             parserResult.Add(presentOptions);
         }
@@ -45,7 +45,5 @@ public class OptionsArgumentsParser {
         if (_undefinedOptionsParser.IsAnUndefinedOption(argument)) return _undefinedOptionsParser;
         return null;
     }
-
-
 
 }
