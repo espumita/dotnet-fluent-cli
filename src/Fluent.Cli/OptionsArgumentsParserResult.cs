@@ -2,9 +2,9 @@
 
 namespace Fluent.Cli;
 
-public class CliArgumentsParserResult {
+public class OptionsArgumentsParserResult {
     public readonly List<ArgumentOption> presentOptions;
-    public CliArgumentsParserResult() {
+    public OptionsArgumentsParserResult() {
         presentOptions = new List<ArgumentOption>();
     }
 

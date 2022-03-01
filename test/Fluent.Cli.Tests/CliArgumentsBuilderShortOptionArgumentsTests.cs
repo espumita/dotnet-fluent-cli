@@ -9,12 +9,11 @@ namespace Fluent.Cli.Tests;
 
 public class CliArgumentsBuilderShortOptionArgumentsTests {
 
-    private Faker faker;
     private OptionFaker anOption;
 
     [SetUp]
     public void SetUp() {
-        faker = new Faker();
+        var faker = new Faker();
         anOption = new OptionFaker(faker);
     }
 
@@ -25,7 +24,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         Action action = () => {
             CliBuilderFrom(environmentArgs)
                 .Option(anOptionShortName)
-                    .WithArgument(null)
+                    .WithOptionArgument(null)
                 .Build();
         };
 
@@ -57,7 +56,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
 
         Action action = () => {
             CliBuilderFrom(environmentArgs)
-                    .WithArgument(argumentName)
+                    .WithOptionArgument(argumentName)
                 .Build();
         };
 
@@ -74,7 +73,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         var environmentArgs = new [] { $"{anOptionShortNamePrefix}{anOptionShortName}={argumentValue}"};
         var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-                .WithArgument(argumentName)
+                .WithOptionArgument(argumentName)
             .Build();
         var option = cliArguments.Option(anOptionShortName);
 
@@ -97,9 +96,9 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         
         var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-                .WithArgument(argumentName)
+                .WithOptionArgument(argumentName)
             .Option(anotherOptionShortName)
-                .WithArgument(anotherArgumentName)
+                .WithOptionArgument(anotherArgumentName)
             .Build();
         
         var option = cliArguments.Option(anOptionShortName);
@@ -122,7 +121,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         var environmentArgs = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}={argumentValue}" };
         var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName, anOptionLongName)
-                .WithArgument(argumentName)
+                .WithOptionArgument(argumentName)
             .Build();
         var option = cliArguments.Option(anOptionShortName);
 
@@ -142,7 +141,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         var environmentArgs = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}={argumentValue}" };
         var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName, anOptionLongName)
-                .WithArgument(argumentName)
+                .WithOptionArgument(argumentName)
             .Build();
         var option = cliArguments.Option(anOptionLongName);
 
@@ -160,7 +159,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         var environmentArgs = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}=" };
         var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-                .WithArgument(argumentName)
+                .WithOptionArgument(argumentName)
             .Build();
         var option = cliArguments.Option(anOptionShortName);
 
@@ -181,7 +180,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         
         Action action = () => CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-                .WithArgument(argumentName)
+                .WithOptionArgument(argumentName)
             .Build();
 
         action.Should().Throw<ArgumentException>()
@@ -199,7 +198,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
 
         Action action = () => CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-                .WithArgument(argumentName)
+                .WithOptionArgument(argumentName)
             .Build();
 
         action.Should().Throw<ArgumentException>()
@@ -216,7 +215,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
 
         Action action = () => CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-                .WithArgument(argumentName)
+                .WithOptionArgument(argumentName)
             .Build();
 
         action.Should().Throw<ArgumentException>()
@@ -234,7 +233,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
 
         Action action = () => CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-                .WithArgument(argumentName)
+                .WithOptionArgument(argumentName)
             .Build();
 
         action.Should().Throw<ArgumentException>()

@@ -7,12 +7,11 @@ using NUnit.Framework;
 namespace Fluent.Cli.Tests; 
 
 public class CliArgumentsBuilderShortNameAndLongNameOptionsTests {
-    private Faker faker;
     private OptionFaker anOption;
 
     [SetUp]
     public void SetUp() {
-        faker = new Faker();
+        var faker = new Faker();
         anOption = new OptionFaker(faker);
     }
 

@@ -7,12 +7,11 @@ using NUnit.Framework;
 
 namespace Fluent.Cli.Tests;
 public class CliArgumentsBuilderConfigurationTests {
-    private Faker faker;
     private OptionFaker anOption;
 
     [SetUp]
     public void SetUp() {
-        faker = new Faker();
+        var faker = new Faker();
         anOption = new OptionFaker(faker);
     }
 
@@ -112,8 +111,8 @@ public class CliArgumentsBuilderConfigurationTests {
         Action action = () =>
             CliBuilderFrom(environmentArgs)
                 .Option(anOptionShortName)
-                    .WithArgument(anOptionArgumentName)
-                    .WithArgument(anOptionArgumentName)
+                    .WithOptionArgument(anOptionArgumentName)
+                    .WithOptionArgument(anOptionArgumentName)
                 .Build();
 
         action.Should().Throw<OptionWithMultipleArgumentsAreNotSupportedException>()

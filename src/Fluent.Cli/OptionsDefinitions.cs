@@ -15,4 +15,5 @@ public class OptionsDefinitions {
                 : Definitions.Values.First(definition => optionName.Equals(definition.SecondaryName));
         return optionsDefinition.HasArgument;
     }
+
 }

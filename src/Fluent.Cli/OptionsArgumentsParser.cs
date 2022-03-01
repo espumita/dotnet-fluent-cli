@@ -2,7 +2,7 @@
 
 namespace Fluent.Cli;
 
-public class CliArgumentsParser {
+public class OptionsArgumentsParser {
     private readonly LongOptionsWithArgumentParser _longOptionsWithArgumentParser;
     private readonly ShortOptionsWithArgumentParser _shortOptionsWithArgumentParser;
     private readonly LongOptionsParser _longOptionsParser;
@@ -10,7 +10,7 @@ public class CliArgumentsParser {
     private readonly MultipleShortOptionsParser _multipleShortOptionsParser;
     private readonly UndefinedOptionsParser _undefinedOptionsParser;
 
-    public CliArgumentsParser(
+    public OptionsArgumentsParser(
         LongOptionsWithArgumentParser longOptionsWithArgumentParser,
             ShortOptionsWithArgumentParser shortOptionsWithArgumentParser,
             LongOptionsParser longOptionsParser,
@@ -25,8 +25,8 @@ public class CliArgumentsParser {
         this._undefinedOptionsParser = undefinedOptionsParser;
     }
 
-    public CliArgumentsParserResult ParseFrom(string[] environmentArgs) {
-        var parserResult = new CliArgumentsParserResult();
+    public OptionsArgumentsParserResult ParseFrom(IList<string> environmentArgs) {
+        var parserResult = new OptionsArgumentsParserResult();
         foreach (var argument in environmentArgs) {
             var optionsParser = OptionsParserFor(argument);
             if (optionsParser == null) continue; //TODO

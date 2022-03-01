@@ -8,13 +8,11 @@ using NUnit.Framework;
 namespace Fluent.Cli.Tests;
 
 public class CliArgumentsBuilderLongOptionArgumentsTests {
-
-    private Faker faker;
     private OptionFaker anOption;
 
     [SetUp]
     public void SetUp() {
-        faker = new Faker();
+        var faker = new Faker();
         anOption = new OptionFaker(faker);
     }
 
@@ -25,7 +23,7 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
         Action action = () => {
             CliBuilderFrom(environmentArgs)
                 .LongOption(anOptionLongName)
-                    .WithArgument(null)
+                    .WithOptionArgument(null)
                 .Build();
         };
 
@@ -57,7 +55,7 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
 
         Action action = () => {
             CliBuilderFrom(environmentArgs)
-                    .WithArgument(argumentName)
+                    .WithOptionArgument(argumentName)
                 .Build();
         };
 
@@ -74,7 +72,7 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
         var environmentArgs = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}={argumentValue}" };
         var cliArguments = CliBuilderFrom(environmentArgs)
             .LongOption(anOptionLongName)
-                .WithArgument(argumentName)
+                .WithOptionArgument(argumentName)
             .Build();
         var option = cliArguments.Option(anOptionLongName);
 
@@ -98,9 +96,9 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
         
         var cliArguments = CliBuilderFrom(environmentArgs)
             .LongOption(anOptionLongName)
-                .WithArgument(argumentName)
+                .WithOptionArgument(argumentName)
             .LongOption(antherOptionLongName)
-                .WithArgument(anotherArgumentName)
+                .WithOptionArgument(anotherArgumentName)
             .Build();
         
         var option = cliArguments.Option(anOptionLongName);
@@ -121,7 +119,7 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
         var environmentArgs = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}=" };
         var cliArguments = CliBuilderFrom(environmentArgs)
             .LongOption(anOptionLongName)
-                .WithArgument(argumentName)
+                .WithOptionArgument(argumentName)
             .Build();
         var option = cliArguments.Option(anOptionLongName);
 
@@ -142,7 +140,7 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
         
         Action action = () => CliBuilderFrom(environmentArgs)
             .LongOption(anOptionLongName)
-                .WithArgument(argumentName)
+                .WithOptionArgument(argumentName)
             .Build();
 
         action.Should().Throw<ArgumentException>()
@@ -160,7 +158,7 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
 
         Action action = () => CliBuilderFrom(environmentArgs)
             .LongOption(anOptionLongName)
-                .WithArgument(argumentName)
+                .WithOptionArgument(argumentName)
             .Build();
 
         action.Should().Throw<ArgumentException>()

@@ -42,7 +42,7 @@ public class CliArgumentsBuilder {
         return this;
     }
 
-    public CliArgumentsBuilder WithArgument(string argumentName) {
+    public CliArgumentsBuilder WithOptionArgument(string argumentName) {
         if (string.IsNullOrEmpty(argumentName)) throw new ArgumentException("Argument name cannot be null or empty");
         if (string.IsNullOrEmpty(buildingOptionConfiguration)) throw new ArgumentException($"Argument '{argumentName}' could not be configured, you need to configure an Option first.");
         var option = optionConfigurations[buildingOptionConfiguration];
@@ -52,9 +52,17 @@ public class CliArgumentsBuilder {
     }
 
     public CliArguments Build() {
+        //Configure
         var optionsDefinitions = OptionDefinitionsFrom(optionConfigurations);
+        var enableArgumentProcess = true; //enabled by default
+        var enableOptionsProcess = true; //enabled by default
 
-        var cliArgumentsParser = new CliArgumentsParser(
+        //Preprocess (If configured)
+        var argumentsPreprocessor = new ArgumentsPreprocessor(enableArgumentProcess, enableOptionsProcess);
+        var argumentsPreprocessResult = argumentsPreprocessor.Preprocess(environmentArgs);
+
+        //Process (If configured)
+        var optionsArgumentsParser = new OptionsArgumentsParser(
             new LongOptionsWithArgumentParser(optionsDefinitions),
             new ShortOptionsWithArgumentParser(optionsDefinitions),
             new LongOptionsParser(optionsDefinitions),
@@ -62,9 +70,12 @@ public class CliArgumentsBuilder {
             new MultipleShortOptionsParser(optionsDefinitions),
             new UndefinedOptionsParser()
         );
-        var parserResult = cliArgumentsParser.ParseFrom(environmentArgs);
+        var argumentsParser = new ArgumentsParser();
 
-        return CliArgumentsFrom(parserResult);
+        var optionsArgumentsParserResult = optionsArgumentsParser.ParseFrom(argumentsPreprocessResult.PossibleOptions);
+        var argumentsParserResult = argumentsParser.ParseFrom(argumentsPreprocessResult.PossibleArguments);
+
+        return CliArgumentsFrom(optionsArgumentsParserResult, argumentsParserResult);
     }
 
     private static OptionsDefinitions OptionDefinitionsFrom(IDictionary<string, OptionConfiguration> optionConfigurations) {
@@ -81,10 +92,20 @@ public class CliArgumentsBuilder {
         };
     }
 
-    private CliArguments CliArgumentsFrom(CliArgumentsParserResult parserResult) {
+    private CliArguments CliArgumentsFrom(OptionsArgumentsParserResult optionsParserResult, ArgumentsParserResult argumentsParserResult) {
         var options = AllOptionsNotPresentByDefaultFrom(optionConfigurations);
-        MarkOptionsAsPresentBasedOn(parserResult, options);
-        return new CliArguments(options.Values.ToList());
+        MarkOptionsAsPresentBasedOn(optionsParserResult, options);
+        var arguments = ArgumentsFrom(argumentsParserResult);
+        return new CliArguments(
+            options: options.Values.ToList(),
+            arguments: arguments
+        );
+    }
+
+    private List<Argument> ArgumentsFrom(ArgumentsParserResult argumentsParserResult) {
+        return argumentsParserResult.arguments.Select(
+            (argument, index) => new Argument($"${index}", argument)
+        ).ToList();
     }
 
     private IDictionary<string, Option> AllOptionsNotPresentByDefaultFrom(IDictionary<string, OptionConfiguration> optionConfigurations) {
@@ -104,7 +125,7 @@ public class CliArgumentsBuilder {
         );
     }
 
-    private void MarkOptionsAsPresentBasedOn(CliArgumentsParserResult parserResult, IDictionary<string, Option> options) {
+    private void MarkOptionsAsPresentBasedOn(OptionsArgumentsParserResult parserResult, IDictionary<string, Option> options) {
         parserResult.presentOptions.ForEach(presentOption => {
             var optionNamePresent = OptionNamePresent(presentOption.OptionNamePresent, options);
             var option = options[optionNamePresent];
