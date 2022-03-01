@@ -52,6 +52,22 @@ public class CliArgumentsBuilderCommandTests {
         command.Name.Should().Be(aCommandName);
     }
 
+    [Test]
+    public void only_get_first_command_as_command() {
+        var aCommandName = aCommand.Name();
+        var anotherCommandName = aCommand.Name();
+        var environmentArgs = new[] { aCommandName, anotherCommandName };
+
+        var cliArguments = CliBuilderFrom(environmentArgs)
+            .Command(aCommandName)
+            .Command(anotherCommandName)
+            .Build();
+
+        cliArguments.IsCommandPresent().Should().BeTrue();
+        var command = cliArguments.GetCommand();
+        command.Name.Should().Be(aCommandName);
+    }
+
     private static CliArgumentsBuilder CliBuilderFrom(string[] args) {
         return CliArgumentsBuilder.With(args);
     }

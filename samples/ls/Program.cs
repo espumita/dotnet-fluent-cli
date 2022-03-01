@@ -76,69 +76,69 @@ var cliArguments = CliArgumentsBuilder.With(environmentArgs)
     .LongOption("version")
     .Build();
 
-ConfigureOption('a', "all");
-ConfigureOption('A', "almost-all");
-ConfigureLongOption("author");
-ConfigureOption('b', "escape");
-ConfigureLongOption("block-size");
-ConfigureOption('B', "ignore-backups");
-ConfigureOption('c');
-ConfigureOption('C');
-ConfigureLongOption("color");
-ConfigureOption('d', "directory");
-ConfigureOption('D', "dired");
-ConfigureOption('f');
-ConfigureOption('F', "classify");
-ConfigureLongOption("file-type");
-ConfigureLongOption("format");
-ConfigureLongOption("full-time");
-ConfigureOption('g');
-ConfigureLongOption("group-directories-first");
-ConfigureOption('G', "no-group");
-ConfigureOption('h', "human-readable");
-ConfigureLongOption("si");
-ConfigureOption('H', "dereference-command-line");
-ConfigureLongOption("dereference-command-line-symlink-to-dir");
-ConfigureLongOption("hide");
-ConfigureLongOption("hyperlink");
-ConfigureLongOption("indicator-style");
-ConfigureOption('i', "inode");
-ConfigureOption('I', "ignore");
-ConfigureOption('k', "kibibytes");
-ConfigureOption('l');
-ConfigureOption('L', "dereference");
-ConfigureOption('m');
-ConfigureOption('n', "numeric-uid-gid");
-ConfigureOption('N', "literal");
-ConfigureOption('o');
-ConfigureOption('p', "indicator-style");
-ConfigureOption('q', "hide-control-chars");
-ConfigureLongOption("show-control-chars");
-ConfigureOption('Q', "quote-name");
-ConfigureLongOption("quoting-style");
-ConfigureOption('r', "reverse");
-ConfigureOption('R', "recursive");
-ConfigureOption('s');
-ConfigureLongOption("sort");
-ConfigureLongOption("time");
-ConfigureLongOption("time-style");
-ConfigureOption('t');
-ConfigureOption('T', "tabsize");
-ConfigureOption('u');
-ConfigureOption('U');
-ConfigureOption('v');
-ConfigureOption('w', "width");
-ConfigureOption('x');
-ConfigureOption('X');
-ConfigureOption('Z', "context");
-ConfigureOption('1');
-ConfigureLongOption("help");
-ConfigureLongOption("version");
-ConfigureFilesArguments();
+PrintOption('a', "all");
+PrintOption('A', "almost-all");
+PrintLongOption("author");
+PrintOption('b', "escape");
+PrintLongOption("block-size");
+PrintOption('B', "ignore-backups");
+PrintOption('c');
+PrintOption('C');
+PrintLongOption("color");
+PrintOption('d', "directory");
+PrintOption('D', "dired");
+PrintOption('f');
+PrintOption('F', "classify");
+PrintLongOption("file-type");
+PrintLongOption("format");
+PrintLongOption("full-time");
+PrintOption('g');
+PrintLongOption("group-directories-first");
+PrintOption('G', "no-group");
+PrintOption('h', "human-readable");
+PrintLongOption("si");
+PrintOption('H', "dereference-command-line");
+PrintLongOption("dereference-command-line-symlink-to-dir");
+PrintLongOption("hide");
+PrintLongOption("hyperlink");
+PrintLongOption("indicator-style");
+PrintOption('i', "inode");
+PrintOption('I', "ignore");
+PrintOption('k', "kibibytes");
+PrintOption('l');
+PrintOption('L', "dereference");
+PrintOption('m');
+PrintOption('n', "numeric-uid-gid");
+PrintOption('N', "literal");
+PrintOption('o');
+PrintOption('p', "indicator-style");
+PrintOption('q', "hide-control-chars");
+PrintLongOption("show-control-chars");
+PrintOption('Q', "quote-name");
+PrintLongOption("quoting-style");
+PrintOption('r', "reverse");
+PrintOption('R', "recursive");
+PrintOption('s');
+PrintLongOption("sort");
+PrintLongOption("time");
+PrintLongOption("time-style");
+PrintOption('t');
+PrintOption('T', "tabsize");
+PrintOption('u');
+PrintOption('U');
+PrintOption('v');
+PrintOption('w', "width");
+PrintOption('x');
+PrintOption('X');
+PrintOption('Z', "context");
+PrintOption('1');
+PrintLongOption("help");
+PrintLongOption("version");
+PrintFilesArguments();
 
 Environment.Exit(0);
 
-void ConfigureOption(char? optionsShortName = null, string optionLongName = null) {
+void PrintOption(char? optionsShortName = null, string optionLongName = null) {
     if (optionsShortName != null) {
         var shortOption = cliArguments.Option((char) optionsShortName);
         if (shortOption.IsPresent) {
@@ -157,11 +157,11 @@ void ConfigureOption(char? optionsShortName = null, string optionLongName = null
     }
 }
 
-void ConfigureLongOption(string optionLongName) {
-    ConfigureOption(optionLongName: optionLongName);
+void PrintLongOption(string optionLongName) {
+    PrintOption(optionLongName: optionLongName);
 }
 
-void ConfigureFilesArguments() {
+void PrintFilesArguments() {
     cliArguments.Arguments.ForEach(argument => {
         Console.WriteLine($"Argument:{argument.Name} - FILE: {argument.Value}");
     });

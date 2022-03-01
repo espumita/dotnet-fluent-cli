@@ -82,23 +82,23 @@ var cliArguments = CliArgumentsBuilder.With(environmentArgs)
     .Command("wait")
     .Build();
 
-ConfigureLongOption("config");
-ConfigureOption('c', "context");
-ConfigureOption('D', "debug");
-ConfigureOption('H', "host");
-ConfigureOption('l', "log-level");
-ConfigureLongOption("tls");
-ConfigureLongOption("tlscacert");
-ConfigureLongOption("tlscert");
-ConfigureLongOption("tlskey");
-ConfigureLongOption("tlsverify");
-ConfigureOption('v',"version");
-ConfigureCommands();
-ConfigureFilesArguments();
+PrintLongOption("config");
+PrintOption('c', "context");
+PrintOption('D', "debug");
+PrintOption('H', "host");
+PrintOption('l', "log-level");
+PrintLongOption("tls");
+PrintLongOption("tlscacert");
+PrintLongOption("tlscert");
+PrintLongOption("tlskey");
+PrintLongOption("tlsverify");
+PrintOption('v',"version");
+PrintCommands();
+PrintArguments();
 
 Environment.Exit(0);
 
-void ConfigureOption(char? optionsShortName = null, string optionLongName = null) {
+void PrintOption(char? optionsShortName = null, string optionLongName = null) {
     if (optionsShortName != null) {
         var shortOption = cliArguments.Option((char)optionsShortName);
         if (shortOption.IsPresent) {
@@ -117,18 +117,18 @@ void ConfigureOption(char? optionsShortName = null, string optionLongName = null
     }
 }
 
-void ConfigureLongOption(string optionLongName) {
-    ConfigureOption(optionLongName: optionLongName);
+void PrintLongOption(string optionLongName) {
+    PrintOption(optionLongName: optionLongName);
 }
 
-void ConfigureCommands() {
+void PrintCommands() {
     if (cliArguments.IsCommandPresent()) {
         var command = cliArguments.GetCommand();
         Console.WriteLine($"{command.Name} command selected");
     }
 }
 
-void ConfigureFilesArguments() {
+void PrintArguments() {
     cliArguments.Arguments.ForEach(argument => {
         Console.WriteLine($"Argument:{argument.Name} - FILE: {argument.Value}");
     });

@@ -21,7 +21,7 @@ public class ArgumentsPreprocessor {
 
         while (argumentsQueue.Any()) {
             var currentArgument = argumentsQueue.Dequeue();
-            if (_enableCommandProcess && IsPossibleCommand(currentArgument) && IsConfiguredCommand(currentArgument, commandsDefinitions)) {
+            if (_enableCommandProcess && ThereIsNoCommandYetDetected(argumentsPreprocessResult) && IsPossibleCommand(currentArgument) && IsConfiguredCommand(currentArgument, commandsDefinitions)) {
                 var possibleCommand = new PossibleCommand(currentArgument);
                 argumentsPreprocessResult.AddPossibleCommand(possibleCommand);
             } else if (_enableOptionsProcess && IsAPossibleOption(currentArgument)) {
@@ -43,11 +43,15 @@ public class ArgumentsPreprocessor {
         return executableFileName;
     }
 
-    public bool IsPossibleCommand(string currentArgument) {
+    private static bool ThereIsNoCommandYetDetected(ArgumentsPreprocessResult argumentsPreprocessResult) {
+        return argumentsPreprocessResult.PossibleCommand == null;
+    }
+
+    private static bool IsPossibleCommand(string currentArgument) {
         return currentArgument.Length > 0 && Regex.IsMatch(currentArgument, "^[a-zA-Z0-9]+$");
     }
 
-    public bool IsConfiguredCommand(string currentArgument, CommandsDefinitions commandsDefinitions) {
+    private static bool IsConfiguredCommand(string currentArgument, CommandsDefinitions commandsDefinitions) {
         return commandsDefinitions.IsCommandDefined(currentArgument);
     }
 
