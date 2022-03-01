@@ -123,7 +123,7 @@ void ConfigureLongOption(string optionLongName) {
 
 void ConfigureCommands() {
     if (cliArguments.IsCommandPresent()) {
-        var command = cliArguments.Command();
+        var command = cliArguments.GetCommand();
         Console.WriteLine($"{command.Name} command selected");
     }
 }

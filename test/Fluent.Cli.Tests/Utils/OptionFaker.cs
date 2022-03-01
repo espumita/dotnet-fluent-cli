@@ -37,7 +37,7 @@ public class OptionFaker {
             2 => faker.Random.Char('\u005B', '\u0060'),
             _ => faker.Random.Char('\u007B', '\uffff'),
         };
-        return shortName == Space 
+        return shortName == Space || StringEscapeSequences.ToString()!.Contains(shortName)
             ? ShortNameWithNonAlphanumericalValue()
             : shortName;
     }
@@ -60,7 +60,7 @@ public class OptionFaker {
             3 => faker.Random.String(1, 100, '\u005B', '\u0060'),
             _ => faker.Random.String(1, 100, '\u007B', '\uffff'),
         };
-        return RemoveSpace(longName);
+        return RemoveSpace(RemoveStringEscapeSequences(longName));
     }
 
     public object LongNamePrefix() {

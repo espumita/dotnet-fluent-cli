@@ -5,7 +5,6 @@ namespace Fluent.Cli;
 public class OptionConfiguration {
     public string PrimaryName { get; }
     public string SecondaryName { get; }
-
     public ArgumentConfiguration Argument { get; private set; }
 
     private OptionConfiguration(string primaryName, string secondaryName) {

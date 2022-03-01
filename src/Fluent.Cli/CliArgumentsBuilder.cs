@@ -8,11 +8,13 @@ namespace Fluent.Cli;
 public class CliArgumentsBuilder {
     private readonly string[] environmentArgs;
     private readonly IDictionary<string, OptionConfiguration> optionConfigurations;
+    private readonly IDictionary<string, CommandConfiguration> commandConfigurations;
     private string buildingOptionConfiguration;
 
     private CliArgumentsBuilder(string[] environmentArgs) {
         this.environmentArgs = environmentArgs;
         optionConfigurations = new Dictionary<string, OptionConfiguration>();
+        commandConfigurations = new Dictionary<string, CommandConfiguration>();
     }
 
     public static CliArgumentsBuilder With(string[] args) {
@@ -52,17 +54,27 @@ public class CliArgumentsBuilder {
         return this;
     }
 
+    public CliArgumentsBuilder Command(string name) {
+        var commandConfiguration = CommandConfiguration.For(name);
+        commandConfigurations[name] = commandConfiguration;
+        return this;
+    }
+
     public CliArguments Build() {
         //Configure
         var optionsDefinitions = OptionDefinitionsFrom(optionConfigurations);
-        var enableArgumentProcess = true; //enabled by default
+        var commandDefinitions = CommandDefinitionsFrom(commandConfigurations);
+        var enableCommandProcess = true; //enabled by default
         var enableOptionsProcess = true; //enabled by default
+        var enableArgumentProcess = true; //enabled by default
+        
 
         //Preprocess (If configured)
-        var argumentsPreprocessor = new ArgumentsPreprocessor(enableArgumentProcess, enableOptionsProcess);
-        var argumentsPreprocessResult = argumentsPreprocessor.Preprocess(environmentArgs);
+        var argumentsPreprocessor = new ArgumentsPreprocessor(enableCommandProcess, enableOptionsProcess, enableArgumentProcess);
+        var argumentsPreprocessResult = argumentsPreprocessor.Preprocess(environmentArgs, commandDefinitions);
 
         //Process (If configured)
+        var commandArgumentsParser = new CommandArgumentsParser(commandDefinitions);
         var optionsArgumentsParser = new OptionsArgumentsParser(
             new LongOptionsWithArgumentParser(optionsDefinitions),
             new ShortOptionsWithArgumentParser(optionsDefinitions),
@@ -73,10 +85,11 @@ public class CliArgumentsBuilder {
         );
         var argumentsParser = new ArgumentsParser();
 
+        var commandsArgumentsParserResult = commandArgumentsParser.ParseFrom(argumentsPreprocessResult.PossibleCommand);
         var optionsArgumentsParserResult = optionsArgumentsParser.ParseFrom(argumentsPreprocessResult.PossibleOptions);
         var argumentsParserResult = argumentsParser.ParseFrom(argumentsPreprocessResult.PossibleArguments);
 
-        return CliArgumentsFrom(argumentsPreprocessResult.Program, optionsArgumentsParserResult, argumentsParserResult);
+        return CliArgumentsFrom(argumentsPreprocessResult.Program, commandsArgumentsParserResult, optionsArgumentsParserResult, argumentsParserResult);
     }
 
     private static OptionsDefinitions OptionDefinitionsFrom(IDictionary<string, OptionConfiguration> optionConfigurations) {
@@ -93,12 +106,25 @@ public class CliArgumentsBuilder {
         };
     }
 
-    private CliArguments CliArgumentsFrom(string program, OptionsArgumentsParserResult optionsParserResult, ArgumentsParserResult argumentsParserResult) {
+    private static CommandsDefinitions CommandDefinitionsFrom(IDictionary<string, CommandConfiguration> commandConfigurations) {
+        var definitions = commandConfigurations
+            .ToDictionary(
+                keyValuePair => keyValuePair.Key,
+                keyValuePair => new CommandDefinition()
+            );
+        return new CommandsDefinitions {
+            Definitions = definitions
+        };
+    }
+
+    private CliArguments CliArgumentsFrom(string program, CommandsArgumentsParserResult commandsArgumentsParserResult, OptionsArgumentsParserResult optionsParserResult, ArgumentsParserResult argumentsParserResult) {
+        var command = CommandFrom(commandsArgumentsParserResult);
         var options = AllOptionsNotPresentByDefaultFrom(optionConfigurations);
         MarkOptionsAsPresentBasedOn(optionsParserResult, options);
         var arguments = ArgumentsFrom(argumentsParserResult);
         return new CliArguments(
             program: program,
+            command: command,
             options: options.Values.ToList(),
             arguments: arguments
         );
@@ -127,6 +153,12 @@ public class CliArgumentsBuilder {
         );
     }
 
+    private static Command? CommandFrom(CommandsArgumentsParserResult commandsArgumentsParserResult) {
+        return commandsArgumentsParserResult.Command?.Name != null
+            ? new Command(commandsArgumentsParserResult.Command.Name)
+            : null;
+    }
+
     private void MarkOptionsAsPresentBasedOn(OptionsArgumentsParserResult parserResult, IDictionary<string, Option> options) {
         parserResult.presentOptions.ForEach(presentOption => {
             var optionNamePresent = OptionNamePresent(presentOption.OptionNamePresent, options);
@@ -153,10 +185,5 @@ public class CliArgumentsBuilder {
             argumentName: option._Argument?.Name,
             argumentValue: argumentValue
         );
-    }
-
-    public CliArgumentsBuilder Command(string builder) {
-        //todo
-        return this;
     }
 }
