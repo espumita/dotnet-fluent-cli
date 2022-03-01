@@ -1,6 +1,6 @@
 ﻿using Fluent.Cli.Options;
 
-namespace Fluent.Cli;
+namespace Fluent.Cli.Parsers;
 
 public class OptionsArgumentsParserResult {
     public readonly List<ArgumentOption> presentOptions;

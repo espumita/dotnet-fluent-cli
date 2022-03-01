@@ -1,6 +1,4 @@
-﻿using Fluent.Cli.Parsers;
-
-namespace Fluent.Cli;
+﻿namespace Fluent.Cli.Parsers;
 
 public class OptionsArgumentsParser {
     private readonly LongOptionsWithArgumentParser _longOptionsWithArgumentParser;

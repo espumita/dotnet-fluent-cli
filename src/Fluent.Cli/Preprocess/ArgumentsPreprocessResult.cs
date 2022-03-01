@@ -1,4 +1,4 @@
-﻿namespace Fluent.Cli;
+﻿namespace Fluent.Cli.Preprocess;
 
 public class ArgumentsPreprocessResult {
 

@@ -1,6 +1,7 @@
 ﻿using Fluent.Cli.Exceptions;
 using Fluent.Cli.Options;
 using Fluent.Cli.Parsers;
+using Fluent.Cli.Preprocess;
 
 namespace Fluent.Cli; 
 

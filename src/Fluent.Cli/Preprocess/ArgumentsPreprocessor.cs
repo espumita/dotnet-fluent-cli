@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Fluent.Cli;
+namespace Fluent.Cli.Preprocess;
 
 public class ArgumentsPreprocessor {
     private readonly bool _enableArgumentProcess;

@@ -1,4 +1,4 @@
-﻿namespace Fluent.Cli;
+﻿namespace Fluent.Cli.Parsers;
 
 public class ArgumentsParser {
     public ArgumentsParserResult ParseFrom(IList<string> arguments) {
