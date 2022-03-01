@@ -16,8 +16,7 @@ public class ArgumentsPreprocessor {
     public ArgumentsPreprocessResult Preprocess(string[] environmentArgs, CommandsDefinitions commandsDefinitions) {
         var argumentsPreprocessResult = new ArgumentsPreprocessResult();
         var argumentsQueue = new Queue<string>(environmentArgs);
-        var executableFileName = ExecutableFileName(argumentsQueue);
-        argumentsPreprocessResult.AddProgramName(executableFileName);
+        RemoveExecutableFileNameIfNecessary(argumentsQueue);
 
         while (argumentsQueue.Any()) {
             var currentArgument = argumentsQueue.Dequeue();
@@ -33,14 +32,13 @@ public class ArgumentsPreprocessor {
         return argumentsPreprocessResult;
     }
 
-    private static string ExecutableFileName(Queue<string> argumentsQueue) {
+    private void RemoveExecutableFileNameIfNecessary(Queue<string> argumentsQueue) {
         var environmentCommandLineArgs = Environment.GetCommandLineArgs();
         var executableFileName = environmentCommandLineArgs[0];
         if (argumentsQueue.Any()) {
             var peek = argumentsQueue.Peek();
-            if (peek.Equals(executableFileName)) return argumentsQueue.Dequeue();
+            if (peek.Equals(executableFileName)) argumentsQueue.Dequeue();
         }
-        return executableFileName;
     }
 
     private static bool ThereIsNoCommandYetDetected(ArgumentsPreprocessResult argumentsPreprocessResult) {

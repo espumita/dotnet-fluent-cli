@@ -1,4 +1,5 @@
-﻿using Fluent.Cli.Exceptions;
+﻿using System.Reflection;
+using Fluent.Cli.Exceptions;
 using Fluent.Cli.Options;
 using Fluent.Cli.Parsers;
 using Fluent.Cli.Preprocess;
@@ -62,6 +63,8 @@ public class CliArgumentsBuilder {
 
     public CliArguments Build() {
         //Configure
+        var programName = ProgramNameFromAssembly();
+        var programVersion = ProgramVersionFromAssembly();
         var optionsDefinitions = OptionDefinitionsFrom(optionConfigurations);
         var commandDefinitions = CommandDefinitionsFrom(commandConfigurations);
         var enableCommandProcess = true; //enabled by default
@@ -72,6 +75,8 @@ public class CliArgumentsBuilder {
         //Preprocess (If configured)
         var argumentsPreprocessor = new ArgumentsPreprocessor(enableCommandProcess, enableOptionsProcess, enableArgumentProcess);
         var argumentsPreprocessResult = argumentsPreprocessor.Preprocess(environmentArgs, commandDefinitions);
+
+        if (VersionOptionIsPresent(argumentsPreprocessResult.PossibleOptions)) PrintVersionAndStopProcess(programName, programVersion);
 
         //Process (If configured)
         var commandArgumentsParser = new CommandArgumentsParser(commandDefinitions);
@@ -89,7 +94,26 @@ public class CliArgumentsBuilder {
         var optionsArgumentsParserResult = optionsArgumentsParser.ParseFrom(argumentsPreprocessResult.PossibleOptions);
         var argumentsParserResult = argumentsParser.ParseFrom(argumentsPreprocessResult.PossibleArguments);
 
-        return CliArgumentsFrom(argumentsPreprocessResult.Program, commandsArgumentsParserResult, optionsArgumentsParserResult, argumentsParserResult);
+        return CliArgumentsFrom(programName, programVersion, commandsArgumentsParserResult, optionsArgumentsParserResult, argumentsParserResult);
+    }
+
+    private string ProgramNameFromAssembly() {
+        var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
+        var assemblyTitles = assembly.GetCustomAttributes<AssemblyTitleAttribute>().ToList();
+        var assemblyTitle = assemblyTitles.FirstOrDefault();
+        return assemblyTitle?.Title ?? assembly.GetName()?.Name ?? string.Empty;
+    }
+
+    private string ProgramVersionFromAssembly() {
+        var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
+        var assemblyTitles = assembly.GetCustomAttributes<AssemblyInformationalVersionAttribute>().ToList();
+        var assemblyTitle = assemblyTitles.FirstOrDefault();
+        return assemblyTitle?.InformationalVersion ?? assembly.GetName()?.Version?.ToString() ?? string.Empty;
+    }
+
+    private void PrintVersionAndStopProcess(string programName, string programVersion) {
+        Console.Write($"{programName} version {programVersion}"); //TODO this should be formatted with default window width
+        Environment.Exit(0);
     }
 
     private static OptionsDefinitions OptionDefinitionsFrom(IDictionary<string, OptionConfiguration> optionConfigurations) {
@@ -117,13 +141,18 @@ public class CliArgumentsBuilder {
         };
     }
 
-    private CliArguments CliArgumentsFrom(string program, CommandsArgumentsParserResult commandsArgumentsParserResult, OptionsArgumentsParserResult optionsParserResult, ArgumentsParserResult argumentsParserResult) {
+    private static bool VersionOptionIsPresent(IList<string> possibleOptions) {
+        return possibleOptions.Contains("-v") || possibleOptions.Contains("--version");
+    }
+
+    private CliArguments CliArgumentsFrom(string program, string version, CommandsArgumentsParserResult commandsArgumentsParserResult, OptionsArgumentsParserResult optionsParserResult, ArgumentsParserResult argumentsParserResult) {
         var command = CommandFrom(commandsArgumentsParserResult);
         var options = AllOptionsNotPresentByDefaultFrom(optionConfigurations);
         MarkOptionsAsPresentBasedOn(optionsParserResult, options);
         var arguments = ArgumentsFrom(argumentsParserResult);
         return new CliArguments(
             program: program,
+            version: version,
             command: command,
             options: options.Values.ToList(),
             arguments: arguments

@@ -4,12 +4,14 @@ namespace Fluent.Cli;
 
 public class CliArguments {
     public string Program { get; }
+    public string Version { get; }
     public Command? Command { get; }
     public List<Option> Options { get; }
     public List<Argument> Arguments { get; }
 
-    public CliArguments(string program, Command? command, List<Option> options, List<Argument> arguments) {
+    public CliArguments(string program, string version, Command? command, List<Option> options, List<Argument> arguments) {
         Program = program;
+        Version = version;
         Command = command;
         Options = options;
         Arguments = arguments;
