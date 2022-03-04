@@ -140,19 +140,24 @@ Environment.Exit(0);
 
 void PrintOption(char? optionsShortName = null, string optionLongName = null) {
     if (optionsShortName != null) {
-        var shortOption = cliArguments.Option((char) optionsShortName);
-        if (shortOption.IsPresent) {
+        if (cliArguments.IsOptionPresent((char)optionsShortName)) {
+            var option = cliArguments.Option((char)optionsShortName);
             Console.WriteLine($"{optionsShortName} option enabled");
-            if (shortOption._Argument?.Name != null)
-                Console.WriteLine($"Argument {shortOption._Argument.Name} is present with value {shortOption._Argument.Value}");
+            if (option.IsArgumentPresent()) {
+                var argument = option.Argument();
+                Console.WriteLine($"Argument {argument.Name} is present with value {argument.Value}");
+            }
+
         }
     }
     if (optionLongName != null) {
-        var longOption = cliArguments.Option(optionLongName);
-        if (longOption.IsPresent) {
+        var option = cliArguments.Option(optionLongName);
+        if (cliArguments.IsOptionPresent(optionLongName)) {
             Console.WriteLine($"{optionLongName} option enabled");
-            if (longOption._Argument?.Name != null)
-                Console.WriteLine($"Argument {longOption._Argument.Name} is present with value {longOption._Argument.Value}");
+            if (option.IsArgumentPresent()) {
+                var argument = option.Argument();
+                Console.WriteLine($"Argument {argument.Name} is present with value {argument.Value}");
+            }
         }
     }
 }

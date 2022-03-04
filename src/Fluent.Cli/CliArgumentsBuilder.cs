@@ -77,7 +77,7 @@ public class CliArgumentsBuilder {
         var argumentsPreprocessResult = argumentsPreprocessor.Preprocess(environmentArgs, commandDefinitions);
 
         if (VersionOptionIsPresent(argumentsPreprocessResult.PossibleOptions)) PrintVersionAndStopProcess(programName, programVersion);
-        if (HelpOptionIsPresent(argumentsPreprocessResult.PossibleOptions)) PrintHelpAndStopProcess(programName, optionsDefinitions, commandDefinitions);
+        if (HelpOptionIsPresent(argumentsPreprocessResult.PossibleOptions)) PrintHelpAndStopProcess(programName, optionConfigurations, commandDefinitions);
 
         //Process (If configured)
         var commandArgumentsParser = new CommandArgumentsParser(commandDefinitions);
@@ -113,22 +113,75 @@ public class CliArgumentsBuilder {
     }
 
     private void PrintVersionAndStopProcess(string programName, string programVersion) {
-        Console.Write($"{programName} version {programVersion}"); //TODO this should be formatted with default window width
+        Console.Write($"{programName} version {programVersion}");
         Environment.Exit(0);
     }
 
-    private void PrintHelpAndStopProcess(string programName, OptionsDefinitions optionsDefinitions, CommandsDefinitions commandsDefinitions) {
+    private void PrintHelpAndStopProcess(string programName, IDictionary<string, OptionConfiguration> optionsConfigurations, CommandsDefinitions commandsDefinitions) {
         Console.Write(Environment.NewLine);
-        Console.WriteLine($"Usage: {programName} [OPTIONS] COMMAND [ARGUMENTS]"); //TODO this should be formatted with default window width
-        Console.WriteLine("Options:");
-        foreach (var optionDefinition in optionsDefinitions.Definitions) {
-            Console.WriteLine($"{optionDefinition.Key}");
+        var options = optionsConfigurations.Any() ? "[OPTIONS] " : string.Empty;
+        var commands = commandsDefinitions.Definitions.Any() ? "[COMMAND] " : string.Empty;
+        var arguments = true ? "[ARGUMENTS]" : string.Empty; // enabled by default
+        var usageLie = $"Usage: {programName} {options}{commands}{arguments}";
+        Console.WriteLine(usageLie);
+        Console.Write(Environment.NewLine);
+        Console.WriteLine("_____________________________________________________"); //program description
+        if (optionsConfigurations.Any()) {
+            Console.Write(Environment.NewLine);
+            Console.WriteLine("Options:");
+            foreach (var optionConfiguration in optionsConfigurations.Values) {
+                var shortOptionName = ShortOptionName(optionConfiguration.PrimaryName);
+                var comma = Comma(optionConfiguration.PrimaryName, optionConfiguration.SecondaryName);
+                var longOptionName = LongOptionName(optionConfiguration.SecondaryName);
+                var optionArgument = OptionArgument(optionConfiguration.Argument);
+                var optionLine = $"  {shortOptionName}{comma} {longOptionName} {optionArgument}";
+                if (optionLine.Length <= 27) {
+                    var optionLineWithFirstColumnWithPadding = optionLine.PadRight(27, ' ');
+                    var optionLineWithSecondColumnWithPadding = optionLineWithFirstColumnWithPadding.PadRight(80, '_'); //option description
+                    Console.WriteLine(optionLineWithSecondColumnWithPadding);
+                } else {
+                    Console.WriteLine(optionLine);
+                }
+
+            }
         }
-        Console.WriteLine("Commands:");
-        foreach (var commandDefinition in commandsDefinitions.Definitions) {
-            Console.WriteLine($"{commandDefinition.Key}");
+        if (commandsDefinitions.Definitions.Any()) {
+            Console.Write(Environment.NewLine);
+            Console.WriteLine("Commands:");
+            foreach (var commandDefinition in commandsDefinitions.Definitions) {
+                var command = commandDefinition.Key;
+                var commandLine = $"  {command}";
+                var commandLineWithFirstColumnWithPadding = commandLine.PadRight(14, ' ');
+                var commandLineWithSecondColumnWithPadding = commandLineWithFirstColumnWithPadding.PadRight(80, '_'); //selectedCommand description
+                Console.WriteLine(commandLineWithSecondColumnWithPadding);
+            }
         }
+        Console.Write(Environment.NewLine);
         Environment.Exit(0);
+    }
+
+    private string Comma(string shortOptionName, string longOptionName) {
+        return !string.IsNullOrEmpty(shortOptionName) && !string.IsNullOrEmpty(longOptionName)
+            ? ","
+            : " ";
+    }
+
+    private string ShortOptionName(string shortOptionName) {
+        return !string.IsNullOrEmpty(shortOptionName)
+            ? $"-{shortOptionName}"
+            : "  ";
+    }
+
+    private string LongOptionName(string longOptionName) {
+        return !string.IsNullOrEmpty(longOptionName)
+            ? $"--{longOptionName}"
+            : string.Empty;
+    }
+
+    private string OptionArgument(ArgumentConfiguration optionArgument) {
+        return !string.IsNullOrEmpty(optionArgument?.ArgumentName)
+            ? optionArgument?.ArgumentName
+            : string.Empty;
     }
 
     private static OptionsDefinitions OptionDefinitionsFrom(IDictionary<string, OptionConfiguration> optionConfigurations) {
@@ -172,7 +225,7 @@ public class CliArgumentsBuilder {
         return new CliArguments(
             program: program,
             version: version,
-            command: command,
+            selectedCommand: command,
             options: options.Values.ToList(),
             arguments: arguments
         );
@@ -230,7 +283,7 @@ public class CliArgumentsBuilder {
             option.ShortName,
             option.Name,
             isPresent: true,
-            argumentName: option._Argument?.Name,
+            argumentName: option.ArgumentPresent?.Name,
             argumentValue: argumentValue
         );
     }

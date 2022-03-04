@@ -99,20 +99,24 @@ PrintArguments();
 Environment.Exit(0);
 
 void PrintOption(char? optionsShortName = null, string optionLongName = null) {
-    if (optionsShortName != null) {
-        var shortOption = cliArguments.Option((char)optionsShortName);
-        if (shortOption.IsPresent) {
+    if (optionsShortName != null) { 
+        if (cliArguments.IsOptionPresent((char)optionsShortName)) {
+            var option = cliArguments.Option((char)optionsShortName);
             Console.WriteLine($"{optionsShortName} option enabled");
-            if (shortOption._Argument?.Name != null)
-                Console.WriteLine($"Argument {shortOption._Argument.Name} is present with value {shortOption._Argument.Value}");
+            if (option.IsArgumentPresent()) {
+                var argument = option.Argument();
+                Console.WriteLine($"Argument {argument.Name} is present with value {argument.Value}");
+            }
         }
-    }
+    } 
     if (optionLongName != null) {
-        var longOption = cliArguments.Option(optionLongName);
-        if (longOption.IsPresent) {
-            Console.WriteLine($"{optionLongName} option enabled");
-            if (longOption._Argument?.Name != null)
-                Console.WriteLine($"Argument {longOption._Argument.Name} is present with value {longOption._Argument.Value}");
+        if (cliArguments.IsOptionPresent(optionLongName)) {
+            var longOption = cliArguments.Option(optionLongName);
+            Console.WriteLine($"{longOption.Name} option enabled");
+            if (longOption.IsArgumentPresent()) {
+                var argument = longOption.Argument();
+                Console.WriteLine($"Argument {argument.Name} is present with value {argument.Value}");
+            }
         }
     }
 }
@@ -123,7 +127,7 @@ void PrintLongOption(string optionLongName) {
 
 void PrintCommands() {
     if (cliArguments.IsCommandPresent()) {
-        var command = cliArguments.GetCommand();
+        var command = cliArguments.Command();
         Console.WriteLine($"{command.Name} command selected");
     }
 }

@@ -5,24 +5,24 @@ namespace Fluent.Cli;
 public class CliArguments {
     public string Program { get; }
     public string Version { get; }
-    public Command? Command { get; }
+    public Command? SelectedCommand { get; }
     public List<Option> Options { get; }
     public List<Argument> Arguments { get; }
 
-    public CliArguments(string program, string version, Command? command, List<Option> options, List<Argument> arguments) {
+    public CliArguments(string program, string version, Command? selectedCommand, List<Option> options, List<Argument> arguments) {
         Program = program;
         Version = version;
-        Command = command;
+        SelectedCommand = selectedCommand;
         Options = options;
         Arguments = arguments;
     }
 
     public bool IsCommandPresent() {
-        return Command != null;
+        return SelectedCommand != null;
     }
 
-    public Command GetCommand() {
-        return Command;
+    public Command Command() {
+        return SelectedCommand;
     }
 
     public Option Option(char shortName) {
@@ -41,5 +41,15 @@ public class CliArguments {
         var argument = Arguments.FirstOrDefault(argument => argument.Name.Equals(argumentName));
         //TODO
         return argument;
+    }
+
+    public bool IsOptionPresent(char shortName) {
+        var option = Option(shortName);
+        return option.IsPresent;
+    }
+
+    public bool IsOptionPresent(string longName) {
+        var option = Option(longName);
+        return option.IsPresent;
     }
 }

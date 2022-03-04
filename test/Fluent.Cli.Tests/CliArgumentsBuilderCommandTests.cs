@@ -48,7 +48,7 @@ public class CliArgumentsBuilderCommandTests {
             .Build();
 
         cliArguments.IsCommandPresent().Should().BeTrue();
-        var command = cliArguments.GetCommand();
+        var command = cliArguments.Command();
         command.Name.Should().Be(aCommandName);
     }
 
@@ -64,7 +64,7 @@ public class CliArgumentsBuilderCommandTests {
             .Build();
 
         cliArguments.IsCommandPresent().Should().BeTrue();
-        var command = cliArguments.GetCommand();
+        var command = cliArguments.Command();
         command.Name.Should().Be(aCommandName);
     }
 
