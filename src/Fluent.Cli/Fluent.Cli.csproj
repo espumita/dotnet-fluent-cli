@@ -5,7 +5,7 @@
 	<TargetFramework>net6.0</TargetFramework>
 	<PackageId>Fluent.Cli</PackageId>
 	<PackageTags>cli;arguments;args;parser;configuration</PackageTags>
-	<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Version>0.0.2-alpha</Version>
     <PackageProjectUrl>https://github.com/espumita/dotnet-fluent-cli</PackageProjectUrl>
 	<RepositoryType>git</RepositoryType>
