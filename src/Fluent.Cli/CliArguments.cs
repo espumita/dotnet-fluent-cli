@@ -31,6 +31,10 @@ public class CliArguments {
         return option.IsPresent;
     }
 
+    public bool IsArgumentPresent(string argumentName) {
+        return Arguments.Exists(argument => argument.Name.Equals(argumentName));
+    }
+
     public Command Command() {
         return SelectedCommand;
     }

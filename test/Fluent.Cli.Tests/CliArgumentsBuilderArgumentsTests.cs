@@ -16,6 +16,27 @@ public class CliArgumentsBuilderArgumentsTests {
     }
 
     [Test]
+    public void get_argument_as_not_present() {
+        var environmentArgs = new string[] { };
+
+        var cliArguments = CliBuilderFrom(environmentArgs)
+            .Build();
+
+        cliArguments.IsArgumentPresent("$0").Should().BeFalse();
+    }
+
+    [Test]
+    public void get_argument_as_present() {
+        var anArgumentValue = anArgument.ArgumentValue();
+        var environmentArgs = new [] { anArgumentValue };
+
+        var cliArguments = CliBuilderFrom(environmentArgs)
+            .Build();
+
+        cliArguments.IsArgumentPresent("$0").Should().BeTrue();
+    }
+
+    [Test]
     public void get_program_without_arguments() {
         var environmentArgs = new string[] { };
 
