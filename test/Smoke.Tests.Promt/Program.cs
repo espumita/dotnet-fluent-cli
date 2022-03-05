@@ -9,19 +9,19 @@ var cliArguments = CliArgumentsBuilder.With(environmentArgs)
     .LongOption("show-arguments")
     .Build();
 
-if (cliArguments.Option("verbose").IsPresent) {
+if (cliArguments.IsOptionPresent("verbose")) {
     Console.Write("Verbose option is present");
 }
 
-if (cliArguments.Option("show-program-name").IsPresent) {
+if (cliArguments.IsOptionPresent("show-program-name")) {
     Console.Write(cliArguments.Program);
 }
 
-if (cliArguments.Option("show-program-version").IsPresent) {
+if (cliArguments.IsOptionPresent("show-program-version")) {
     Console.Write(cliArguments.Version);
 }
 
-if (cliArguments.Option("show-arguments").IsPresent) {
+if (cliArguments.IsOptionPresent("show-arguments")) {
     cliArguments.Arguments.ForEach(argument => {
         Console.Write($"{argument.Name}:{argument.Value}:");
     });

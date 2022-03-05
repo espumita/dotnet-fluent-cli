@@ -62,13 +62,13 @@ public class CliArgumentsBuilderShortNameAndLongNameOptionsTests {
         var anOptionLongName = anOption.LongName();
         var environmentArgs = new string[] { };
 
-        var cli = CliBuilderFrom(environmentArgs)
+        var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName, anOptionLongName)
             .Build();
 
-        cli.Options.Count.Should().Be(1);
-        cli.Option(anOptionShortName).IsPresent.Should().BeFalse();
-        cli.Option(anOptionLongName).IsPresent.Should().BeFalse();
+        cliArguments.Options.Count.Should().Be(1);
+        cliArguments.IsOptionPresent(anOptionShortName).Should().BeFalse();
+        cliArguments.IsOptionPresent(anOptionLongName).Should().BeFalse();
     }
 
     [Test]
@@ -78,13 +78,13 @@ public class CliArgumentsBuilderShortNameAndLongNameOptionsTests {
         var anOptionLongName = anOption.LongName();
         var environmentArgs = new [] { $"{shortNamePrefix}{anOptionShortName}" };
 
-        var cli = CliBuilderFrom(environmentArgs)
+        var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName, anOptionLongName)
             .Build();
 
-        cli.Options.Count.Should().Be(1);
-        cli.Option(anOptionShortName).IsPresent.Should().BeTrue();
-        cli.Option(anOptionLongName).IsPresent.Should().BeTrue();
+        cliArguments.Options.Count.Should().Be(1);
+        cliArguments.IsOptionPresent(anOptionShortName).Should().BeTrue();
+        cliArguments.IsOptionPresent(anOptionLongName).Should().BeTrue();
     }
 
     [Test]
@@ -94,13 +94,13 @@ public class CliArgumentsBuilderShortNameAndLongNameOptionsTests {
         var longNamePrefix = anOption.LongNamePrefix();
         var environmentArgs = new[] { $"{longNamePrefix}{anOptionLongName}" };
 
-        var cli = CliBuilderFrom(environmentArgs)
+        var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName, anOptionLongName)
             .Build();
 
-        cli.Options.Count.Should().Be(1);
-        cli.Option(anOptionShortName).IsPresent.Should().BeTrue();
-        cli.Option(anOptionLongName).IsPresent.Should().BeTrue();
+        cliArguments.Options.Count.Should().Be(1);
+        cliArguments.IsOptionPresent(anOptionShortName).Should().BeTrue();
+        cliArguments.IsOptionPresent(anOptionLongName).Should().BeTrue();
     }
 
     [Test]
@@ -111,13 +111,13 @@ public class CliArgumentsBuilderShortNameAndLongNameOptionsTests {
         var longNamePrefix = anOption.LongNamePrefix();
         var environmentArgs = new[] { $"{shortNamePrefix}{anOptionShortName}", $"{longNamePrefix}{anOptionLongName}" };
 
-        var cli = CliBuilderFrom(environmentArgs)
+        var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName, anOptionLongName)
             .Build();
 
-        cli.Options.Count.Should().Be(1);
-        cli.Option(anOptionShortName).IsPresent.Should().BeTrue();
-        cli.Option(anOptionLongName).IsPresent.Should().BeTrue();
+        cliArguments.Options.Count.Should().Be(1);
+        cliArguments.IsOptionPresent(anOptionShortName).Should().BeTrue();
+        cliArguments.IsOptionPresent(anOptionLongName).Should().BeTrue();
     }
 
     private static CliArgumentsBuilder CliBuilderFrom(string[] args) {

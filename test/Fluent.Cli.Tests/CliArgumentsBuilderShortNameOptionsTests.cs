@@ -38,7 +38,7 @@ public class CliArgumentsBuilderShortNameOptionsTests {
             .Build();
 
         cliArguments.Options.Count.Should().Be(1);
-        cliArguments.Options.Single().IsPresent.Should().BeFalse();
+        cliArguments.IsOptionPresent(anOptionShortName).Should().BeFalse();
         cliArguments.Option(anOptionShortName).IsPresent.Should().BeFalse();
     }
 
@@ -53,7 +53,7 @@ public class CliArgumentsBuilderShortNameOptionsTests {
             .Build();
 
         cliArguments.Options.Count.Should().Be(1);
-        cliArguments.Options.Single().IsPresent.Should().BeTrue();
+        cliArguments.IsOptionPresent(anOptionShortName).Should().BeTrue();
         cliArguments.Option(anOptionShortName).IsPresent.Should().BeTrue();
     }
 
@@ -70,8 +70,8 @@ public class CliArgumentsBuilderShortNameOptionsTests {
             .Build();
 
         cliArguments.Options.Count.Should().Be(2);
-        cliArguments.Option(anOptionShortName).IsPresent.Should().BeTrue();
-        cliArguments.Option(anotherOptionShortName).IsPresent.Should().BeTrue();
+        cliArguments.IsOptionPresent(anOptionShortName).Should().BeTrue();
+        cliArguments.IsOptionPresent(anotherOptionShortName).Should().BeTrue();
     }
 
     [Test]
@@ -85,7 +85,7 @@ public class CliArgumentsBuilderShortNameOptionsTests {
             .Build();
 
         cliArguments.Options.Count.Should().Be(1);
-        cliArguments.Options.Single().IsPresent.Should().BeTrue();
+        cliArguments.IsOptionPresent(anOptionShortName).Should().BeTrue();
     }
 
     [TestCase('r', "arr")]
@@ -118,7 +118,7 @@ public class CliArgumentsBuilderShortNameOptionsTests {
 
         cliArguments.Options.Count.Should().Be(2);
         someOptionsShortName.ToList().ForEach(optionShortName => {
-            cliArguments.Option(optionShortName).IsPresent.Should().BeTrue();
+            cliArguments.IsOptionPresent(optionShortName).Should().BeTrue();
         });
     }
 

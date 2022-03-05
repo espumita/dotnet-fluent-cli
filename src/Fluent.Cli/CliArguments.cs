@@ -21,6 +21,16 @@ public class CliArguments {
         return SelectedCommand != null;
     }
 
+    public bool IsOptionPresent(char shortName) {
+        var option = Option(shortName);
+        return option.IsPresent;
+    }
+
+    public bool IsOptionPresent(string longName) {
+        var option = Option(longName);
+        return option.IsPresent;
+    }
+
     public Command Command() {
         return SelectedCommand;
     }
@@ -41,15 +51,5 @@ public class CliArguments {
         var argument = Arguments.FirstOrDefault(argument => argument.Name.Equals(argumentName));
         //TODO
         return argument;
-    }
-
-    public bool IsOptionPresent(char shortName) {
-        var option = Option(shortName);
-        return option.IsPresent;
-    }
-
-    public bool IsOptionPresent(string longName) {
-        var option = Option(longName);
-        return option.IsPresent;
     }
 }

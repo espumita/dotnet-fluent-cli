@@ -125,7 +125,6 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
 
         var argument = option.Argument();
 
-        option.IsPresent.Should().BeTrue();
         argument.Name.Should().Be(argumentName);
         argument.Value.Should().Be(string.Empty);
     }
