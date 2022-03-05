@@ -26,15 +26,17 @@ public class OptionsArgumentsParser {
     public OptionsArgumentsParserResult ParseFrom(IList<string> environmentArgs) {
         var parserResult = new OptionsArgumentsParserResult();
         foreach (var argument in environmentArgs) {
-            var optionsParser = OptionsParserFor(argument);
-           // if (optionsParser == null) continue; //TODO
-            var presentOptions = optionsParser.TryToParse(argument);
-            parserResult.Add(presentOptions);
+            var optionsParser = TryToFindSuitableOptionsParserFor(argument);
+           if (optionsParser != null) {
+               var presentOptions = optionsParser.TryToParse(argument);
+               parserResult.Add(presentOptions);
+            }
+
         }
         return parserResult;
     }
 
-    private IOptionsParser OptionsParserFor(string argument) {
+    private IOptionsParser? TryToFindSuitableOptionsParserFor(string argument) {
         if (_longOptionsWithArgumentParser.IsALongOptionWithArgument(argument)) return _longOptionsWithArgumentParser;
         if (_shortOptionsWithArgumentParser.IsAnOptionWithArgument(argument)) return _shortOptionsWithArgumentParser;
         if (_longOptionsParser.IsALongOption(argument)) return _longOptionsParser;
