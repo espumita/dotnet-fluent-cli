@@ -134,7 +134,7 @@ PrintOption('Z', "context");
 PrintOption('1');
 PrintLongOption("help");
 PrintLongOption("version");
-PrintFilesArguments();
+PrintAllFilesArguments();
 
 Environment.Exit(0);
 
@@ -166,7 +166,7 @@ void PrintLongOption(string optionLongName) {
     PrintOption(optionLongName: optionLongName);
 }
 
-void PrintFilesArguments() {
+void PrintAllFilesArguments() {
     cliArguments.Arguments.ForEach(argument => {
         Console.WriteLine($"Argument:{argument.Name} - FILE: {argument.Value}");
     });

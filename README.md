@@ -42,7 +42,7 @@ var cliArguments = CliArgumentsBuilder.With(args)
 
 if (cliArguments.IsCommandPresent()) {
     var command = cliArguments.Command();
-    Console.WriteLine($"{command.Name} command selected!");
+    Console.WriteLine($"Comand: {command.Name} selected!");
 }
 ```
 ### Arguments:
@@ -50,9 +50,9 @@ if (cliArguments.IsCommandPresent()) {
 var cliArguments = CliArgumentsBuilder.With(args)
     .Build();
 
-if (cliArguments.Arguments.Any()) {
-    var argument = cliArguments.Argument('$0');
-    Console.WriteLine($"argument:{argument.Name} with value:{argument.Value}")
+if (cliArguments.IsArgumentPresent("$0")) {
+    var argument = cliArguments.Argument("$0");
+    Console.WriteLine($"Argument: {argument.Name} with value: {argument.Value}")
 }
 ```
 ### Short/Long options with arguments:
@@ -66,7 +66,7 @@ if (cliArguments.IsOptionPresent("block-size")) {
     var option = cliArguments.Option("block-size");
     if (option.IsArgumentPresent()) {
         var argument = option.Argument();
-        Console.WriteLine($"Option '{option.Name}' enabled with {argument.Name} value:{argument.Value}");
+        Console.WriteLine($"Option: {option.Name} enabled with {argument.Name} value: {argument.Value}");
     }
 }
 ```

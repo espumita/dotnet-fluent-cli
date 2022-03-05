@@ -94,7 +94,7 @@ PrintLongOption("tlskey");
 PrintLongOption("tlsverify");
 PrintOption('v',"version");
 PrintCommands();
-PrintArguments();
+PrintAllArguments();
 
 Environment.Exit(0);
 
@@ -132,8 +132,8 @@ void PrintCommands() {
     }
 }
 
-void PrintArguments() {
+void PrintAllArguments() {
     cliArguments.Arguments.ForEach(argument => {
-        Console.WriteLine($"Argument:{argument.Name} - FILE: {argument.Value}");
+        Console.WriteLine($"Argument:{argument.Name} - Value: {argument.Value}");
     });
 }
