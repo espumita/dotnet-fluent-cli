@@ -102,6 +102,18 @@ public class CliArgumentsBuilderArgumentsTests {
             .And.Message.Should().Be($"PROGRAM: invalid option -- 'r'\r\nTry 'PROGRAM --help' for more information.");
     }
 
+    [Test]
+    public void throw_argument_exception_when_argument_has_not_been_provided() {
+        var environmentArgs = new string[] { };
+        var cliArguments = CliBuilderFrom(environmentArgs)
+            .Build();
+
+        Action action = () => cliArguments.Argument("$0");
+
+        action.Should().Throw<ArgumentException>()
+            .And.Message.Should().Be("Argument '$0' has not been provided.");
+    }
+
     private static CliArgumentsBuilder CliBuilderFrom(string[] args) {
         return CliArgumentsBuilder.With(args);
     }

@@ -49,7 +49,7 @@ public class CliArguments {
 
     public Argument Argument(string argumentName) {
         var argument = Arguments.FirstOrDefault(argument => argument.Name.Equals(argumentName));
-        //TODO
+        if (argument == null) throw new ArgumentException($"Argument '{argumentName}' has not been provided.");
         return argument;
     }
 }
