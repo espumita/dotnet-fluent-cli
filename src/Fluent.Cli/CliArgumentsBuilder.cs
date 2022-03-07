@@ -7,7 +7,7 @@ namespace Fluent.Cli;
 
 public class CliArgumentsBuilder {
     private readonly string[] environmentArgs;
-    protected readonly IDictionary<string, OptionConfiguration> optionConfigurations;
+    private readonly IDictionary<string, OptionConfiguration> optionConfigurations;
     private readonly IDictionary<string, CommandConfiguration> commandConfigurations;
 
     protected CliArgumentsBuilder(string[] environmentArgs) {
@@ -47,14 +47,10 @@ public class CliArgumentsBuilder {
         return CliArgumentsOptionsBuilderFromBaseBuilder(optionConfiguration);
     }
 
-    private CliArgumentsOptionsBuilder CliArgumentsOptionsBuilderFromBaseBuilder(OptionConfiguration optionConfiguration) {
-        return CliArgumentsOptionsBuilder.With(environmentArgs, optionConfigurations, commandConfigurations, optionConfiguration);
-    }
-
-    public CliArgumentsBuilder Command(string name) {
+    public CliArgumentsCommandsBuilder Command(string name) {
         var commandConfiguration = CommandConfiguration.For(name);
         commandConfigurations[name] = commandConfiguration;
-        return this;
+        return CliArgumentsCommandsBuilderFromBaseBuilder(commandConfiguration);
     }
 
     public CliArguments Build() {
@@ -92,6 +88,14 @@ public class CliArgumentsBuilder {
         var argumentsParserResult = argumentsParser.ParseFrom(argumentsPreprocessResult.PossibleArguments);
 
         return CliArgumentsFrom(programName, programVersion, commandsArgumentsParserResult, optionsArgumentsParserResult, argumentsParserResult);
+    }
+
+    private CliArgumentsOptionsBuilder CliArgumentsOptionsBuilderFromBaseBuilder(OptionConfiguration optionConfiguration) {
+        return CliArgumentsOptionsBuilder.With(environmentArgs, optionConfigurations, commandConfigurations, optionConfiguration);
+    }
+
+    private CliArgumentsCommandsBuilder CliArgumentsCommandsBuilderFromBaseBuilder(CommandConfiguration commandConfiguration) {
+        return CliArgumentsCommandsBuilder.With(environmentArgs, optionConfigurations, commandConfigurations, commandConfiguration);
     }
 
     private string ProgramNameFromAssembly() {
