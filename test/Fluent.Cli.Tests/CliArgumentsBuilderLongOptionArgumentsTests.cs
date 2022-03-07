@@ -49,21 +49,6 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
     }
 
     [Test]
-    public void throw_exception_when_option_is_not_configured_yet_and_try_to_configure_an_argument() {
-        var argumentName = anOption.ArgumentName();
-        var environmentArgs = new string[] { };
-
-        Action action = () => {
-            CliBuilderFrom(environmentArgs)
-                    .WithOptionArgument(argumentName)
-                .Build();
-        };
-
-        action.Should().Throw<ArgumentException>()
-            .And.Message.Should().Be($"Argument '{argumentName}' could not be configured, you need to configure an Option first.");
-    }
-
-    [Test]
     public void get_a_long_option_argument_value_when_argument_is_after_equals_sign() {
         var anOptionLongName = anOption.LongName();
         var anOptionLongNamePrefix = anOption.LongNamePrefix();
@@ -179,8 +164,7 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
             .And.Message.Should().Be($"PROGRAM: option -- '{anOptionLongName}' cannot be used with arguments.\r\nTry 'PROGRAM --help' for more information.");
     }
 
-    private static CliArgumentsBuilder CliBuilderFrom(string[] args)
-    {
+    private static CliArgumentsBuilder CliBuilderFrom(string[] args) {
         return CliArgumentsBuilder.With(args);
     }
 

@@ -31,7 +31,6 @@ public class OptionsArgumentsParser {
                var presentOptions = optionsParser.TryToParse(argument);
                parserResult.Add(presentOptions);
             }
-
         }
         return parserResult;
     }

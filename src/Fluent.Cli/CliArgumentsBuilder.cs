@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Fluent.Cli.Exceptions;
 using Fluent.Cli.Options;
 using Fluent.Cli.Parsers;
 using Fluent.Cli.Preprocess;
@@ -8,14 +7,21 @@ namespace Fluent.Cli;
 
 public class CliArgumentsBuilder {
     private readonly string[] environmentArgs;
-    private readonly IDictionary<string, OptionConfiguration> optionConfigurations;
+    protected readonly IDictionary<string, OptionConfiguration> optionConfigurations;
     private readonly IDictionary<string, CommandConfiguration> commandConfigurations;
-    private string buildingOptionConfiguration;
+    protected string buildingOptionConfiguration;
 
-    private CliArgumentsBuilder(string[] environmentArgs) {
+    protected CliArgumentsBuilder(string[] environmentArgs) {
         this.environmentArgs = environmentArgs;
         optionConfigurations = new Dictionary<string, OptionConfiguration>();
         commandConfigurations = new Dictionary<string, CommandConfiguration>();
+    }
+
+    protected CliArgumentsBuilder(string[] environmentArgs, IDictionary<string, OptionConfiguration> optionConfigurations, IDictionary<string, CommandConfiguration> commandConfigurations, string buildingOptionConfiguration) {
+        this.environmentArgs = environmentArgs;
+        this.optionConfigurations = optionConfigurations;
+        this.commandConfigurations = commandConfigurations;
+        this.buildingOptionConfiguration = buildingOptionConfiguration;
     }
 
     public static CliArgumentsBuilder With(string[] args) {
@@ -23,36 +29,31 @@ public class CliArgumentsBuilder {
         return new CliArgumentsBuilder(args);
     }
 
-    public CliArgumentsBuilder Option(char shortName) {
+    public CliArgumentsOptionsBuilder Option(char shortName) {
         var optionConfiguration = OptionConfiguration.For(shortName);
         optionConfigurations[shortName.ToString()] = optionConfiguration;
         buildingOptionConfiguration = shortName.ToString();
-        return this;
+        return CliArgumentsOptionsBuilderFromBaseBuilder();
     }
 
-    public CliArgumentsBuilder Option(char shortName, string longName) {
+    public CliArgumentsOptionsBuilder Option(char shortName, string longName) {
         if (string.IsNullOrEmpty(longName)) throw new ArgumentException("Option long name cannot be null, use other method instead");
         var optionConfiguration = OptionConfiguration.For(shortName, longName);
         optionConfigurations[shortName.ToString()] = optionConfiguration;
         buildingOptionConfiguration = shortName.ToString();
-        return this;
+        return CliArgumentsOptionsBuilderFromBaseBuilder();
     }
 
-    public CliArgumentsBuilder LongOption(string longName) {
+    public CliArgumentsOptionsBuilder LongOption(string longName) {
         if (string.IsNullOrEmpty(longName)) throw new ArgumentException("Option long name cannot be null or empty, use other method instead");
         var optionConfiguration = OptionConfiguration.ForLong(longName);
         optionConfigurations[longName] = optionConfiguration;
         buildingOptionConfiguration = longName;
-        return this;
+        return CliArgumentsOptionsBuilderFromBaseBuilder();
     }
 
-    public CliArgumentsBuilder WithOptionArgument(string argumentName) {
-        if (string.IsNullOrEmpty(argumentName)) throw new ArgumentException("Argument name cannot be null or empty");
-        if (string.IsNullOrEmpty(buildingOptionConfiguration)) throw new ArgumentException($"Argument '{argumentName}' could not be configured, you need to configure an Option first.");
-        var option = optionConfigurations[buildingOptionConfiguration];
-        if (option.IsArgumentConfigured()) throw new OptionWithMultipleArgumentsAreNotSupportedException($"Option -- '{buildingOptionConfiguration}' can only be configured with a single argument. If you need multiple arguments, consider use a command instead.");
-        option.AddArgument(argumentName);
-        return this;
+    private CliArgumentsOptionsBuilder CliArgumentsOptionsBuilderFromBaseBuilder() {
+        return CliArgumentsOptionsBuilder.With(environmentArgs, optionConfigurations, commandConfigurations, buildingOptionConfiguration);
     }
 
     public CliArgumentsBuilder Command(string name) {

@@ -50,21 +50,6 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
     }
 
     [Test]
-    public void throw_exception_when_option_is_not_configured_yet_and_try_to_configure_an_argument() {
-        var argumentName = anOption.ArgumentName();
-        var environmentArgs = new string[] { };
-
-        Action action = () => {
-            CliBuilderFrom(environmentArgs)
-                    .WithOptionArgument(argumentName)
-                .Build();
-        };
-
-        action.Should().Throw<ArgumentException>()
-            .And.Message.Should().Be($"Argument '{argumentName}' could not be configured, you need to configure an Option first.");
-    }
-
-    [Test]
     public void get_a_short_option_argument_value_when_argument_is_after_equals_sign() {
         var anOptionShortName = anOption.ShortName();
         var anOptionShortNamePrefix = anOption.ShortNamePrefix();
