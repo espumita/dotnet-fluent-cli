@@ -9,7 +9,6 @@ public class CliArgumentsBuilder {
     private readonly string[] environmentArgs;
     protected readonly IDictionary<string, OptionConfiguration> optionConfigurations;
     private readonly IDictionary<string, CommandConfiguration> commandConfigurations;
-    protected string buildingOptionConfiguration;
 
     protected CliArgumentsBuilder(string[] environmentArgs) {
         this.environmentArgs = environmentArgs;
@@ -17,11 +16,10 @@ public class CliArgumentsBuilder {
         commandConfigurations = new Dictionary<string, CommandConfiguration>();
     }
 
-    protected CliArgumentsBuilder(string[] environmentArgs, IDictionary<string, OptionConfiguration> optionConfigurations, IDictionary<string, CommandConfiguration> commandConfigurations, string buildingOptionConfiguration) {
+    protected CliArgumentsBuilder(string[] environmentArgs, IDictionary<string, OptionConfiguration> optionConfigurations, IDictionary<string, CommandConfiguration> commandConfigurations) {
         this.environmentArgs = environmentArgs;
         this.optionConfigurations = optionConfigurations;
         this.commandConfigurations = commandConfigurations;
-        this.buildingOptionConfiguration = buildingOptionConfiguration;
     }
 
     public static CliArgumentsBuilder With(string[] args) {
@@ -32,28 +30,25 @@ public class CliArgumentsBuilder {
     public CliArgumentsOptionsBuilder Option(char shortName) {
         var optionConfiguration = OptionConfiguration.For(shortName);
         optionConfigurations[shortName.ToString()] = optionConfiguration;
-        buildingOptionConfiguration = shortName.ToString();
-        return CliArgumentsOptionsBuilderFromBaseBuilder();
+        return CliArgumentsOptionsBuilderFromBaseBuilder(optionConfiguration);
     }
 
     public CliArgumentsOptionsBuilder Option(char shortName, string longName) {
         if (string.IsNullOrEmpty(longName)) throw new ArgumentException("Option long name cannot be null, use other method instead");
         var optionConfiguration = OptionConfiguration.For(shortName, longName);
         optionConfigurations[shortName.ToString()] = optionConfiguration;
-        buildingOptionConfiguration = shortName.ToString();
-        return CliArgumentsOptionsBuilderFromBaseBuilder();
+        return CliArgumentsOptionsBuilderFromBaseBuilder(optionConfiguration);
     }
 
     public CliArgumentsOptionsBuilder LongOption(string longName) {
         if (string.IsNullOrEmpty(longName)) throw new ArgumentException("Option long name cannot be null or empty, use other method instead");
         var optionConfiguration = OptionConfiguration.ForLong(longName);
         optionConfigurations[longName] = optionConfiguration;
-        buildingOptionConfiguration = longName;
-        return CliArgumentsOptionsBuilderFromBaseBuilder();
+        return CliArgumentsOptionsBuilderFromBaseBuilder(optionConfiguration);
     }
 
-    private CliArgumentsOptionsBuilder CliArgumentsOptionsBuilderFromBaseBuilder() {
-        return CliArgumentsOptionsBuilder.With(environmentArgs, optionConfigurations, commandConfigurations, buildingOptionConfiguration);
+    private CliArgumentsOptionsBuilder CliArgumentsOptionsBuilderFromBaseBuilder(OptionConfiguration optionConfiguration) {
+        return CliArgumentsOptionsBuilder.With(environmentArgs, optionConfigurations, commandConfigurations, optionConfiguration);
     }
 
     public CliArgumentsBuilder Command(string name) {
