@@ -17,5 +17,4 @@
     <ProjectReference Include="..\Smoke.Tests.Promt\Smoke.Tests.Promt.csproj" />
   </ItemGroup>
 
-
 </Project>

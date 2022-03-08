@@ -11,5 +11,4 @@
 		<ProjectReference Include="..\..\src\Fluent.Cli\Fluent.Cli.csproj" />
 	</ItemGroup>
 
-
 </Project>
