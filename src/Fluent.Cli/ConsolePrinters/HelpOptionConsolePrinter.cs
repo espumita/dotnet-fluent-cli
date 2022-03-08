@@ -1,14 +1,13 @@
 ﻿using Fluent.Cli.Configuration;
-using Fluent.Cli.Definitions;
 
 namespace Fluent.Cli.ConsolePrinters;
 
 public class HelpOptionConsolePrinter {
 
-    public void PrintHelpAndStopProcess(string programName, IDictionary<string, OptionConfiguration> optionsConfigurations, CommandsDefinitions commandsDefinitions) {
+    public void PrintHelpAndStopProcess(string programName, IDictionary<string, OptionConfiguration> optionsConfigurations, IDictionary<string, CommandConfiguration> commandConfigurations) {
         Console.Write(Environment.NewLine);
         var options = optionsConfigurations.Any() ? "[OPTIONS] " : string.Empty;
-        var commands = commandsDefinitions.Definitions.Any() ? "[COMMAND] " : string.Empty;
+        var commands = commandConfigurations.Any() ? "[COMMAND] " : string.Empty;
         var arguments = true ? "[ARGUMENTS]" : string.Empty; // enabled by default
         var usageLie = $"Usage: {programName} {options}{commands}{arguments}";
         Console.WriteLine(usageLie);
@@ -33,10 +32,10 @@ public class HelpOptionConsolePrinter {
 
             }
         }
-        if (commandsDefinitions.Definitions.Any()) {
+        if (commandConfigurations.Any()) {
             Console.Write(Environment.NewLine);
             Console.WriteLine("Commands:");
-            foreach (var commandDefinition in commandsDefinitions.Definitions) {
+            foreach (var commandDefinition in commandConfigurations) {
                 var command = commandDefinition.Key;
                 var commandLine = $"  {command}";
                 var commandLineWithFirstColumnWithPadding = commandLine.PadRight(14, ' ');

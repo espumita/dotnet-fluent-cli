@@ -2,7 +2,6 @@
 using Fluent.Cli.Configuration;
 using Fluent.Cli.ConsolePrinters;
 using Fluent.Cli.Definitions;
-using Fluent.Cli.Options;
 using Fluent.Cli.Parsers;
 using Fluent.Cli.Preprocess;
 
@@ -10,10 +9,10 @@ namespace Fluent.Cli.Containers;
 
 public class ParserExecutionContainer {
     private readonly string[] environmentArgs;
-    private readonly IDictionary<string, OptionConfiguration> optionConfigurations;
     private readonly IDictionary<string, CommandConfiguration> commandConfigurations;
+    private readonly IDictionary<string, OptionConfiguration> optionConfigurations;
 
-    public ParserExecutionContainer(string[] environmentArgs, IDictionary<string, OptionConfiguration> optionConfigurations, IDictionary<string, CommandConfiguration> commandConfigurations) {
+    public ParserExecutionContainer(string[] environmentArgs, IDictionary<string, CommandConfiguration> commandConfigurations, IDictionary<string, OptionConfiguration> optionConfigurations) {
         this.environmentArgs = environmentArgs;
         this.optionConfigurations = optionConfigurations;
         this.commandConfigurations = commandConfigurations;
@@ -23,36 +22,32 @@ public class ParserExecutionContainer {
         //Configure
         var programName = ProgramNameFromAssembly();
         var programVersion = ProgramVersionFromAssembly();
-        var optionsDefinitions = OptionDefinitionsFrom(optionConfigurations);
         var commandDefinitions = CommandDefinitionsFrom(commandConfigurations);
+        var optionsDefinitions = OptionDefinitionsFrom(optionConfigurations);
         var enableCommandProcess = true; //enabled by default
         var enableOptionsProcess = true; //enabled by default
         var enableArgumentProcess = true; //enabled by default
 
-        //Preprocess (If configured)
-        var argumentsPreprocessor = new ArgumentsPreprocessor(enableCommandProcess, enableOptionsProcess, enableArgumentProcess);
-        var argumentsPreprocessResult = argumentsPreprocessor.Preprocess(environmentArgs, commandDefinitions);
+        //Preprocess
+        var argumentsPreprocessResult = ArgumentsPreprocessor(enableCommandProcess, enableOptionsProcess, enableArgumentProcess)
+            .Preprocess(environmentArgs, commandDefinitions);
+        
+        CheckIfDefaultOptionsArePresent(argumentsPreprocessResult, programName, programVersion);
 
-        if (VersionOptionIsPresent(argumentsPreprocessResult.PossibleOptions)) new VersionOptionConsolePrinter().PrintVersionAndStopProcess(programName, programVersion);
-        if (HelpOptionIsPresent(argumentsPreprocessResult.PossibleOptions)) new HelpOptionConsolePrinter().PrintHelpAndStopProcess(programName, optionConfigurations, commandDefinitions);
+        //Parse process
+        var commandsArgumentsParserResult = CommandArgumentsParser(commandDefinitions)
+            .ParseFrom(argumentsPreprocessResult.PossibleCommand);
+        var optionsArgumentsParserResult = OptionsArgumentsParser(optionsDefinitions)
+            .ParseFrom(argumentsPreprocessResult.PossibleOptions);
+        var argumentsParserResult = ArgumentsParser()
+            .ParseFrom(argumentsPreprocessResult.PossibleArguments);
+        
+        return new ParserExecutionsResultsMerger(programName, programVersion, commandsArgumentsParserResult, optionsArgumentsParserResult, optionConfigurations, argumentsParserResult)
+            .MergeAsCliArguments();
+    }
 
-        //Parse process (If configured)
-        var commandArgumentsParser = new CommandArgumentsParser(commandDefinitions);
-        var optionsArgumentsParser = new OptionsArgumentsParser(
-            new LongOptionsWithArgumentParser(optionsDefinitions),
-            new ShortOptionsWithArgumentParser(optionsDefinitions),
-            new LongOptionsParser(optionsDefinitions),
-            new ShortOptionsParser(optionsDefinitions),
-            new MultipleShortOptionsParser(optionsDefinitions),
-            new UndefinedOptionsParser()
-        );
-        var argumentsParser = new ArgumentsParser();
-
-        var commandsArgumentsParserResult = commandArgumentsParser.ParseFrom(argumentsPreprocessResult.PossibleCommand);
-        var optionsArgumentsParserResult = optionsArgumentsParser.ParseFrom(argumentsPreprocessResult.PossibleOptions);
-        var argumentsParserResult = argumentsParser.ParseFrom(argumentsPreprocessResult.PossibleArguments);
-
-        return CliArgumentsFrom(programName, programVersion, commandsArgumentsParserResult, optionsArgumentsParserResult, argumentsParserResult);
+    private static ArgumentsPreprocessor ArgumentsPreprocessor(bool enableCommandProcess, bool enableOptionsProcess, bool enableArgumentProcess) {
+        return new ArgumentsPreprocessor(enableCommandProcess, enableOptionsProcess, enableArgumentProcess);
     }
 
     private string ProgramNameFromAssembly() {
@@ -69,6 +64,17 @@ public class ParserExecutionContainer {
         return assemblyTitle?.InformationalVersion ?? assembly.GetName()?.Version?.ToString() ?? string.Empty;
     }
 
+    private static CommandsDefinitions CommandDefinitionsFrom(IDictionary<string, CommandConfiguration> commandConfigurations) {
+        var definitions = commandConfigurations
+            .ToDictionary(
+                keyValuePair => keyValuePair.Key,
+                keyValuePair => new CommandDefinition()
+            );
+        return new CommandsDefinitions {
+            Definitions = definitions
+        };
+    }
+
     private static OptionsDefinitions OptionDefinitionsFrom(IDictionary<string, OptionConfiguration> optionConfigurations) {
         var definitions = optionConfigurations
             .ToDictionary(
@@ -83,15 +89,11 @@ public class ParserExecutionContainer {
         };
     }
 
-    private static CommandsDefinitions CommandDefinitionsFrom(IDictionary<string, CommandConfiguration> commandConfigurations) {
-        var definitions = commandConfigurations
-            .ToDictionary(
-                keyValuePair => keyValuePair.Key,
-                keyValuePair => new CommandDefinition()
-            );
-        return new CommandsDefinitions {
-            Definitions = definitions
-        };
+    private void CheckIfDefaultOptionsArePresent(ArgumentsPreprocessResult argumentsPreprocessResult, string programName, string programVersion) {
+        if (VersionOptionIsPresent(argumentsPreprocessResult.PossibleOptions))
+            new VersionOptionConsolePrinter(programName, programVersion).PrintVersionAndStopProcess();
+        if (HelpOptionIsPresent(argumentsPreprocessResult.PossibleOptions))
+            new HelpOptionConsolePrinter().PrintHelpAndStopProcess(programName, optionConfigurations, commandConfigurations);
     }
 
     private static bool VersionOptionIsPresent(IList<string> possibleOptions) {
@@ -102,74 +104,23 @@ public class ParserExecutionContainer {
         return possibleOptions.Contains("--help");
     }
 
-    private CliArguments CliArgumentsFrom(string program, string version, CommandsArgumentsParserResult commandsArgumentsParserResult, OptionsArgumentsParserResult optionsParserResult, ArgumentsParserResult argumentsParserResult) {
-        var command = CommandFrom(commandsArgumentsParserResult);
-        var options = AllOptionsNotPresentByDefaultFrom(optionConfigurations);
-        MarkOptionsAsPresentBasedOn(optionsParserResult, options);
-        var arguments = ArgumentsFrom(argumentsParserResult);
-        return new CliArguments(
-            program: program,
-            version: version,
-            selectedCommand: command,
-            options: options.Values.ToList(),
-            arguments: arguments
-        );
-    }
-    
-    private List<Argument> ArgumentsFrom(ArgumentsParserResult argumentsParserResult) {
-        return argumentsParserResult.arguments.Select(
-            (argument, index) => new Argument($"${index}", argument)
-        ).ToList();
+    private static CommandArgumentsParser CommandArgumentsParser(CommandsDefinitions commandDefinitions) {
+        return new CommandArgumentsParser(commandDefinitions);
     }
 
-    private IDictionary<string, Option> AllOptionsNotPresentByDefaultFrom(IDictionary<string, OptionConfiguration> optionConfigurations) {
-        return optionConfigurations
-            .ToDictionary(
-                keyValuePair => keyValuePair.Key,
-                keyValuePair => OptionNotPresent(keyValuePair.Value)
-            );
-    }
-
-    private Option OptionNotPresent(OptionConfiguration optionConfiguration) {
-        return new Option(
-            string.IsNullOrEmpty(optionConfiguration.PrimaryName) ? null : char.Parse(optionConfiguration.PrimaryName),
-            optionConfiguration.SecondaryName,
-            isPresent: false,
-            argumentName: optionConfiguration.Argument?.ArgumentName
+    private static OptionsArgumentsParser OptionsArgumentsParser(OptionsDefinitions optionsDefinitions) {
+        return new OptionsArgumentsParser(
+            new LongOptionsWithArgumentParser(optionsDefinitions),
+            new ShortOptionsWithArgumentParser(optionsDefinitions),
+            new LongOptionsParser(optionsDefinitions),
+            new ShortOptionsParser(optionsDefinitions),
+            new MultipleShortOptionsParser(optionsDefinitions),
+            new UndefinedOptionsParser()
         );
     }
 
-    private static Command? CommandFrom(CommandsArgumentsParserResult commandsArgumentsParserResult) {
-        return commandsArgumentsParserResult.Command?.Name != null
-            ? new Command(commandsArgumentsParserResult.Command.Name)
-            : null;
+    private static ArgumentsParser ArgumentsParser() {
+        return new ArgumentsParser();
     }
 
-    private void MarkOptionsAsPresentBasedOn(OptionsArgumentsParserResult parserResult, IDictionary<string, Option> options) {
-        parserResult.presentOptions.ForEach(presentOption => {
-            var optionNamePresent = OptionNamePresent(presentOption.OptionNamePresent, options);
-            var option = options[optionNamePresent];
-            if (presentOption is ArgumentOptionWithArgument presentOptionWithArgument) {
-                options[optionNamePresent] = OptionPresent(option, presentOptionWithArgument.ArgumentValue);
-            } else {
-                options[optionNamePresent] = OptionPresent(option);
-            }
-        });
-    }
-
-    private static string OptionNamePresent(string OptionName, IDictionary<string, Option> options) {
-        return OptionName.Length == 1
-            ? OptionName
-            : options.First(keyValuePair => OptionName.Equals(keyValuePair.Value.Name)).Key;
-    }
-
-    private Option OptionPresent(Option option, string argumentValue = null) {
-        return new Option(
-            option.ShortName,
-            option.Name,
-            isPresent: true,
-            argumentName: option.ArgumentPresent?.Name,
-            argumentValue: argumentValue
-        );
-    }
 }

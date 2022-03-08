@@ -52,7 +52,7 @@ public class CliArgumentsBuilder {
     }
 
     public CliArguments Build() {
-        return new ParserExecutionContainer(environmentArgs, optionConfigurations, commandConfigurations)
+        return new ParserExecutionContainer(environmentArgs, commandConfigurations, optionConfigurations)
             .Run();
     }
 
