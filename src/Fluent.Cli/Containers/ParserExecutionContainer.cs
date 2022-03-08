@@ -42,7 +42,7 @@ public class ParserExecutionContainer {
         var argumentsParserResult = ArgumentsParser()
             .ParseFrom(argumentsPreprocessResult.PossibleArguments);
         
-        return new ParserExecutionsResultsMerger(programName, programVersion, commandsArgumentsParserResult, optionsArgumentsParserResult, optionConfigurations, argumentsParserResult)
+        return new ParserResultsMerger(programName, programVersion, commandsArgumentsParserResult, optionsArgumentsParserResult, optionConfigurations, argumentsParserResult)
             .MergeAsCliArguments();
     }
 

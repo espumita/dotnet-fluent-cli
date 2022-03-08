@@ -4,7 +4,7 @@ using Fluent.Cli.Parsers;
 
 namespace Fluent.Cli.Containers; 
 
-public class ParserExecutionsResultsMerger {
+public class ParserResultsMerger {
     private readonly string _programName;
     private readonly string _programVersion;
     private readonly CommandsArgumentsParserResult _commandsArgumentsParserResult;
@@ -12,7 +12,7 @@ public class ParserExecutionsResultsMerger {
     private readonly IDictionary<string, OptionConfiguration> _optionConfigurations;
     private readonly ArgumentsParserResult _argumentsParserResult;
 
-    public ParserExecutionsResultsMerger(string programName, string programVersion, CommandsArgumentsParserResult commandsArgumentsParserResult, OptionsArgumentsParserResult optionsArgumentsParserResult, IDictionary<string, OptionConfiguration> optionConfigurations, ArgumentsParserResult argumentsParserResult) {
+    public ParserResultsMerger(string programName, string programVersion, CommandsArgumentsParserResult commandsArgumentsParserResult, OptionsArgumentsParserResult optionsArgumentsParserResult, IDictionary<string, OptionConfiguration> optionConfigurations, ArgumentsParserResult argumentsParserResult) {
         _programName = programName;
         _programVersion = programVersion;
         _commandsArgumentsParserResult = commandsArgumentsParserResult;

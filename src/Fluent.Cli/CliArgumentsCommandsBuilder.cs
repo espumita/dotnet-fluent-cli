@@ -7,7 +7,7 @@ public class CliArgumentsCommandsBuilder : CliArgumentsBuilder {
 
     private CliArgumentsCommandsBuilder(string[] environmentArgs,
         IDictionary<string, OptionConfiguration> optionConfigurations,
-        IDictionary<string, CommandConfiguration> commandConfigurations, CommandConfiguration commandConfiguration) : base(environmentArgs, optionConfigurations, commandConfigurations) {
+        IDictionary<string, CommandConfiguration> commandConfigurations, CommandConfiguration commandConfiguration) : base(environmentArgs, commandConfigurations, optionConfigurations) {
         _commandConfiguration = commandConfiguration;
     }
 
