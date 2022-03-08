@@ -1,4 +1,4 @@
-﻿namespace Fluent.Cli;
+﻿namespace Fluent.Cli.Configuration;
 
 public class ArgumentConfiguration {
     public string ArgumentName { get; }

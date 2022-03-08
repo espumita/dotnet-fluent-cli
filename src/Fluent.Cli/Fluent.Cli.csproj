@@ -14,4 +14,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Containers\" />
+    <Folder Include="ConsolePrinters\" />
+  </ItemGroup>
+
 </Project>

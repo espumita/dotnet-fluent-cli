@@ -1,4 +1,4 @@
-﻿namespace Fluent.Cli;
+﻿namespace Fluent.Cli.Definitions;
 
 public class OptionsDefinitions {
     public IDictionary<string, OptionsDefinition> Definitions { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace Fluent.Cli;
+﻿namespace Fluent.Cli.Definitions;
 
 public class CommandsDefinitions {
     public Dictionary<string, CommandDefinition> Definitions { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace Fluent.Cli;
+﻿namespace Fluent.Cli.Definitions;
 
 public class OptionsDefinition {
     public string SecondaryName { get; set; }

@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Fluent.Cli;
+namespace Fluent.Cli.Configuration;
 
 public class OptionConfiguration {
     public string PrimaryName { get; }

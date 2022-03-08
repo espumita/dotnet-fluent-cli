@@ -1,4 +1,6 @@
-﻿namespace Fluent.Cli;
+﻿using Fluent.Cli.Configuration;
+
+namespace Fluent.Cli;
 
 public class CliArgumentsOptionsBuilder : CliArgumentsBuilder {
     private readonly OptionConfiguration _optionConfiguration;

@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Fluent.Cli;
+namespace Fluent.Cli.Configuration;
 
 public class CommandConfiguration {
     private readonly string _name;

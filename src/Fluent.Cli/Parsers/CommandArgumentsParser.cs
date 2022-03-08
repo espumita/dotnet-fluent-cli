@@ -1,4 +1,5 @@
-﻿using Fluent.Cli.Preprocess;
+﻿using Fluent.Cli.Definitions;
+using Fluent.Cli.Preprocess;
 
 namespace Fluent.Cli.Parsers;
 

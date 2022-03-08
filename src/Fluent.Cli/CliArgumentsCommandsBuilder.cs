@@ -1,4 +1,6 @@
-﻿namespace Fluent.Cli;
+﻿using Fluent.Cli.Configuration;
+
+namespace Fluent.Cli;
 
 public class CliArgumentsCommandsBuilder : CliArgumentsBuilder {
     private readonly CommandConfiguration _commandConfiguration;

@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Fluent.Cli.Definitions;
 
 namespace Fluent.Cli.Preprocess;
 
