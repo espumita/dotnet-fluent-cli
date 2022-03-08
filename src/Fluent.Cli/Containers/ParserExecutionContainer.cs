@@ -52,8 +52,7 @@ public class ParserExecutionContainer {
         var optionsArgumentsParserResult = optionsArgumentsParser.ParseFrom(argumentsPreprocessResult.PossibleOptions);
         var argumentsParserResult = argumentsParser.ParseFrom(argumentsPreprocessResult.PossibleArguments);
 
-        return CliArgumentsFrom(programName, programVersion, commandsArgumentsParserResult, optionsArgumentsParserResult,
-            argumentsParserResult);
+        return CliArgumentsFrom(programName, programVersion, commandsArgumentsParserResult, optionsArgumentsParserResult, argumentsParserResult);
     }
 
     private string ProgramNameFromAssembly() {
