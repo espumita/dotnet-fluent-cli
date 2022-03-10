@@ -24,7 +24,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         Action action = () => {
             CliBuilderFrom(environmentArgs)
                 .Option(anOptionShortName)
-                    .WithOptionArgument(null)
+                    .WithArgument(null)
                 .Build();
         };
 
@@ -58,7 +58,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         var environmentArgs = new [] { $"{anOptionShortNamePrefix}{anOptionShortName}={argumentValue}"};
         var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-                .WithOptionArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
         var option = cliArguments.Option(anOptionShortName);
 
@@ -81,9 +81,9 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         
         var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-                .WithOptionArgument(argumentName)
+                .WithArgument(argumentName)
             .Option(anotherOptionShortName)
-                .WithOptionArgument(anotherArgumentName)
+                .WithArgument(anotherArgumentName)
             .Build();
         
         var option = cliArguments.Option(anOptionShortName);
@@ -106,7 +106,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         var environmentArgs = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}={argumentValue}" };
         var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName, anOptionLongName)
-                .WithOptionArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
         var option = cliArguments.Option(anOptionShortName);
 
@@ -126,7 +126,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         var environmentArgs = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}={argumentValue}" };
         var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName, anOptionLongName)
-                .WithOptionArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
         var option = cliArguments.Option(anOptionLongName);
 
@@ -144,7 +144,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         var environmentArgs = new[] { $"{anOptionShortNamePrefix}{anOptionShortName}=" };
         var cliArguments = CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-                .WithOptionArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
         var option = cliArguments.Option(anOptionShortName);
 
@@ -164,7 +164,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
         
         Action action = () => CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-                .WithOptionArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
 
         action.Should().Throw<ArgumentException>()
@@ -182,7 +182,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
 
         Action action = () => CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-                .WithOptionArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
 
         action.Should().Throw<ArgumentException>()
@@ -199,7 +199,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
 
         Action action = () => CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-                .WithOptionArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
 
         action.Should().Throw<ArgumentException>()
@@ -217,7 +217,7 @@ public class CliArgumentsBuilderShortOptionArgumentsTests {
 
         Action action = () => CliBuilderFrom(environmentArgs)
             .Option(anOptionShortName)
-                .WithOptionArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
 
         action.Should().Throw<ArgumentException>()

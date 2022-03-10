@@ -23,7 +23,7 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
         Action action = () => {
             CliBuilderFrom(environmentArgs)
                 .LongOption(anOptionLongName)
-                    .WithOptionArgument(null)
+                    .WithArgument(null)
                 .Build();
         };
 
@@ -57,7 +57,7 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
         var environmentArgs = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}={argumentValue}" };
         var cliArguments = CliBuilderFrom(environmentArgs)
             .LongOption(anOptionLongName)
-                .WithOptionArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
         var option = cliArguments.Option(anOptionLongName);
 
@@ -81,9 +81,9 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
         
         var cliArguments = CliBuilderFrom(environmentArgs)
             .LongOption(anOptionLongName)
-                .WithOptionArgument(argumentName)
+                .WithArgument(argumentName)
             .LongOption(antherOptionLongName)
-                .WithOptionArgument(anotherArgumentName)
+                .WithArgument(anotherArgumentName)
             .Build();
         
         var option = cliArguments.Option(anOptionLongName);
@@ -104,7 +104,7 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
         var environmentArgs = new[] { $"{anOptionLongNamePrefix}{anOptionLongName}=" };
         var cliArguments = CliBuilderFrom(environmentArgs)
             .LongOption(anOptionLongName)
-                .WithOptionArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
         var option = cliArguments.Option(anOptionLongName);
 
@@ -124,7 +124,7 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
         
         Action action = () => CliBuilderFrom(environmentArgs)
             .LongOption(anOptionLongName)
-                .WithOptionArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
 
         action.Should().Throw<ArgumentException>()
@@ -142,7 +142,7 @@ public class CliArgumentsBuilderLongOptionArgumentsTests {
 
         Action action = () => CliBuilderFrom(environmentArgs)
             .LongOption(anOptionLongName)
-                .WithOptionArgument(argumentName)
+                .WithArgument(argumentName)
             .Build();
 
         action.Should().Throw<ArgumentException>()

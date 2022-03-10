@@ -59,7 +59,7 @@ if (cliArguments.IsArgumentPresent("$0")) {
 ```c#
 var cliArguments = CliArgumentsBuilder.With(args)
     .LongOption("block-size")
-        .WithOptionArgument("SIZE")
+        .WithArgument("SIZE")
     .Build();
 
 if (cliArguments.IsOptionPresent("block-size")) {

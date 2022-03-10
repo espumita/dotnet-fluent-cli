@@ -15,7 +15,7 @@ public class CliArgumentsOptionsBuilder : CliArgumentsBuilder {
         return new CliArgumentsOptionsBuilder(environmentArgs, optionConfigurations, commandConfigurations, optionConfiguration);
     }
 
-    public CliArgumentsBuilder WithOptionArgument(string argumentName) {
+    public CliArgumentsBuilder WithArgument(string argumentName) {
         if (string.IsNullOrEmpty(argumentName)) throw new ArgumentException("Argument name cannot be null or empty");
         _optionConfiguration.AddArgument(argumentName);
         return this;
