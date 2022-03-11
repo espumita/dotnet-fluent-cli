@@ -11,11 +11,13 @@ public class ParserExecutionContainer {
     private readonly string[] environmentArgs;
     private readonly IDictionary<string, CommandConfiguration> commandConfigurations;
     private readonly IDictionary<string, OptionConfiguration> optionConfigurations;
+    private readonly ProgramDescriptionsConfiguration programDescriptionsConfiguration;
 
-    public ParserExecutionContainer(string[] environmentArgs, IDictionary<string, CommandConfiguration> commandConfigurations, IDictionary<string, OptionConfiguration> optionConfigurations) {
+    public ParserExecutionContainer(string[] environmentArgs, IDictionary<string, CommandConfiguration> commandConfigurations, IDictionary<string, OptionConfiguration> optionConfigurations, ProgramDescriptionsConfiguration programDescriptionsConfiguration) {
         this.environmentArgs = environmentArgs;
         this.optionConfigurations = optionConfigurations;
         this.commandConfigurations = commandConfigurations;
+        this.programDescriptionsConfiguration = programDescriptionsConfiguration;
     }
 
     public CliArguments Run() {
@@ -93,7 +95,7 @@ public class ParserExecutionContainer {
         if (VersionOptionIsPresent(argumentsPreprocessResult.PossibleOptions))
             new VersionOptionConsolePrinter(programName, programVersion).PrintVersionAndStopProcess();
         if (HelpOptionIsPresent(argumentsPreprocessResult.PossibleOptions))
-            new HelpOptionConsolePrinter().PrintHelpAndStopProcess(programName, optionConfigurations, commandConfigurations);
+            new HelpOptionConsolePrinter().PrintHelpAndStopProcess(programName, programDescriptionsConfiguration, optionConfigurations, commandConfigurations);
     }
 
     private static bool VersionOptionIsPresent(IList<string> possibleOptions) {

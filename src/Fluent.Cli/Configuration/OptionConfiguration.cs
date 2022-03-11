@@ -5,6 +5,7 @@ namespace Fluent.Cli.Configuration;
 public class OptionConfiguration {
     public string PrimaryName { get; }
     public string SecondaryName { get; }
+    public string Description { get; private set; }
     public ArgumentConfiguration Argument { get; private set; }
 
     private OptionConfiguration(string primaryName, string secondaryName) {
@@ -26,6 +27,10 @@ public class OptionConfiguration {
     public static OptionConfiguration ForLong(string secondaryName) {
         Validate(secondaryName);
         return new OptionConfiguration(primaryName: null, secondaryName: secondaryName);
+    }
+
+    public void AddDescription(string description) {
+        Description = description;
     }
 
     public void AddArgument(string argumentName) {

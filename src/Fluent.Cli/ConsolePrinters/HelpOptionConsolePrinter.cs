@@ -4,11 +4,11 @@ namespace Fluent.Cli.ConsolePrinters;
 
 public class HelpOptionConsolePrinter {
 
-    public void PrintHelpAndStopProcess(string programName, IDictionary<string, OptionConfiguration> optionsConfigurations, IDictionary<string, CommandConfiguration> commandConfigurations) {
+    public void PrintHelpAndStopProcess(string programName, ProgramDescriptionsConfiguration programDescriptionsConfiguration, IDictionary<string, OptionConfiguration> optionsConfigurations, IDictionary<string, CommandConfiguration> commandConfigurations) {
         Console.Write(Environment.NewLine);
         PrintUsageLine(programName, optionsConfigurations, commandConfigurations);
         Console.Write(Environment.NewLine);
-        PrintProgramDescription();
+        PrintProgramDescription(programDescriptionsConfiguration.HeaderDescription);
         if (optionsConfigurations.Any()) {
             Console.Write(Environment.NewLine);
             PrintOptions(optionsConfigurations);
@@ -18,6 +18,7 @@ public class HelpOptionConsolePrinter {
             PrintCommands(commandConfigurations);
         }
         Console.Write(Environment.NewLine);
+        PrintProgramDescription(programDescriptionsConfiguration.FooterDescription);
         Environment.Exit(0);
     }
 
@@ -29,8 +30,8 @@ public class HelpOptionConsolePrinter {
         Console.WriteLine(usageLie);
     }
 
-    private static void PrintProgramDescription() {
-        Console.WriteLine("_____________________________________________________"); //program description
+    private static void PrintProgramDescription(string description) {
+        Console.Write(description);
     }
 
     private void PrintOptions(IDictionary<string, OptionConfiguration> optionsConfigurations) {
@@ -43,8 +44,8 @@ public class HelpOptionConsolePrinter {
             var optionLine = $"  {shortOptionName}{comma} {longOptionName} {optionArgument}";
             if (optionLine.Length <= 27) {
                 var optionLineWithFirstColumnWithPadding = optionLine.PadRight(27, ' ');
-                var optionLineWithSecondColumnWithPadding =
-                    optionLineWithFirstColumnWithPadding.PadRight(80, '_'); //option description
+                //var optionLineWithSecondColumnWithPadding = optionLineWithFirstColumnWithPadding.PadRight(80, '_'); //option description
+                var optionLineWithSecondColumnWithPadding = optionLineWithFirstColumnWithPadding + optionConfiguration.Description;
                 Console.WriteLine(optionLineWithSecondColumnWithPadding);
             }
             else {
