@@ -15,4 +15,8 @@ public class CliArgumentsCommandsBuilder : CliArgumentsBuilder {
         return new CliArgumentsCommandsBuilder(environmentArgs, optionConfigurations, commandConfigurations, commandConfiguration, programDescriptionsConfiguration);
     }
 
+    public CliArgumentsCommandsBuilder WithDescription(string description) {
+        _commandConfiguration.AddDescription(description);
+        return this;
+    }
 }

@@ -80,12 +80,12 @@ public class HelpOptionConsolePrinter {
 
     private static void PrintCommands(IDictionary<string, CommandConfiguration> commandConfigurations) {
         Console.WriteLine("Commands:");
-        foreach (var commandDefinition in commandConfigurations) {
-            var command = commandDefinition.Key;
+        foreach (var commandConfiguration in commandConfigurations.Values) {
+            var command = commandConfiguration.Name;
             var commandLine = $"  {command}";
             var commandLineWithFirstColumnWithPadding = commandLine.PadRight(14, ' ');
-            var commandLineWithSecondColumnWithPadding =
-                commandLineWithFirstColumnWithPadding.PadRight(80, '_'); //selectedCommand description
+            //var commandLineWithSecondColumnWithPadding = commandLineWithFirstColumnWithPadding.PadRight(80, '_'); //selectedCommand description
+            var commandLineWithSecondColumnWithPadding = commandLineWithFirstColumnWithPadding + commandConfiguration.Description; //selectedCommand description
             Console.WriteLine(commandLineWithSecondColumnWithPadding);
         }
         

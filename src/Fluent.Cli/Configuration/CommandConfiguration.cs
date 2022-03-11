@@ -3,15 +3,21 @@
 namespace Fluent.Cli.Configuration;
 
 public class CommandConfiguration {
-    private readonly string _name;
+    public string Name { get; }
+    public string Description { get; private set; }
 
     private CommandConfiguration(string name) {
-        _name = name;
+        Name = name;
     }
 
     public static CommandConfiguration For(string name) {
         Validate(name);
         return new CommandConfiguration(name);
+    }
+
+    public void AddDescription(string description) {
+        Description = description;
+
     }
 
     private static void Validate(string name) {
