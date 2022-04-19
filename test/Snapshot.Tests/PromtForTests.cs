@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace Smoke.Tests;
+namespace Snapshot.Tests;
 
 public class PromtForTests {
     private readonly string executableFileName;
@@ -10,8 +10,16 @@ public class PromtForTests {
         this.executableFileName = executableFileName;
     }
 
-    public async Task<string> RunWithArguments(string args) {
-        var process = new ProcessStartInfo {
+    public async Task<string> RunWithArgumentsAndGetOutput(string args) {
+        var process = ProcessStartInfo(args);
+
+        using (var executedProcess = Process.Start(process)) {
+            return await executedProcess.StandardOutput.ReadToEndAsync();
+        }
+    }
+
+    private ProcessStartInfo ProcessStartInfo(string args) {
+        return new ProcessStartInfo {
             CreateNoWindow = false,
             UseShellExecute = false,
             RedirectStandardOutput = true,
@@ -19,9 +27,5 @@ public class PromtForTests {
             WindowStyle = ProcessWindowStyle.Hidden,
             Arguments = args
         };
-
-        using (var executedProcess = Process.Start(process)) {
-            return await executedProcess.StandardOutput.ReadToEndAsync();
-        }
     }
 }

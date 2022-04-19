@@ -14,7 +14,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Smoke.Tests.Promt\Smoke.Tests.Promt.csproj" />
+    <ProjectReference Include="..\..\samples\docker\docker.csproj" />
+    <ProjectReference Include="..\..\samples\ls\ls.csproj" />
+    <ProjectReference Include="..\Snapshot.Tests.Promt\Snapshot.Tests.Promt.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="snapshots\docker_help_snapshot.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="snapshots\ls_help_snapshot.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
