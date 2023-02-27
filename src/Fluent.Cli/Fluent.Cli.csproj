@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
 	<Description>Fluent interface to parse and configure arguments for command line applications in .NET</Description>
@@ -6,7 +6,7 @@
 	<PackageId>Fluent.Cli</PackageId>
 	<PackageTags>cli;arguments;args;parser;configuration</PackageTags>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>0.0.4-alpha</Version>
+    <Version>0.0.5-alpha</Version>
     <PackageProjectUrl>https://github.com/espumita/dotnet-fluent-cli</PackageProjectUrl>
 	<RepositoryType>git</RepositoryType>
 	<RepositoryUrl>https://github.com/espumita/dotnet-fluent-cli.git</RepositoryUrl>
