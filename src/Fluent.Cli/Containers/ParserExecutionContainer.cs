@@ -63,7 +63,13 @@ public class ParserExecutionContainer {
         var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
         var assemblyTitles = assembly.GetCustomAttributes<AssemblyInformationalVersionAttribute>().ToList();
         var assemblyTitle = assemblyTitles.FirstOrDefault();
-        return assemblyTitle?.InformationalVersion ?? assembly.GetName()?.Version?.ToString() ?? string.Empty;
+        return InformationalVersion(assemblyTitle) ?? assembly.GetName()?.Version?.ToString() ?? string.Empty;
+    }
+
+    private static string? InformationalVersion(AssemblyInformationalVersionAttribute? assemblyTitle) {
+        var version = assemblyTitle?.InformationalVersion;
+        var versionWithoutSeparator = version?.Split('+');
+        return versionWithoutSeparator?[0];
     }
 
     private static CommandsDefinitions CommandDefinitionsFrom(IDictionary<string, CommandConfiguration> commandConfigurations) {
